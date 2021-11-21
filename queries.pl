@@ -9,20 +9,22 @@ tMaisEcologico(bicicleta).
 %-	Peso,
 %-	Volume,
 %-	Estado,
-%-	Transporte).
+%-	Transporte,
+%- 	PrecoBase,
+%- 	DataEntrega).
 
-encomenda(40,4,7,34,23,entregue,moto). 
-encomenda(20,2,2,34,23,entregue,bicicleta). %-- CodE:2 - CodC:2
-encomenda(50,3,3,34,23,entregue,carro).
-encomenda(10,2,4,34,23,entregue,bicicleta). %-- CodE:4 - CodC:2
-encomenda(10,2,5,34,23,entregue,bicicleta). %-- CodE:5 - CodC:2
-encomenda(30,6,6,34,23,entregue,moto).
-encomenda(40,2,4,34,23,entregue,bicicleta).  %-- CodE:4 - CodC:2
-encomenda(50,8,8,34,23,entregue,carro).
-encomenda(60,2,2,34,23,entregue,bicicleta).  %-- CodE:2 - CodC:2
-encomenda(10,5,10,34,23,entregue,moto).    
-encomenda(20,3,7,34,23,entregue,moto). 
-encomenda(70,2,4,34,23,entregue,bicicleta).   %-- CodE:4 - CodC:2
+encomenda(40,4,7,34,23,entregue,moto, 19.95, 21/11/2021). 
+encomenda(20,2,2,34,23,entregue,bicicleta, 20.1, 21/11/2021). %-- CodE:2 - CodC:2
+encomenda(50,3,3,34,23,entregue,carro, 23, 1/6/2021).
+encomenda(10,2,4,34,23,entregue,bicicleta, 32, 30/5/2021). %-- CodE:4 - CodC:2
+encomenda(10,2,5,34,23,entregue,bicicleta, 43, 11/9/2021). %-- CodE:5 - CodC:2
+encomenda(30,6,6,34,23,entregue,moto, 10, 23/2/2018).
+encomenda(40,2,4,34,23,entregue,bicicleta, 2, 12/2/2019).  %-- CodE:4 - CodC:2
+encomenda(50,8,8,34,23,entregue,carro,2, 21/11/2021).
+encomenda(60,2,2,34,23,entregue,bicicleta, 28, 24/12/2020).  %-- CodE:2 - CodC:2
+encomenda(10,5,10,34,23,entregue,moto, 40, 26/12/2020).    
+encomenda(20,3,7,34,23,entregue,moto, 42, 1/1/2021). 
+encomenda(70,2,4,34,23,entregue,bicicleta, 24.5, 21/11/2021).   %-- CodE:4 - CodC:2
 
 /* 
 Optamos pelo código do estafeta para permitir a existência de estafetas com o mesmo nome, mas códigos de identificação distintos
@@ -46,6 +48,18 @@ cliente(3,flash).
 cliente(4,zeus).
 cliente(5,ares).
 cliente(6,batman).
+
+%- precoEncomenda(Base, TempMax, Veiculo, Preco).
+
+precoEncomenda(Base, 2, bicicleta, Base + 5).
+precoEncomenda(Base, 6, bicicleta, Base + 4).
+precoEncomenda(Base, 24, bicicleta, Base + 3).
+precoEncomenda(Base, 2, moto, Base + 5).
+precoEncomenda(Base, 6, moto, Base + 4).
+precoEncomenda(Base, 24,moto, Base + 3).
+precoEncomenda(Base, 2, carro, Base + 6).
+precoEncomenda(Base, 6, carro, Base + 4).
+precoEncomenda(Base, 24, carro, Base + 3).
 
 %------------------------- Regras auxiliares -------------------------------%
 
@@ -196,3 +210,25 @@ menu :- repeat,
 		doit(1) :- query1().
 		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod).
 		doit(3) :- write('Insira o código do estafeto pretendido: '), read(Cod), query3(Cod).
+%------------------------------------- Query 4 ---------------------------------------------%
+
+%- A função predefinida plus só aceita inteiros, provavelmente há uma maneira 
+%- melhor de fazer isto.
+plusFloat(X,Y,R) :- R is X + Y.
+/*
+ * Nome: query4(DataEntrega) ou query(DataEntrega, Preco)
+ * Descroção: Calcula o valor faturado pela Green Distribution num dado dia
+ */
+
+%- query4(DataEntrega, Preco) :- 
+%-      findall(X, encomenda(_,_,_,_,_,_,_,X,DataEntrega), Found),
+%- 	foldl(plus, Found, 0, Preco).
+
+query4(DataEntrega) :- findall(X, encomenda(_,_,_,_,_,_,_,X,DataEntrega), Found),
+	foldl(plusFloat, Found, 0, Preco), showQuery4(DataEntrega, Preco).
+
+showQuery4(DataEntrega, Preco) :- write('DataEntrega: '),
+                                  write(DataEntrega),
+				  write(' -> Preco acumulado: '),
+                                  write(Preco),
+                                  write('\n').
