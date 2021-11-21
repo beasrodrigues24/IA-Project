@@ -9,7 +9,9 @@ tMaisEcologico(bicicleta).
 %-	Peso,
 %-	Volume,
 %-	Estado,
-%-	Transporte).
+%-	Transporte,
+%- 	PrecoBase,
+%- 	DataEntrega).
 
 encomenda(40,4,7,34,23,entregue,moto). 
 encomenda(20,2,2,34,23,entregue,bicicleta). %-- CodE:2 - CodC:2
@@ -46,6 +48,18 @@ cliente(3,flash).
 cliente(4,zeus).
 cliente(5,ares).
 cliente(6,batman).
+
+%- precoEncomenda(Base, TempMax, Veiculo, Preco).
+
+precoEncomenda(Base, 2, bicicleta, Base + 5).
+precoEncomenda(Base, 6, bicicleta, Base + 4).
+precoEncomenda(Base, 24, bicicleta, Base + 3).
+precoEncomenda(Base, 2, moto, Base + 5).
+precoEncomenda(Base, 6, moto, Base + 4).
+precoEncomenda(Base, 24,moto, Base + 3).
+precoEncomenda(Base, 2, carro, Base + 6).
+precoEncomenda(Base, 6, carro, Base + 4).
+precoEncomenda(Base, 24, carro, Base + 3).
 
 %------------------------- Regras auxiliares -------------------------------%
 
@@ -170,3 +184,8 @@ showQuery3([CodCliente|T]) :- write('Cliente: '),
 				write(CodCliente),
 				write('\n'),
 				showQuery3(T).
+
+%------------------------------------- Query 3 ---------------------------------------------%
+/*
+ * Nome: query4(Dia) ou query(Dia, Preco)
+ * Descroção: Calcula o valor faturado pela Green Distribution num dado dia
