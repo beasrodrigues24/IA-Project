@@ -71,6 +71,7 @@ removeCod(_,[],[]).
 removeCod(Cod,[Cod|T],L) :-removeCod(Cod,T,L).
 removeCod(Cod,[OutroCod|T],[OutroCod|Res]) :- removeCod(Cod,T,Res).
 
+
 %------------------------------ Query 1 -------------------------------------%
 
 /*
@@ -170,3 +171,28 @@ showQuery3([CodCliente|T]) :- write('Cliente: '),
 				write(CodCliente),
 				write('\n'),
 				showQuery3(T).
+
+
+%-------------------------------  Menu  -------------------------------------%
+menu :- repeat,
+		nl,nl,
+		write('|-----------------------------------------------------    Green Distribution    ------------------------------------------------------|'),nl,
+		write('|                                                                                                                                     |'),nl,
+		write('|  1.  Identificar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.                                           |'),nl,
+		write('|  2.  Identificar que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente.                                     |'),nl,
+		write('|  3.  Identificar os clientes servidos por um determinado estafeta.                                                                  |'),nl,
+		write('|  4.  Calcular o valor faturado pela Green Distribution num determinado dia.                                                         |'),nl,
+		write('|  5.  Identificar quais as zonas com maior volume de entregas por parte da Green Distribution.                                       |'),nl,
+		write('|  6.  Calcular a classificação média de satisfação de cliente para um determinado estafeta.                                          |'),nl,
+		write('|  7.  Identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo.               |'),nl,
+		write('|  8.  Identificar  o  número  total  de  entregas  pelos  estafetas,  num  determinado intervalo de tempo.                           |'),nl,
+		write('|  9.  Calcular  o  número  de  encomendas  entregues  e  não  entregues  pela  Green Distribution, num determinado período de tempo. |'),nl,
+		write('| 10. Calcular o peso total transportado por estafeta num determinado dia.                                                            |'),nl,
+		write('|                                                                                                                                     |'),nl,
+		write('|-------------------------------------------------------------------------------------------------------------------------------------|'),nl,nl,
+		write('Insira a Query pretendida: '), nl,
+		read(Choice), Choice > 0, Choice =< 10,
+		doit(Choice), Choice = 0, !.
+		doit(1) :- query1().
+		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod).
+		doit(3) :- write('Insira o código do estafeto pretendido: '), read(Cod), query3(Cod).
