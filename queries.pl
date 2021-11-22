@@ -210,6 +210,7 @@ menu :- repeat,
 		doit(1) :- query1().
 		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod).
 		doit(3) :- write('Insira o código do estafeto pretendido: '), read(Cod), query3(Cod).
+		doit(4) :- write('Inseria a data de entrega pretendida: '), read(Data), query4(Data).
 %------------------------------------- Query 4 ---------------------------------------------%
 
 %- A função predefinida plus só aceita inteiros, provavelmente há uma maneira 
