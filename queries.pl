@@ -1,3 +1,4 @@
+:- use_module(helpers).
 /* 
 A explicação desse facto "tMaisEcologico" será útil para flexibilidade na primeira query (explicação adiante)
 */
@@ -233,3 +234,30 @@ showQuery4(DataEntrega, Preco) :- write('DataEntrega: '),
 				  write(' -> Preco acumulado: '),
                                   write(Preco),
                                   write('\n').
+
+%------------------------------------- Query 9 ---------------------------------------------%
+
+query9(DataInicial, DataFinal, Entregues/NEntregues) :-
+	findall(Estado,
+	(encomenda(_,_,_,_,_,Estado,_,_,DataEntrega), pertenceData(DataInicial, DataFinal, DataEntrega)),
+	Found),
+	countX(entregue, Found, Entregues),
+	countX(espera, Found, NEntregues).
+
+query9(DataInicial, DataFinal) :-
+	findall(Estado, 
+	(encomenda(_,_,_,_,_,Estado,_,_,DataEntrega), pertenceData(DataInicial, DataFinal, DataEntrega)),
+	Found),
+	countX(entregue, Found, Entregues),
+	countX(espera, Found, NEntregues),
+	showQuery9(DataInicial, DataFinal, Entregues, NEntregues).
+
+showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :- write('Data Incial: '),
+															 write(DataInicial),
+															 write(' ; Data Final: '),
+															 write(DataFinal),
+															 write('\nEntregues: '),
+															 write(Entregues),
+															 write("; Não Entregues: "),
+															 write(NEntregues),
+															 write('\n').
