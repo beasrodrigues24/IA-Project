@@ -77,8 +77,8 @@ removeRepetidos([Elem|T],[Elem|T2]) :- removeElem(Elem,T,ListSemRepetidos),
 				         removeRepetidos(ListSemRepetidos,T2).
 
 /*
-Nome: removeElem(Cod,Lista A,Lista B).
-Descrição: dado um elemento (código nesse caso), constrói uma lista B com os elementos de A diferentes do elemento dado. Por outras palavras, B é o resultado de remover de A os elementos iguais ao elemento dado.
+Nome: removeElem(Elem,Lista A,Lista B).
+Descrição: dado um elemento, constrói uma lista B com os elementos de A diferentes do elemento dado. Por outras palavras, B é o resultado de remover de A os elementos iguais ao elemento dado.
 Ex: removeElem(2,[1,2,3,2],B).
     B = [1,3]
 */
@@ -87,15 +87,25 @@ removeElem(_,[],[]).
 removeElem(Elem,[Elem|T],L) :-removeElem(Elem,T,L).
 removeElem(Elem,[OutroElem|T],[OutroElem|Res]) :- removeElem(Elem,T,Res).
 
+/*
+Nome: maxElem(Lista de Pares <A,B>, Par <Elem mais comum até ao momento, Nº de vezes que ocorre>, Res).
+Descrição: dada uma lista de pares <A,B>, retorna o elem A com mais ocorrências (B). 
+Ex: maxElem([Inteligencia/3, Artificial/2, Trabalho/4], Prático/1, Res). 
+    Res = Trabalho.
+*/
 
 maxElem([],Zona/_,Zona).
 maxElem([Zona/N|T],_/N2,Res) :- N > N2, maxElem(T, Zona/N, Res).
 maxElem([_/N|T],ZonaMaior/N2,Res) :- N =< N2, maxElem(T, ZonaMaior/N2, Res).
 
 /*
-Nome: calcParOcorr(Lista A <Lista de estafetas>, Lista de pares <Estafeta, nº de entregas feitas>)
-Raciocínio:
-	1º Passo: calcular quantas vezes o estafeta (que está a cabeça da lista) aparece na lista A. Este passo é feito pela regra "calcParOcorrAux". O resultado será colocado na variável "NEstafeta", na forma de par "<CodEstafeta,numero de entregas>. Repare que este valor é incorporado na cabeça da lista resultante em cada recursão. Após termos calculado quantas vezes o estafeta que está a cabeça da lista repete-se, temos de fazer a próxima recursão sem ele. Por isso existe a regra "removeElem" que será responsável por criar uma lista (a partir da lista de estafetas) sem a cabeça anterior que já foi analisada. Por fim, invocamos a recursão com a lista sem o estafeta que já foi analisado (e seus dados já foram incorporados na lista resultante através de [NEstafeta|LResultante]).
+Nome: calcParOcorr(Lista A <Lista de elementos>, Lista de pares <Elementos, nº de ocorrências associadas>)
+Descrição: calcula quantas vezes o elemento aparece na lista A. Este passo é feito pela regra "calcParOcorrAux". 
+O resultado será colocado na variável "NElem", na forma de par "<Elem,Numero de ocorrencias>. 
+Repare que este valor é incorporado na cabeça da lista resultante em cada recursão. 
+Após termos calculado quantas vezes o elemento que está a cabeça da lista repete-se, temos de fazer a próxima recursão sem ele. 
+Por isso existe a regra "removeElem" que será responsável por criar uma lista (a partir da lista de elementos) sem a cabeça anterior que já foi analisada. 
+Por fim, invocamos a recursão com a lista sem o elemento que já foi analisado (e seus dados já foram incorporados na lista resultante através de [NElem|LResultante]).
 */
 	
 calcParOcorr([],[]).
@@ -105,11 +115,13 @@ calcParOcorr([Elem|T],[NElem|LResultante]) :-
 	calcParOcorr(ListSemElem,LResultante).
 
 /*
-Nome: calcParOcorrAux(Estafeta, Lista de Estafetas, par <Estafeta,n de vezes que o estafeta fez entregas>).
+Nome: calcParOcorrAux(Elem, Lista de Elementos, par <Elem,Nº de vezes que o estafeta fez entregas>).
 Raciocínio:
-	1º Passo: Se a lista dada for vazia, quer dizer que o estafeta não se repete nela, ou seja, quer dizer que o estafeta só fez uma entrega (pois a lista dada é corresponde ao Tail da lista de estafetas).
-	2º Passo: Se o código do estafeta surge na lista de estafetas, temos então de invocar a recursão (com o Tail da lista de estafetas) e preparar uma variável N para armazenar o "resultado da recursão + 1". Caso o código do estafeta não surgir na cabeça da lista de estafetas, invocamos a recursão com o Tail da lista de estafetas, sem fazer nada com o resultado R.
+    1º Passo: Se a lista dada for vazia, quer dizer que o elemento não se repete nela, ou seja, quer dizer que só há uma ocorrência (pois a lista dada é corresponde ao Tail da lista de estafetas).
+    2º Passo: Se o elemento surge na lista, temos então de invocar a recursão (com o Tail da lista) e preparar uma variável N para armazenar o "resultado da recursão + 1". Caso o elemento não surja na cabeça da lista, 
+    invocamos a recursão com o Tail da lista, sem fazer nada com o resultado R.
 */
+
 calcParOcorrAux(Elem,[],Elem/1).
 calcParOcorrAux(Elem,[Elem|T],Elem/N) :- calcParOcorrAux(Elem,T,Elem/N2),N is N2 + 1.
 calcParOcorrAux(Elem,[_|T],R) :- calcParOcorrAux(Elem,T,R).
@@ -218,27 +230,44 @@ showQuery4(DataEntrega, Preco) :- write('DataEntrega: '),
 
 %------------------------------------- Query 5 ---------------------------------------------%
 
-query5() :- findall(X, encomenda(_,_,_,_,_,_,_,_,_,X), ListaZonas),
-	calcParOcorr(ListaZonas,[H|T]),
+query5(Top) :- findall(X, encomenda(_,_,_,_,_,_,_,_,_,X), ListaZonas),
+	calcParOcorr(ListaZonas, ListaPares),
 	!,
-	maxElem(T,H,Zona),
-	showQuery5(Zona).
+	ordDecrescente(ListaPares, Result),
+	takeTopN(Top, Result, ResultTruncado),
+	!,
+	showQuery5(ResultTruncado).
 	
-showQuery5(Zona) :- 
+showQuery5(Result) :- 
 	write('\n'),
 	write('Zona com maior volume de entregas'),
 	write('\n'),
 	write('----------------------------------------------------'),
 	write('\n'),
-	write(Zona),
+	write(Result),
 	write('\n').
+
+ordDecrescente([],[]).
+ordDecrescente([H|T], [Elem|Res]) :- 
+    maxElem(T,H,Elem),
+    (isEqual(H,Elem) -> ordDecrescente(T,Res), !; removePar(Elem,T,ListSemElem), ordDecrescente([H|ListSemElem], Res)).
+
+removePar(_,[],[]).
+removePar(Elem, [Elem/_|T], L) :- removePar(Elem, T, L).
+removePar(Elem, [OutroElem|T], [OutroElem|Res]) :- removePar(Elem, T, Res).
+
+isEqual(A/_,A).
+
+takeTopN(_, [], []).
+takeTopN(0, _, []).
+takeTopN(N, [H|T], [H|Res]) :- B is N - 1, takeTopN(B, T, Res). 
 
 
 %------------------------------------- Query 9 ---------------------------------------------%
 
 query9(DataInicial, DataFinal, Entregues/NEntregues) :-
 	findall(Estado,
-	(encomenda(_,_,_,_,_,Estado,_,_,DataEntrega), pertenceData(DataInicial, DataFinal, DataEntrega)),
+	(encomenda(_,_,_,_,_,Estado,_,_,DataEntrega,_), pertenceData(DataInicial, DataFinal, DataEntrega)),
 	Found),
 	countX(entregue, Found, Entregues),
 	countX(espera, Found, NEntregues).
@@ -287,5 +316,4 @@ menu :- repeat,
 		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod).
 		doit(3) :- write('Insira o código do estafeta pretendido: '), read(Cod), query3(Cod).
 		doit(4) :- write('Insira a data de entrega pretendida: '), read(Data), query4(Data).
-		doit(5) :- query5().
-
+		doit(5) :- write('Insira o número de resultados pretendidos: '), read(Num), query5(Num).
