@@ -4,7 +4,8 @@
            pertenceData/3,
            dataDiff/3,
            dataStamp/2,
-           countX/3
+           countX/3,
+           sumMap/2
                 ]).
 
 pertenceData(DataInicial, DataFinal, Data) :- dataDiff(Data, DataInicial, N1),
@@ -22,3 +23,8 @@ countX(_, [], 0).
 countX(X, [X|T], N) :- countX(X,T,N1),
                        N is N1 + 1, !.
 countX(X, [_|T], N) :- countX(X,T,N).
+
+
+plusFloat(X,Y,R) :- R is X + Y.
+
+sumMap(L, N) :- foldl(plusFloat, L, 0, N).

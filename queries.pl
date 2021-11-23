@@ -261,12 +261,9 @@ showQuery3([CodCliente|T]) :-
 
 %------------------------------------- Query 4 ---------------------------------------------%
 
-%- A função predefinida plus só aceita inteiros, provavelmente há uma maneira 
-%- melhor de fazer isto.
-plusFloat(X,Y,R) :- R is X + Y.
 /*
  * Nome: query4(DataEntrega) ou query(DataEntrega, Preco)
- * Descroção: Calcula o valor faturado pela Green Distribution num dado dia
+ * Descrição: Calcula o valor faturado pela Green Distribution num dado dia
  */
 
 %- query4(DataEntrega, Preco) :- 
@@ -274,7 +271,7 @@ plusFloat(X,Y,R) :- R is X + Y.
 %- 	foldl(plus, Found, 0, Preco).
 
 query4(DataEntrega) :- findall(X, encomenda(_,_,_,_,_,_,_,X,DataEntrega,_,_), Found),
-	foldl(plusFloat, Found, 0, Preco), showQuery4(DataEntrega, Preco), write('Insira n. para avançar'), read(_).
+	sumMap(Found, Preco), showQuery4(DataEntrega, Preco), write('Insira n. para avançar'), read(_).
 
 
 showQuery4(DataEntrega, Preco) :- 
@@ -433,6 +430,28 @@ showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :- clear(),
 															 write("; Não Entregues: "),
 															 write(NEntregues),
 															 write('\n').
+
+
+%------------------------------------- Query 10 ---------------------------------------------%
+
+query10(Data, PesoTotal) :-
+    findall(Peso,
+            encomenda(_,_,_,Peso,_,_,_,_,Data,_,_),
+            Pesos),
+    sumMap(Pesos, PesoTotal).
+
+query10(Data) :-
+    query10(Data, PesoTotal),
+    showQuery10(Data, PesoTotal).
+
+showQuery10(Data, PesoTotal) :- write('Peso Total em '),
+                                write(Data),
+                                write(': '),
+                                write(PesoTotal),
+                                nl.
+
+
+
 
 
 
