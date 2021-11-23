@@ -172,6 +172,8 @@ printListaPares([Nome/Freq|T]) :-
 	write('Nome: '), write(Nome), write(', Frequência: '), write(Freq), nl,
 	printListaPares(T).	
 
+clear() :- nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl.
+
 %------------------------------ Query 1 -------------------------------------%
 
 /*
@@ -194,9 +196,10 @@ query1() :- findall(X,(
 	!,
 	maxElem(T,H,Estafeta),
 	estafeta(Estafeta,Nome),
-	showQuery1(Nome,Estafeta).
+	showQuery1(Nome,Estafeta),
+	write('Insira n. para avançar'),read(_).
 
-showQuery1(Nome,Estafeta) :-
+showQuery1(Nome,Estafeta) :- clear(),
 	write('\n'),
 	write('Estafeta que mais andou no transporte mais ecologico'),
 	write('\n'),
@@ -204,8 +207,7 @@ showQuery1(Nome,Estafeta) :-
 	write('\n'),
 	write('Nome: '),write(Nome),
 	write('\n'),
-	write('Código: '),write(Estafeta).
-
+	write('Código: '),write(Estafeta),nl.
 
 	
 
@@ -218,11 +220,14 @@ Descrição: Identifica  que  estafetas  entregaram encomenda(s) a  um determina
 query2(CodCliente) :- findall(X,encomenda(_,CodCliente,X,_,_,_,_,_,_,_,_),ListEstafetas),
 	removeRepetidos(ListEstafetas,ListSemRepetidos),
 	!,
-	showQuery2(ListSemRepetidos).
+	showQuery2(ListSemRepetidos),
+	write('Insira n. para avançar'),read(_).
 
 	
 showQuery2([]).
-showQuery2([CodEstafeta|T]) :- write('Estafeta: '),
+showQuery2([CodEstafeta|T]) :-
+				clear(),
+				write('Estafeta: '),
 				estafeta(CodEstafeta,Nome),
 				write(Nome),
 				write(' - Código:'),
@@ -238,11 +243,15 @@ Descrição: Identifica que clientes foram servidos por um determinado estafeta
 query3(CodEstafeta) :-	findall(X,encomenda(_,X,CodEstafeta,_,_,_,_,_,_,_,_),ListClientes),
 	removeRepetidos(ListClientes,ListSemRepetidos),
 	!,
-	showQuery3(ListSemRepetidos).		
+	showQuery3(ListSemRepetidos),
+	write('Insira n. para avançar'), read(_).
+		
 
 	
 showQuery3([]).
-showQuery3([CodCliente|T]) :- write('Cliente: '),
+showQuery3([CodCliente|T]) :- 
+				clear(),
+				write('Cliente: '),
 				cliente(CodCliente,Nome),
 				write(Nome),
 				write(' - Código:'),
@@ -265,13 +274,16 @@ plusFloat(X,Y,R) :- R is X + Y.
 %- 	foldl(plus, Found, 0, Preco).
 
 query4(DataEntrega) :- findall(X, encomenda(_,_,_,_,_,_,_,X,DataEntrega,_,_), Found),
-	foldl(plusFloat, Found, 0, Preco), showQuery4(DataEntrega, Preco).
+	foldl(plusFloat, Found, 0, Preco), showQuery4(DataEntrega, Preco), write('Insira n. para avançar'), read(_).
 
-showQuery4(DataEntrega, Preco) :- write('DataEntrega: '),
-                                  write(DataEntrega),
-				  write(' -> Preco acumulado: '),
-                                  write(Preco),
-                                  write('\n').
+
+showQuery4(DataEntrega, Preco) :- 
+								clear(),
+								write('DataEntrega: '),
+                                write(DataEntrega),
+				 				write(' -> Preço acumulado: '),
+                                write(Preco),
+                                write('\n').
 
 %------------------------------------- Query 5 ---------------------------------------------%
 
@@ -289,9 +301,11 @@ query5(Top) :- findall(X, encomenda(_,_,_,_,_,_,_,_,_,X,_), ListaZonas),
 	ordDecrescente(ListaPares, Result),
 	takeTopN(Top, Result, ResultTruncado),
 	!,
-	showQuery5(ResultTruncado).
+	showQuery5(ResultTruncado),
+	write('Insira . para avançar'), read(_).
 	
-showQuery5(Result) :- 
+showQuery5(Result) :-
+	clear(),
 	write('\n'),
 	write('Zona com maior volume de entregas'),
 	write('\n'),
@@ -321,9 +335,12 @@ query6(CodEstafeta) :- findall(X, encomenda(_,CodEstafeta,_,_,_,_,_,_,_,_,X), Li
 					   foldl(plus, ListaClassificacoes, 0, Total),
 					   (NumeroClassif > 0 -> ClassifMedia is Total/NumeroClassif; ClassifMedia is 0),
 					   estafeta(CodEstafeta, Estafeta),
-					   showQuery6(ClassifMedia, Estafeta).
+					   showQuery6(ClassifMedia, Estafeta),
+					   write('Insira n. para avançar'),read(_).
+
 
 showQuery6(Classif,Estafeta) :- 
+	clear(),
 	nl, write('----------------------------------------------------'),nl,
 	write('Classificação média do estafeta '),
 	write(Estafeta),
@@ -346,9 +363,12 @@ query7(DataInicial,DataFinal) :- findall(X, (encomenda(_,_,_,_,_,_,X,_,DataEntre
 										pertenceData(DataInicial, DataFinal, DataEntrega)), ListaTransportes), 
 								calcParOcorr(ListaTransportes, ParesTransporteOcorr), 
 								!, 
-								showQuery7(ParesTransporteOcorr).
+								showQuery7(ParesTransporteOcorr),
+								write('Insira n. para avançar'),read(_).
+
 
 showQuery7(Pares) :- 
+	clear(),
 	nl,
 	printListaPares(Pares).
 
@@ -368,9 +388,12 @@ query8(DataInicial,DataFinal) :- findall(X, (encomenda(_,_,X,_,_,_,_,_,DataEntre
 								 calcParOcorr(ListaCodEstafetas, ParesCodEstafetaOcorr), 
 								 !, 
 								 encontraNomeEstafetas(ParesCodEstafetaOcorr, ParesNomeEstafetaOcorr),
-								 showQuery8(ParesNomeEstafetaOcorr). 
+								 showQuery8(ParesNomeEstafetaOcorr),
+								 write('Insira n. para avançar'),read(_).
+
 
 showQuery8(Pares) :- 
+	clear(),
 	nl,
 	printListaPares(Pares).	
 
@@ -397,9 +420,11 @@ query9(DataInicial, DataFinal) :-
 	Found),
 	countX(entregue, Found, Entregues),
 	countX(espera, Found, NEntregues),
-	showQuery9(DataInicial, DataFinal, Entregues, NEntregues).
+	showQuery9(DataInicial, DataFinal, Entregues, NEntregues),
+	write('Insira . para avançar'),read(_).
 
-showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :- write('Data Incial: '),
+showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :- clear(),
+															 write('Data Incial: '),
 															 write(DataInicial),
 															 write(' ; Data Final: '),
 															 write(DataFinal),
@@ -413,7 +438,7 @@ showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :- write('Data Incial:
 
 %-------------------------------  Menu  -------------------------------------%
 menu :- repeat,
-		nl,nl,
+		clear(),
 		write('|-----------------------------------------------------    Green Distribution    ------------------------------------------------------|'),nl,
 		write('|                                                                                                                                     |'),nl,
 		write('|  1.  Identificar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.                                           |'),nl,
@@ -425,7 +450,7 @@ menu :- repeat,
 		write('|  7.  Identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo.               |'),nl,
 		write('|  8.  Identificar  o  número  total  de  entregas  pelos  estafetas,  num  determinado intervalo de tempo.                           |'),nl,
 		write('|  9.  Calcular  o  número  de  encomendas  entregues  e  não  entregues  pela  Green Distribution, num determinado período de tempo. |'),nl,
-		write('| 10.  Calcular o peso total transportado por estafeta num determinado dia.                                                            |'),nl,
+		write('| 10.  Calcular o peso total transportado por estafeta num determinado dia.                                                           |'),nl,
 		write('|                                                                                                                                     |'),nl,
 		write('|-------------------------------------------------------------------------------------------------------------------------------------|'),nl,nl,
 		write('Insira a Query pretendida: '), nl,
@@ -443,3 +468,6 @@ menu :- repeat,
 		doit(8) :- write('Insira a data inicial: '), read(DataInicial), nl, 
 				   write('Insira a data final  : '), read(DataFinal), 
 				   query8(DataInicial,DataFinal).
+		doit(9) :- write('Insira a data inicial: '), read(DataInicial), nl, 
+				   write('Insira a data final  : '), read(DataFinal), 
+		           query9(DataInicial,DataFinal).
