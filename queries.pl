@@ -230,6 +230,14 @@ showQuery4(DataEntrega, Preco) :- write('DataEntrega: '),
 
 %------------------------------------- Query 5 ---------------------------------------------%
 
+/*
+ * Nome: query5(Top) 
+ * Descrição: Calcula os Top número de zonas com mais volume de encomendas
+ * 
+ * Raciocínio: 1º Passo - Criar uma lista de pares <Zona,Frequência da Zona> (calcParOcorr)
+			   2º Passo - Ordenar os pares por ordem crescente de frequência (ordDecrescente)
+			   3º Passo - Selecionar os Top primeiros elementos dessa lista (takeTopN)
+*/
 query5(Top) :- findall(X, encomenda(_,_,_,_,_,_,_,_,_,X), ListaZonas),
 	calcParOcorr(ListaZonas, ListaPares),
 	!,
@@ -247,17 +255,39 @@ showQuery5(Result) :-
 	write(Result),
 	write('\n').
 
+/*
+ * Nome: ordDecrescente(Lista Pares, Lista de Elementos Resultante)
+ * Descrição: Recebe uma lista de Pares <Elem, Número de Ocorrências> e cria uma lista de Elem's ordenados
+ * 
+ * Raciocínio: 1º Passo - Encontrar o elemento com maior frequência na lista (através da maxElem) 
+ 			   2º Passo - Se esse elemento for a cabeça, adicionar o elemento à lista resultante e chamar recursivamente 
+ 						para o resto da lista 
+			   3º Passo - Se esse elemento não for a cabeça, remover da cauda o elemento, adicioná-lo à lista resultante 
+ 						e chamar recursivamente para a cabeça e a cauda após remoção do par.
+*/
 ordDecrescente([],[]).
 ordDecrescente([H|T], [Elem|Res]) :- 
     maxElem(T,H,Elem),
     (isEqual(H,Elem) -> ordDecrescente(T,Res), !; removePar(Elem,T,ListSemElem), ordDecrescente([H|ListSemElem], Res)).
 
+/*
+ * Nome: removePar(Elem, Lista de Pares <Elemento,Frequência>, Lista de Pares Resultante)
+ * Descrição: Quando encontra o par com elemento Elem, remove o par <Elem,FrequenciaElem>
+*/
 removePar(_,[],[]).
 removePar(Elem, [Elem/_|T], L) :- removePar(Elem, T, L).
 removePar(Elem, [OutroElem|T], [OutroElem|Res]) :- removePar(Elem, T, Res).
 
+/*
+ * Nome: isEqual(Elem/Frequencia, Outro Elem) 
+ * Descrição: Verifica se o primeiro parâmetro do par é igual a um dado elemento.
+*/
 isEqual(A/_,A).
 
+/*
+ * Nome: takeTopN(N, Lista, Lista Resultante)
+ * Descrição: Recebe uma lista e devolve a lista resultante de selecionar os primeiros N elementos 
+*/
 takeTopN(_, [], []).
 takeTopN(0, _, []).
 takeTopN(N, [H|T], [H|Res]) :- B is N - 1, takeTopN(B, T, Res). 
