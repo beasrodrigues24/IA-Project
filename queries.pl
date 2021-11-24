@@ -16,6 +16,8 @@ tMaisEcologico(bicicleta).
 %-  ZonaEntrega
 %-  Classificação).
 
+:- dynamic(encomenda/12). 
+
 encomenda(40,4,7,34,23,entregue,moto, 19.95, 21/11/2021, gothamCity, 4). 
 encomenda(20,2,2,34,23,entregue,bicicleta, 20.1, 21/11/2021, centralCity, 2). %-- CodE:2 - CodC:2
 encomenda(50,3,3,34,23,entregue,carro, 23, 01/06/2021, gothamCity, 3).
@@ -34,6 +36,8 @@ Optamos pelo código do estafeta para permitir a existência de estafetas com o 
 */
 %-estafeta(Codigo,Nome).
 
+:- dynamic(estafeta/2). 
+
 estafeta(1,homemaranha).
 estafeta(2,homemdeferro).
 estafeta(3,hulk).
@@ -44,6 +48,8 @@ estafeta(7,loki).
 estafeta(8,capitamarvel).
 
 %- cliente(Codigo,Cliente).
+
+:- dynamic(cliente/2).
 
 cliente(1,superhomem).
 cliente(2,mulhermaravilha).
@@ -454,9 +460,20 @@ showQuery10(Data, PesoTotal) :- clear(),
                                 nl.
 
 
+%-------------------------------  Leitura de ficheiros  ---------------------%
+
+carregaFicheiro(Name) :- open(Name,read,Str),
+					 leFicheiro(Str,Data),
+					 maplist(asserta, Data).								   
+
+leFicheiro(Stream,[]) :-
+	at_end_of_stream(Stream).
 
 
-
+leFicheiro(Stream,[X|L]) :-
+	\+ at_end_of_stream(Stream),
+	read(Stream,X),
+	leFicheiro(Stream,L).
 
 %-------------------------------  Menu  -------------------------------------%
 menu :- repeat,
@@ -473,10 +490,11 @@ menu :- repeat,
 		write('|  8.  Identificar  o  número  total  de  entregas  pelos  estafetas,  num  determinado intervalo de tempo.                           |'),nl,
 		write('|  9.  Calcular  o  número  de  encomendas  entregues  e  não  entregues  pela  Green Distribution, num determinado período de tempo. |'),nl,
 		write('| 10.  Calcular o peso total transportado por estafeta num determinado dia.                                                           |'),nl,
+		write('| 11.  Carregar ficheiro.																											 |'),nl,
 		write('|                                                                                                                                     |'),nl,
 		write('|-------------------------------------------------------------------------------------------------------------------------------------|'),nl,nl,
 		write('Insira a Query pretendida: '), nl,
-		read(Choice), Choice > 0, Choice =< 10,
+		read(Choice), Choice > 0, Choice =< 12,
 		doit(Choice), Choice = 0, !.
 		doit(1) :- query1().
 		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod).
@@ -494,3 +512,5 @@ menu :- repeat,
 				   write('Insira a data final  : '), read(DataFinal), 
 		           query9(DataInicial,DataFinal).
 		doit(10) :- write('Insira a data       : '), read(Data), query10(Data).
+		doit(11) :- write('Insira o nome do ficheiro: '), read(Data), term_to_atom(Data, Name), carregaFicheiro(Name).
+		
