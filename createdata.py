@@ -8,7 +8,7 @@ names = ("superhomem", "supermulher", "flash", "thor", "loki", "drestranho", "vi
          "arrow", "batman", "bobesponja", "harrypotter", "barryallen", "iriswest", "lukeskywalker",
          "mandalorian", "r2d2", "hansolo", "leia", "homemformiga", "panteranegra", "lanternaverde",
          "hulk", "homemdeferro", "robin", "capitamarvel", "capitaoamerica", "batgirl", "batwoman",
-         "asterix", "obelix", "peterpan", "gatsbu", "katniss", "homer", "bart", "lisa", "trex",
+         "asterix", "obelix", "peterpan", "gatsby", "katniss", "homer", "bart", "lisa", "trex",
          "bilbo", "ray", "lannister", "patrick", "anakin", "gandalf", "gollum", "dipper", "wendy",
          "cisco", "yoda", "chewbacca", "kylo", "obiwan", "darthvader", "apu", "burns", "squidward",
          "krabs", "plankton", "gary", "sandy", "hammond", "tyrion", "sansa", "arya", "cersei", "snow",
