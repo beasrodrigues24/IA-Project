@@ -23,7 +23,7 @@ cities = ("gothamCity", "centralCity", "starCity", "mordor", "hogwarts", "spring
           "kingsLanding", "jurassicPark",
           "bikiniBottom", "dragonstone", "quahog", "wonderland", "westworld", "neverland", "themyscira", "tatooine")
 
-vehicles = ("bicicleta", "carro", "mota")
+vehicles = ("bicicleta", "carro", "moto")
 
 
 def random_date(start, end):
