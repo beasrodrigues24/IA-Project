@@ -418,7 +418,7 @@ query9(DataInicial, DataFinal) :-
 	countX(entregue, Found, Entregues),
 	countX(espera, Found, NEntregues),
 	showQuery9(DataInicial, DataFinal, Entregues, NEntregues),
-	write('Insira . para avançar'),read(_).
+	write('Insira n. para avançar'),read(_).
 
 showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :- clear(),
 															 write('Data Incial: '),
@@ -442,9 +442,12 @@ query10(Data, PesoTotal) :-
 
 query10(Data) :-
     query10(Data, PesoTotal),
-    showQuery10(Data, PesoTotal).
+    showQuery10(Data, PesoTotal),
+	write('Insira n. para avançar'),read(_).
 
-showQuery10(Data, PesoTotal) :- write('Peso Total em '),
+
+showQuery10(Data, PesoTotal) :- clear(),
+								write('Peso Total em '),
                                 write(Data),
                                 write(': '),
                                 write(PesoTotal),
@@ -490,3 +493,4 @@ menu :- repeat,
 		doit(9) :- write('Insira a data inicial: '), read(DataInicial), nl, 
 				   write('Insira a data final  : '), read(DataFinal), 
 		           query9(DataInicial,DataFinal).
+		doit(10) :- write('Insira a data       : '), read(Data), query10(Data).
