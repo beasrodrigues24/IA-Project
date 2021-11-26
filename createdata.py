@@ -92,7 +92,7 @@ def generate_stuff(how_many, option, begin_code, how_many_delivery, how_many_cli
                 status = "entregue"
                 if vehicle == "bicicleta":
                     weight = random.randint(1, 5)
-                elif vehicle == "mota":
+                elif vehicle == "moto":
                     weight = random.randint(1, 20)
                 elif vehicle == "carro":
                     weight = random.randint(1, 100)
@@ -112,10 +112,10 @@ def generate_stuff(how_many, option, begin_code, how_many_delivery, how_many_cli
                 max_time = random.randint(1, 900)
                 city = get_random_city()
                 volume = get_random_float(1.5, 150.5)
-                status = "em andamento"
+                status = "emAndamento"
                 if vehicle == "bicicleta":
                     weight = random.randint(1, 5)
-                elif vehicle == "mota":
+                elif vehicle == "moto":
                     weight = random.randint(1, 20)
                 elif vehicle == "carro":
                     weight = random.randint(1, 100)
