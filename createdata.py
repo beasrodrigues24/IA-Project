@@ -100,6 +100,29 @@ def generate_stuff(how_many, option, begin_code, how_many_delivery, how_many_cli
                 file.write(tmp_str)
                 if index + 1 != how_many:
                     file.write("\n")
+    elif option == 4:
+        with open('encomendas_n_entregues.txt', 'w') as file:
+            for x in range(how_many):
+                index = x
+                cod_client = random.randrange(1, how_many_clients)
+                cod_del = random.randrange(1, how_many_delivery)
+                vehicle = get_random_vehicle()
+                price = get_random_float(2.5, 150.5)
+                weight = 0
+                max_time = random.randint(1, 900)
+                city = get_random_city()
+                volume = get_random_float(1.5, 150.5)
+                status = "em andamento"
+                if vehicle == "bicicleta":
+                    weight = random.randint(1, 5)
+                elif vehicle == "mota":
+                    weight = random.randint(1, 20)
+                elif vehicle == "carro":
+                    weight = random.randint(1, 100)
+                tmp_str = "encomenda(" + str(max_time) + "," + str(cod_client) + "," + str(cod_del) + "," + str(weight) + "," + str(volume) + "," + status + "," + vehicle + "," + str(price) + "," + city + ")."
+                file.write(tmp_str)
+                if index + 1 != how_many:
+                    file.write("\n")
     print("Ficheiro Gerado Com Sucesso.")
 
 
@@ -107,10 +130,11 @@ if __name__ == '__main__':
     while 1:
         print("1. Gerar Estafetas")
         print("2. Gerar Clientes")
-        print("3. Gerar Encomendas")
+        print("3. Gerar Encomendas Entregues")
+        print("4. Gerar Encomendas Não Entregues")
         print("0. Sair")
         option = int(input())
-        if option != 1 and option != 2 and option != 3 and option != 0:
+        if option != 1 and option != 2 and option != 3 and option != 4 and option != 0:
             print("Opção Desconhecida. Insere novamente:")
         elif option != 0:
             print("Quantos?")
@@ -119,7 +143,7 @@ if __name__ == '__main__':
                 print("Código Inicial?")
                 begin_code = int(input())
                 generate_stuff(how_many, option, begin_code, 0, 0)
-            elif option == 3:
+            elif option == 3 or option == 4:
                 print("Quantos clientes existem?")
                 clients = int(input())
                 print("Quantos estafetas existem?")
