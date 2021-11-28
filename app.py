@@ -25,12 +25,15 @@ labelHello.pack()
 
 
 # GLOBAL VARIABLES
+
 codClient = StringVar()
 codEstafeta = StringVar()
 nameClient = StringVar()
 nameEstafeta = StringVar()
 dataEntrega = StringVar()
 topN = StringVar()
+dataInicial = StringVar()
+dataFinal = StringVar()
 
 def open_popup():
    top= Toplevel(app)
@@ -147,6 +150,7 @@ def query4Aux():
     textResString.set(str(res[0]['Y']) + " euros")
     textRes.pack()
 
+# ------------------------------------------------------- DONE
 
 def query5():
     
@@ -186,21 +190,202 @@ def query5Aux():
     
     table.pack()
 
+# -------------------------------------------------------- DONE 
 
 def query6():
-    print("TODO")
+    
+    clearFrame()
+    
+    text = Label(frame ,text = "Código Estafeta")
+    textInsert = Entry(frame,textvariable=codEstafeta)
+    btn = ttk.Button(frame,text="Procurar",command=query6Aux)
+    text.pack()
+    textInsert.pack()
+    btn.pack()
+
+def query6Aux():
+    cod = codEstafeta.get()
+    clearFrame()
+
+    textString = StringVar()
+    textString.set("Classificação média estafeta: " + cod)
+    text = Label(frame,textvariable=textString)
+    text.pack()
+    
+    textResString = StringVar()
+    res = list(prolog.query("query6("+cod+",Y)"))
+    textRes = Label(frame,textvariable=textResString)
+    textResString.set("Classificação: " +str(res[0]['Y']))
+    textRes.pack()
+
+# ------------------------------------------------ DONE
 
 def query7():
-    print("TODO")
+    
+    clearFrame()
+    
+    text = Label(frame ,text = "Data inicial")
+    textInsert = Entry(frame,textvariable=dataInicial)
+    
+    text2 = Label(frame ,text = "Data Final")
+    textInsert2 = Entry(frame,textvariable=dataFinal)
+    
+    btn = ttk.Button(frame,text="Calcular",command=query7Aux)
+    
+    text.pack()
+    textInsert.pack()
+    text2.pack()
+    textInsert2.pack()
+    
+    btn.pack()
+
+def query7Aux():
+    di = dataInicial.get()
+    df = dataFinal.get()
+    clearFrame()
+
+    textString = StringVar()
+    textString.set("Número de encomendas por transporte ")
+    text = Label(frame,textvariable=textString)
+    text.pack()
+    table = ttk.Treeview(frame)
+    table['columns'] = ('Transporte','Quantidade')
+
+    table.column("#0",width=0,stretch=NO)
+    table.column("Transporte",width=400,anchor=CENTER)
+    table.column("Quantidade",width=400,anchor=CENTER)
+   
+    table.heading("Transporte",text="Transporte",anchor=CENTER)
+    table.heading("Quantidade",text="Quantidade",anchor=CENTER)
+
+    i = 1
+    res = list(prolog.query("query7("+di+","+df+",Y)"))
+    print(res)
+    for answer in (res[0]['Y']):
+        table.insert(parent='',index='end',iid=i,values=(answer.args[0],answer.args[1]))
+        i = i + 1
+    
+    table.pack()
+
+# ------------------------------------------------ DONE
 
 def query8():
-    print("TODO")
+    
+    clearFrame()
+    
+    text = Label(frame ,text = "Data inicial")
+    textInsert = Entry(frame,textvariable=dataInicial)
+    
+    text2 = Label(frame ,text = "Data Final")
+    textInsert2 = Entry(frame,textvariable=dataFinal)
+    
+    btn = ttk.Button(frame,text="Calcular",command=query8Aux)
+    
+    text.pack()
+    textInsert.pack()
+    text2.pack()
+    textInsert2.pack()
+    
+    btn.pack()
+
+def query8Aux():
+    di = dataInicial.get()
+    df = dataFinal.get()
+    clearFrame()
+
+    text = Label(frame ,text = "Entregas por estafeta entre " + di + " e " + df)
+    text.pack()
+
+    table = ttk.Treeview(frame)
+    table['columns'] = ('Código Estafeta','Quantidade')
+
+    table.column("#0",width=0,stretch=NO)
+    table.column("Código Estafeta",width=400,anchor=CENTER)
+    table.column("Quantidade",width=400,anchor=CENTER)
+   
+    table.heading("Código Estafeta",text="Código Estafeta",anchor=CENTER)
+    table.heading("Quantidade",text="Quantidade",anchor=CENTER)
+   
+    i = 0
+    res = list(prolog.query("query8("+di+","+df+",Y)"))
+    for answer in (res[0]['Y']):
+        table.insert(parent='',index='end',iid=i,values=(answer.args[0],answer.args[1]))
+        i = i + 1
+    
+    table.pack()
+
+# ------------------------------------------------ DONE
 
 def query9():
-    print("TODO")
+    
+    clearFrame()
+    
+    text = Label(frame ,text = "Data inicial")
+    textInsert = Entry(frame,textvariable=dataInicial)
+    
+    text2 = Label(frame ,text = "Data Final")
+    textInsert2 = Entry(frame,textvariable=dataFinal)
+    
+    btn = ttk.Button(frame,text="Calcular",command=query9Aux)
+    
+    text.pack()
+    textInsert.pack()
+    text2.pack()
+    textInsert2.pack()
+    
+    btn.pack()
+
+def query9Aux():
+    di = dataInicial.get()
+    df = dataFinal.get()
+    clearFrame()
+
+    text = Label(frame ,text = "Número de encomendas entregues e não entregues entre " + di + " e " + df)
+    text.pack()
+
+    textResString = StringVar()
+    res = list(prolog.query("query9("+di+","+df+",Y,X)"))
+    textRes = Label(frame,textvariable=textResString)
+    
+    textResString.set("Encomendas entregues: " +str(res[0]['Y']))
+    textRes.pack()
+    
+    textRes2String = StringVar()
+    textRes2 = Label(frame,textvariable=textRes2String)
+    textRes2String.set("Encomendas não entregues: " +str(res[0]['X']))
+    textRes2.pack()
+
+# ---------------------------------------------------------- DONE
 
 def query10():
-    print("TODO")
+    
+    clearFrame()
+    
+    text = Label(frame ,text = "Data")
+    textInsert = Entry(frame,textvariable=dataInicial)
+     
+    btn = ttk.Button(frame,text="Calcular",command=query10Aux)
+    
+    text.pack()
+    textInsert.pack()
+    
+    btn.pack()
+
+def query10Aux():
+    di = dataInicial.get()
+    clearFrame()
+
+    text = Label(frame ,text = "Peso Transportado pelos estafetas em " + di)
+    text.pack()
+
+    textResString = StringVar()
+    res = list(prolog.query("query10("+di+",Y)"))
+    textRes = Label(frame,textvariable=textResString)
+    print(res)
+    textResString.set(str(res[0]['Y']) + " Kg")
+    textRes.pack()
+    
+
 
 # ---------------------------------------------------------- DONE
 

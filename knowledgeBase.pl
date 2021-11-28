@@ -43,7 +43,7 @@ estado(criada).
 encomenda(1,40,4,7,34,23,entregue,moto, 19.95, 21/11/2021, gothamCity, 4). 
 encomenda(2,20,2,2,34,23,entregue,bicicleta, 20.1, 21/11/2021, centralCity, 2). %-- CodE:2 - CodC:2
 encomenda(3,50,3,3,34,23,entregue,carro, 23, 01/06/2021, gothamCity, 3).
-encomenda(4,10,2,4,34,23,entregue,bicicleta, 32, 30/05/2021, centralCity, 5). %-- CodE:4 - CodC:2
+encomenda(4,10,2,4,34,23,entregue,bicicleta, 32, 01/06/2021, centralCity, 5). %-- CodE:4 - CodC:2
 encomenda(5,10,2,5,34,23,entregue,bicicleta, 43, 11/09/2021, centralCity, 5). %-- CodE:5 - CodC:2
 encomenda(6,30,6,6,34,23,entregue,moto, 10, 23/02/2018, wonderland, 3).
 encomenda(7,40,2,4,34,23,entregue,bicicleta, 02, 12/02/2019, narnia, 4).  %-- CodE:4 - CodC:2
