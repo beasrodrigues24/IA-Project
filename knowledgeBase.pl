@@ -96,6 +96,11 @@ precoEncomenda(Base, 2, carro, Base + 6).
 precoEncomenda(Base, 6, carro, Base + 4).
 precoEncomenda(Base, 24, carro, Base + 3).
 
+%- transporte(Nome,PesoMax,VelMedia)
+transporte(bicicleta,5,10).
+transporte(moto,20,35).
+transporte(carro,100,25).
+
 /***************** INVARIANTES ******************/
 
 :- op(900,xfy,'::').
