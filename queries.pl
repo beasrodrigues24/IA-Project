@@ -1,11 +1,21 @@
 :- use_module(helpers).
+:- use_module(invariants).
 
 /* 
 A explicação desse facto "tMaisEcologico" será útil para flexibilidade na primeira query (explicação adiante)
 */
 tMaisEcologico(bicicleta).
 
-%-encomenda(TempMax,
+/*
+	Possíveis estados da encomenda
+*/
+
+estado(entregue).
+estado(criada).
+
+%-encomenda(
+%	codEncomenda,
+%	TempMax,
 %-	codCliente,
 %-	codEstafeta,
 %-	Peso,
@@ -13,24 +23,25 @@ tMaisEcologico(bicicleta).
 %-	Estado,
 %-	Transporte,
 %- 	PrecoBase,
-%- 	DataEntrega,
-%-  ZonaEntrega
-%-  Classificação).
+%- 	Data, 
+%-      ZonaEntrega
+%- 	Classificação
+%).
 
-:- dynamic(encomenda/11). 
+:- dynamic(encomenda/12). 
 
-encomenda(40,4,7,34,23,entregue,moto, 19.95, 21/11/2021, gothamCity, 4). 
-encomenda(20,2,2,34,23,entregue,bicicleta, 20.1, 21/11/2021, centralCity, 2). %-- CodE:2 - CodC:2
-encomenda(50,3,3,34,23,entregue,carro, 23, 01/06/2021, gothamCity, 3).
-encomenda(10,2,4,34,23,entregue,bicicleta, 32, 30/05/2021, centralCity, 5). %-- CodE:4 - CodC:2
-encomenda(10,2,5,34,23,entregue,bicicleta, 43, 11/09/2021, centralCity, 5). %-- CodE:5 - CodC:2
-encomenda(30,6,6,34,23,entregue,moto, 10, 23/02/2018, wonderland, 3).
-encomenda(40,2,4,34,23,entregue,bicicleta, 02, 12/02/2019, narnia, 4).  %-- CodE:4 - CodC:2
-encomenda(50,8,8,34,23,entregue,carro,2, 21/11/2021, centralCity, 1).
-encomenda(60,2,2,34,23,entregue,bicicleta, 28, 24/12/2020, narnia, 5).  %-- CodE:2 - CodC:2
-encomenda(10,5,1,34,23,entregue,moto, 40, 26/12/2020, narnia, 4).    
-encomenda(20,3,7,34,23,entregue,moto, 42, 01/01/2021, centralCity, 3). 
-encomenda(70,2,4,34,23,entregue,bicicleta, 24.5, 21/11/2021, narnia, 2).   %-- CodE:4 - CodC:2
+encomenda(1,40,4,7,34,23,entregue,moto, 19.95, 21/11/2021, gothamCity, 4). 
+encomenda(2,20,2,2,34,23,entregue,bicicleta, 20.1, 21/11/2021, centralCity, 2). %-- CodE:2 - CodC:2
+encomenda(3,50,3,3,34,23,entregue,carro, 23, 01/06/2021, gothamCity, 3).
+encomenda(4,10,2,4,34,23,entregue,bicicleta, 32, 30/05/2021, centralCity, 5). %-- CodE:4 - CodC:2
+encomenda(5,10,2,5,34,23,entregue,bicicleta, 43, 11/09/2021, centralCity, 5). %-- CodE:5 - CodC:2
+encomenda(6,30,6,6,34,23,entregue,moto, 10, 23/02/2018, wonderland, 3).
+encomenda(7,40,2,4,34,23,entregue,bicicleta, 02, 12/02/2019, narnia, 4).  %-- CodE:4 - CodC:2
+encomenda(8,50,8,8,34,23,entregue,carro,2, 21/11/2021, centralCity, 1).
+encomenda(9,60,2,2,34,23,entregue,bicicleta, 28, 24/12/2020, narnia, 5).  %-- CodE:2 - CodC:2
+encomenda(10,10,5,1,34,23,entregue,moto, 40, 26/12/2020, narnia, 4).    
+encomenda(11,20,3,2,34,23,entregue,bicicleta, 42, 01/01/2021, centralCity, 3). %-- CodE: 2 
+encomenda(12,70,2,4,34,23,entregue,bicicleta, 24.5, 21/11/2021, narnia, 2).   %-- CodE:4 - CodC:2
 
 /* 
 Optamos pelo código do estafeta para permitir a existência de estafetas com o mesmo nome, mas códigos de identificação distintos
@@ -59,6 +70,10 @@ cliente(4,zeus).
 cliente(5,ares).
 cliente(6,batman).
 
+%- penalizado(CodEstafeta,DataInicio,DataFim)
+
+:- dynamic(penalizado/3).
+
 %- precoEncomenda(Base, TempMax, Veiculo, Preco).
 
 precoEncomenda(Base, 2, bicicleta, Base + 5).
@@ -86,28 +101,27 @@ Raciocínio:
 	Detalhe: Se existir mais que um estafeta no topo do ranking de entregas, essa regra ainda não lida com isso, devolvendo apenas um deles. Porém para corrigir isso basta a regra "maxElem" devolver o número máximo de entregas e depois filtrar da Lista obtida em "calcParOcorr" OS os estafetas que tiverem efetuado esse número de entregas. 
 */ 
 
-query1() :- findall(X,(
-	encomenda(_,_,X,_,_,entregue,Transporte,_,_,_,_),
+query1(Estafetas) :- findall(X,(
+	encomenda(_,_,_,X,_,_,entregue,Transporte,_,_,_,_),
 	tMaisEcologico(Transporte)
 	),ListEstafetas),
 	calcParOcorr(ListEstafetas,[H|T]),
 	!,
-	maxElem(T,H,Estafeta),
-	estafeta(Estafeta,Nome),
-	showQuery1(Nome,Estafeta),
-	write('Insira n. para avançar'),read(_).
+	maxOcor(T,H,Max),
+	getEstafetasMax([H|T],Max,EstafetasCod),
+	getEstafetasNome(EstafetasCod,Estafetas),
+	showQuery1(Estafetas).
 
-showQuery1(Nome,Estafeta) :- clear(),
+showQuery1([]).
+showQuery1([EstafetaCod/EstafetaNome|T]) :- clear(),
+	write('Nome: '),write(EstafetaNome),
 	write('\n'),
-	write('Estafeta que mais andou no transporte mais ecologico'),
-	write('\n'),
-	write('----------------------------------------------------'),
-	write('\n'),
-	write('Nome: '),write(Nome),
-	write('\n'),
-	write('Código: '),write(Estafeta),nl.
+	write('Código: '),write(EstafetaCod),
+	showQuery1(T).
 
 	
+getEstafetasNome([],[]).
+getEstafetasNome([EstafetaCod|T],[EstafetaCod/EstafetaNome|T2]) :- estafeta(EstafetaCod,EstafetaNome), getEstafetasNome(T,T2).
 
 
 %------------------------------------ Query 2 -----------------------------------------------%
@@ -115,11 +129,12 @@ showQuery1(Nome,Estafeta) :- clear(),
 Nome: query2(Código de cliente)
 Descrição: Identifica  que  estafetas  entregaram encomenda(s) a  um determinado cliente; 
 */
-query2(CodCliente) :- findall(X,encomenda(_,CodCliente,X,_,_,_,_,_,_,_,_),ListEstafetas),
-	removeRepetidos(ListEstafetas,ListSemRepetidos),
+query2(CodCliente,Estafetas) :- findall(X,encomenda(_,_,CodCliente,X,_,_,_,_,_,_,_,_),ListEstafetas),
+	removeRepetidos(ListEstafetas,EstafetasCod),
+	getEstafetasNome(EstafetasCod,Estafetas),
 	!,
-	showQuery2(ListSemRepetidos),
-	write('Insira n. para avançar'),read(_).
+	showQuery2(EstafetasCod).
+%--write('Insira n. para avançar'),read(_).
 
 	
 showQuery2([]).
@@ -138,13 +153,16 @@ showQuery2([CodEstafeta|T]) :-
 Nome: query2(Código de estafeta)
 Descrição: Identifica que clientes foram servidos por um determinado estafeta
 */
-query3(CodEstafeta) :-	findall(X,encomenda(_,X,CodEstafeta,_,_,_,_,_,_,_,_),ListClientes),
+query3(CodEstafeta,Clientes) :-	findall(X,encomenda(_,_,X,CodEstafeta,_,_,_,_,_,_,_,_),ListClientes),
 	removeRepetidos(ListClientes,ListSemRepetidos),
+	getClientesNome(ListSemRepetidos,Clientes),
 	!,
-	showQuery3(ListSemRepetidos),
-	write('Insira n. para avançar'), read(_).
+	showQuery3(ListSemRepetidos).
+	% --write('Insira n. para avançar'), read(_).
 		
 
+getClientesNome([],[]).
+getClientesNome([ClienteCod|T],[ClienteCod/ClienteNome|T2]) :- cliente(ClienteCod,ClienteNome), getClientesNome(T,T2).
 	
 showQuery3([]).
 showQuery3([CodCliente|T]) :- 
@@ -168,7 +186,7 @@ showQuery3([CodCliente|T]) :-
 %-      findall(X, encomenda(_,_,_,_,_,_,_,X,DataEntrega), Found),
 %- 	foldl(plus, Found, 0, Preco).
 
-query4(DataEntrega) :- findall(X, encomenda(_,_,_,_,_,_,_,X,DataEntrega,_,_), Found),
+query4(DataEntrega) :- findall(X, encomenda(_,_,_,_,_,_,_,_,X,DataEntrega,_,_), Found),
 	sumMap(Found, Preco), showQuery4(DataEntrega, Preco), write('Insira n. para avançar'), read(_).
 
 
@@ -190,7 +208,7 @@ showQuery4(DataEntrega, Preco) :-
 			   2º Passo - Ordenar os pares por ordem crescente de frequência (ordDecrescente)
 			   3º Passo - Selecionar os Top primeiros elementos dessa lista (takeTopN)
 */
-query5(Top) :- findall(X, encomenda(_,_,_,_,_,_,_,_,_,X,_), ListaZonas),
+query5(Top) :- findall(X, encomenda(_,_,_,_,_,_,_,_,_,_,X,_), ListaZonas),
 	calcParOcorr(ListaZonas, ListaPares),
 	!,
 	ordDecrescente(ListaPares, Result),
@@ -225,7 +243,7 @@ showQuery5(Result) :-
 			   5º Passo - Para efeitos de imprimir no ecrã, recolher o nome do estafeta. 
 			   6º Passo - Imprimir a classificação média e o nome do estafeta.
 */
-query6(CodEstafeta) :- findall(X, encomenda(_,CodEstafeta,_,_,_,_,_,_,_,_,X), ListaClassificacoes), 
+query6(CodEstafeta) :- findall(X, encomenda(_,_,CodEstafeta,_,_,_,_,_,_,_,_,X), ListaClassificacoes), 
 					   length(ListaClassificacoes, NumeroClassif), 
 					   foldl(plus, ListaClassificacoes, 0, Total),
 					   (NumeroClassif > 0 -> ClassifMedia is Total/NumeroClassif; ClassifMedia is 0),
@@ -254,7 +272,7 @@ showQuery6(Classif,Estafeta) :-
  			   2º Passo - Criar uma lista de pares <Transporte, Frequência> (através da calcParOcorr).
   			   3º Passo - Imprimir os pares
 */
-query7(DataInicial,DataFinal) :- findall(X, (encomenda(_,_,_,_,_,_,X,_,DataEntrega,_,_), 
+query7(DataInicial,DataFinal) :- findall(X, (encomenda(_,_,_,_,_,_,_,X,_,DataEntrega,_,_), 
 										pertenceData(DataInicial, DataFinal, DataEntrega)), ListaTransportes), 
 								calcParOcorr(ListaTransportes, ParesTransporteOcorr), 
 								!, 
@@ -278,7 +296,7 @@ showQuery7(Pares) :-
 			   3º Passo - Criar uma lista que crie uma lista semelhante em que os códigos do estafeta passam a ser o seu nome
 			   4º Passo - Imprimir a nova lista de pares
 */
-query8(DataInicial,DataFinal) :- findall(X, (encomenda(_,_,X,_,_,_,_,_,DataEntrega,_,_), 
+query8(DataInicial,DataFinal) :- findall(X, (encomenda(_,_,_,X,_,_,_,_,_,DataEntrega,_,_), 
 									pertenceData(DataInicial, DataFinal, DataEntrega)), ListaCodEstafetas), 
 								 calcParOcorr(ListaCodEstafetas, ParesCodEstafetaOcorr), 
 								 !, 
@@ -304,14 +322,14 @@ encontraNomeEstafetas([Cod/N|T], [Nome/N|Res]) :- estafeta(Cod,Nome), encontraNo
 
 query9(DataInicial, DataFinal, Entregues/NEntregues) :-
 	findall(Estado,
-	(encomenda(_,_,_,_,_,Estado,_,_,DataEntrega,_,_), pertenceData(DataInicial, DataFinal, DataEntrega)),
+	(encomenda(_,_,_,_,_,_,Estado,_,_,DataEntrega,_,_), pertenceData(DataInicial, DataFinal, DataEntrega)),
 	Found),
 	countX(entregue, Found, Entregues),
 	countX(espera, Found, NEntregues).
 
 query9(DataInicial, DataFinal) :-
 	findall(Estado,
-	(encomenda(_,_,_,_,_,Estado,_,_,DataEntrega,_,_), pertenceData(DataInicial, DataFinal, DataEntrega)),
+	(encomenda(_,_,_,_,_,_,Estado,_,_,DataEntrega,_,_), pertenceData(DataInicial, DataFinal, DataEntrega)),
 	Found),
 	countX(entregue, Found, Entregues),
 	countX(espera, Found, NEntregues),
@@ -334,7 +352,7 @@ showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :- clear(),
 
 query10(Data, PesoTotal) :-
     findall(Peso,
-            encomenda(_,_,_,Peso,_,_,_,_,Data,_,_),
+            encomenda(_,_,_,_,Peso,_,_,_,_,Data,_,_),
             Pesos),
     sumMap(Pesos, PesoTotal).
 
@@ -351,6 +369,13 @@ showQuery10(Data, PesoTotal) :- clear(),
                                 write(PesoTotal),
                                 nl.
 
+%------------------------------------- Query 11 ---------------------------------------------%
+
+query11(Clientes) :- findall(X/Y,cliente(X,Y),Clientes).
+
+%------------------------------------- Query 12 ---------------------------------------------%
+
+query12(Estafetas) :- findall(X/Y,estafeta(X,Y),Estafetas).
 
 %-------------------------------  Leitura de ficheiros  ---------------------%
 
@@ -388,9 +413,9 @@ menu :- repeat,
 		write('Insira a Query pretendida: '), nl,
 		read(Choice), Choice > 0, Choice =< 11,
 		doit(Choice), Choice = 0, !.
-		doit(1) :- query1().
-		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod).
-		doit(3) :- write('Insira o código do estafeta pretendido: '), read(Cod), query3(Cod).
+		doit(1) :- query1(_).
+		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod,_).
+		doit(3) :- write('Insira o código do estafeta pretendido: '), read(Cod), query3(Cod,_).
 		doit(4) :- write('Insira a data de entrega pretendida: '), read(Data), query4(Data).
 		doit(5) :- write('Insira o número de resultados pretendidos: '), read(Num), query5(Num).
 		doit(6) :- write('Insira o código do estafeta pretendido: '), read(Cod), query6(Cod).

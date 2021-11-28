@@ -10,6 +10,8 @@
            removeRepetidos/2,
            removeElem/3,
            maxElem/3,
+	   maxOcor/3,
+	   getEstafetasMax/3,
            calcParOcorr/2,
            calcParOcorrAux/3,
            ordDecrescente/2,
@@ -73,6 +75,18 @@ Ex: maxElem([Inteligencia/3, Artificial/2, Trabalho/4], Prático/1, Res).
 maxElem([],Zona/_,Zona).
 maxElem([Zona/N|T],_/N2,Res) :- N > N2, maxElem(T, Zona/N, Res).
 maxElem([_/N|T],ZonaMaior/N2,Res) :- N =< N2, maxElem(T, ZonaMaior/N2, Res).
+
+
+/*
+*/
+
+maxOcor([],Zona/Max,Max).
+maxOcor([Zona/N|T],_/N2,Max) :- N > N2, maxOcor(T, Zona/N, Max).
+maxOcor([_/N|T],ZonaMaior/N2,Max) :- N =< N2, maxOcor(T, ZonaMaior/N2, Max).
+
+getEstafetasMax([],_,[]).
+getEstafetasMax([CodEstafeta/N|T1],Max,[CodEstafeta|T2]) :- N == Max, getEstafetasMax(T1,Max,T2). 
+getEstafetasMax([CodEstafeta/N|T1],Max,Res) :- N =\= Max, getEstafetasMax(T1,Max,Res). 
 
 /*
 Nome: calcParOcorr(Lista A <Lista de elementos>, Lista de pares <Elementos, nº de ocorrências associadas>)
