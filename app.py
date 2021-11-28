@@ -3,6 +3,7 @@ import os
 from pyswip import Prolog
 from tkinter import ttk
 from pyswip import Variable,Query
+from tkinter import messagebox
 
 prolog = Prolog()
 prolog.consult("queries.pl")
@@ -27,6 +28,9 @@ labelHello.pack()
 codClient = StringVar()
 codEstafeta = StringVar()
 nameClient = StringVar()
+nameEstafeta = StringVar()
+dataEntrega = StringVar()
+topN = StringVar()
 
 def open_popup():
    top= Toplevel(app)
@@ -116,13 +120,72 @@ def query3Aux():
     
     table.pack()
 
-# ------------------------------------------------------ TODO
+# ------------------------------------------------------ DONE
 
 def query4():
-    print("TODO")
+    
+    clearFrame()
+    
+    text = Label(frame ,text = "Data")
+    textInsert = Entry(frame,textvariable=dataEntrega)
+    btn = ttk.Button(frame,text="Calcular",command=query4Aux)
+    text.pack()
+    textInsert.pack()
+    btn.pack()
+
+def query4Aux():
+    data = dataEntrega.get()
+    clearFrame()
+
+    textString = StringVar()
+    textString.set("Valor faturado em: " + data)
+    text = Label(frame,textvariable=textString)
+    text.pack()
+    textResString = StringVar()
+    res = list(prolog.query("query4("+data+",Y)"))
+    textRes = Label(frame,textvariable=textResString)
+    textResString.set(str(res[0]['Y']) + " euros")
+    textRes.pack()
+
 
 def query5():
-    print("TODO")
+    
+    clearFrame()
+    
+    text = Label(frame ,text = "Top")
+    textInsert = Entry(frame,textvariable=topN)
+    btn = ttk.Button(frame,text="Calcular",command=query5Aux)
+    text.pack()
+    textInsert.pack()
+    btn.pack()
+
+def query5Aux():
+    top = topN.get()
+    clearFrame()
+
+    textString = StringVar()
+    textString.set("Top " + top)
+    text = Label(frame,textvariable=textString)
+    text.pack()
+    table = ttk.Treeview(frame)
+    table['columns'] = ('Posição','Zona')
+
+    table.column("#0",width=0,stretch=NO)
+    table.column("Posição",width=400,anchor=CENTER)
+    table.column("Zona",width=400,anchor=CENTER)
+   
+    table.heading("Posição",text="Posição",anchor=CENTER)
+    table.heading("Zona",text="Zona",anchor=CENTER)
+
+    i = 1
+    res = list(prolog.query("query5("+top+",Y)"))
+    print(res)
+    for answer in (res[0]['Y']):
+        table.insert(parent='',index='end',iid=i,values=(i,answer))
+        i = i + 1
+    
+    table.pack()
+
 
 def query6():
     print("TODO")
@@ -194,6 +257,8 @@ def query12():
     
     table.pack()
 
+# ---------------------------------------------- DONE
+
 def insertCliente():
     clearFrame()
     
@@ -214,10 +279,39 @@ def insertClienteAux():
     name = nameClient.get()
 
     res = bool(list(prolog.query("evolucao(cliente("+cod+","+name+"))")))
-    print(res)
+    if res == True:
+        prolog.assertz("cliente("+cod+","+name+")")
+        messagebox.showinfo("Sucesso","Inserção realizada")
+    if res == False:
+        messagebox.showwarning("Erro", "Invariante não verificado")
+# ---------------------------------------------- DONE
 
 def insertEstafeta():
-    print("TODO")
+    clearFrame()
+    
+    text = Label(frame ,text = "Código Estafeta")
+    codInsert = Entry(frame,textvariable=codEstafeta)
+    text2 = Label(frame ,text = "Nome Estafeta")
+    nameInsert = Entry(frame,textvariable=nameEstafeta)
+
+    btn = ttk.Button(frame,text="Adicionar",command=insertEstafetaAux)
+    text.pack()
+    codInsert.pack()
+    text2.pack()
+    nameInsert.pack()
+    btn.pack()
+
+def insertEstafetaAux():
+    cod = codEstafeta.get()
+    name = nameEstafeta.get()
+
+    res = bool(list(prolog.query("evolucao(estafeta("+cod+","+name+"))")))
+    print(res)
+    if res == True:
+        prolog.assertz("estafeta("+cod+","+name+")")
+        messagebox.showinfo("Sucesso","Inserção realizada")
+    if res == False:
+        messagebox.showwarning("Erro", "Invariante não verificado")
 
 def insertEncomenda():
     print("TODO")
