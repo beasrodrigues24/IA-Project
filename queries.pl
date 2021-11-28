@@ -110,10 +110,10 @@ query1(Estafetas) :- findall(X,(
 	maxOcor(T,H,Max),
 	getEstafetasMax([H|T],Max,EstafetasCod),
 	getEstafetasNome(EstafetasCod,Estafetas),
-	showQuery1(Estafetas).
+	showQuery1(Estafetas), write('Insira n. para avançar'), read(_).
 
 showQuery1([]).
-showQuery1([EstafetaCod/EstafetaNome|T]) :- clear(),
+showQuery1([EstafetaCod/EstafetaNome|T]) :-
 	write('Nome: '),write(EstafetaNome),
 	write('\n'),
 	write('Código: '),write(EstafetaCod),
@@ -133,13 +133,12 @@ query2(CodCliente,Estafetas) :- findall(X,encomenda(_,_,CodCliente,X,_,_,_,_,_,_
 	removeRepetidos(ListEstafetas,EstafetasCod),
 	getEstafetasNome(EstafetasCod,Estafetas),
 	!,
-	showQuery2(EstafetasCod).
-%--write('Insira n. para avançar'),read(_).
+	showQuery2(EstafetasCod),
+    write('Insira n. para avançar'),read(_).
 
 	
 showQuery2([]).
 showQuery2([CodEstafeta|T]) :-
-				clear(),
 				write('Estafeta: '),
 				estafeta(CodEstafeta,Nome),
 				write(Nome),
@@ -157,8 +156,8 @@ query3(CodEstafeta,Clientes) :-	findall(X,encomenda(_,_,X,CodEstafeta,_,_,_,_,_,
 	removeRepetidos(ListClientes,ListSemRepetidos),
 	getClientesNome(ListSemRepetidos,Clientes),
 	!,
-	showQuery3(ListSemRepetidos).
-	% --write('Insira n. para avançar'), read(_).
+	showQuery3(ListSemRepetidos),
+	write('Insira n. para avançar'), read(_).
 		
 
 getClientesNome([],[]).
@@ -166,7 +165,6 @@ getClientesNome([ClienteCod|T],[ClienteCod/ClienteNome|T2]) :- cliente(ClienteCo
 	
 showQuery3([]).
 showQuery3([CodCliente|T]) :- 
-				clear(),
 				write('Cliente: '),
 				cliente(CodCliente,Nome),
 				write(Nome),
@@ -191,7 +189,6 @@ query4(DataEntrega) :- findall(X, encomenda(_,_,_,_,_,_,_,_,X,DataEntrega,_,_), 
 
 
 showQuery4(DataEntrega, Preco) :- 
-								clear(),
 								write('DataEntrega: '),
                                 write(DataEntrega),
 				 				write(' -> Preço acumulado: '),
@@ -218,7 +215,6 @@ query5(Top) :- findall(X, encomenda(_,_,_,_,_,_,_,_,_,_,X,_), ListaZonas),
 	write('Insira n. para avançar'), read(_).
 	
 showQuery5(Result) :-
-	clear(),
 	write('\n'),
 	write('Zona com maior volume de entregas'),
 	write('\n'),
@@ -253,13 +249,12 @@ query6(CodEstafeta) :- findall(X, encomenda(_,_,CodEstafeta,_,_,_,_,_,_,_,_,X), 
 
 
 showQuery6(Classif,Estafeta) :- 
-	clear(),
 	nl, write('----------------------------------------------------'),nl,
 	write('Classificação média do estafeta '),
 	write(Estafeta),
 	write(' : '),
 	write(Classif), nl,
-	write('----------------------------------------------------'),nl.
+	write('--------------------------------------------------------'),nl.
 
 %------------------------------------- Query 7 ---------------------------------------------%
 
@@ -281,7 +276,6 @@ query7(DataInicial,DataFinal) :- findall(X, (encomenda(_,_,_,_,_,_,_,X,_,DataEnt
 
 
 showQuery7(Pares) :- 
-	clear(),
 	nl,
 	printListaPares(Pares).
 
@@ -306,7 +300,6 @@ query8(DataInicial,DataFinal) :- findall(X, (encomenda(_,_,_,X,_,_,_,_,_,DataEnt
 
 
 showQuery8(Pares) :- 
-	clear(),
 	nl,
 	printListaPares(Pares).	
 
@@ -336,7 +329,7 @@ query9(DataInicial, DataFinal) :-
 	showQuery9(DataInicial, DataFinal, Entregues, NEntregues),
 	write('Insira n. para avançar'),read(_).
 
-showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :- clear(),
+showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :-
 															 write('Data Incial: '),
 															 write(DataInicial),
 															 write(' ; Data Final: '),
@@ -362,7 +355,7 @@ query10(Data) :-
 	write('Insira n. para avançar'),read(_).
 
 
-showQuery10(Data, PesoTotal) :- clear(),
+showQuery10(Data, PesoTotal) :- 
 								write('Peso Total em '),
                                 write(Data),
                                 write(': '),
@@ -428,6 +421,6 @@ menu :- repeat,
 		doit(9) :- write('Insira a data inicial: '), read(DataInicial), nl, 
 				   write('Insira a data final  : '), read(DataFinal), 
 		           query9(DataInicial,DataFinal).
-		doit(10) :- write('Insira a data       : '), read(Data), query10(Data).
+		doit(10) :- write('Insira a data: '), read(Data), query10(Data).
 		doit(11) :- write('Insira o nome do ficheiro: '), read(Data), term_to_atom(Data, Name), carregaFicheiro(Name).
 		
