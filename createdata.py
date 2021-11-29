@@ -33,8 +33,7 @@ def random_date(start, end):
     return start + timedelta(seconds=random_second)
 
 
-def get_random_date():
-    fake = Faker()
+def get_random_date(fake):
     start_date = datetime.date(day=1, month=1, year=2001)
     end_date = datetime.date(day=31, month=12, year=2021)
     date_to_format = fake.date_between(start_date=start_date, end_date=end_date)
@@ -77,13 +76,14 @@ def generate_stuff(how_many, option, begin_code, how_many_delivery, how_many_cli
                     file.write("\n")
     elif option == 3:
         with open('encomendas.txt', 'w') as file:
+            fake = Faker()
             for x in range(how_many):
                 index = x
                 cod_client = random.randrange(1, how_many_clients)
                 cod_del = random.randrange(1, how_many_delivery)
                 vehicle = get_random_vehicle()
                 price = get_random_float(2.5, 150.5)
-                date = get_random_date()
+                date = get_random_date(fake)
                 weight = 0
                 max_time = random.randint(1, 900)
                 classification = random.randint(1, 5)
@@ -96,7 +96,7 @@ def generate_stuff(how_many, option, begin_code, how_many_delivery, how_many_cli
                     weight = random.randint(1, 20)
                 elif vehicle == "carro":
                     weight = random.randint(1, 100)
-                tmp_str = "encomenda(" + str(max_time) + "," + str(cod_client) + "," + str(cod_del) + "," + str(weight) + "," + str(volume) + "," + status + "," + vehicle + "," + str(price) + "," + date + "," + city + "," + str(classification) + ")."
+                tmp_str = "encomenda(" + str(index) + "," + str(max_time) + "," + str(cod_client) + "," + str(cod_del) + "," + str(weight) + "," + str(volume) + "," + status + "," + vehicle + "," + str(price) + "," + date + "," + city + "," + str(classification) + ")."
                 file.write(tmp_str)
                 if index + 1 != how_many:
                     file.write("\n")
@@ -119,7 +119,7 @@ def generate_stuff(how_many, option, begin_code, how_many_delivery, how_many_cli
                     weight = random.randint(1, 20)
                 elif vehicle == "carro":
                     weight = random.randint(1, 100)
-                tmp_str = "encomenda(" + str(max_time) + "," + str(cod_client) + "," + str(cod_del) + "," + str(weight) + "," + str(volume) + "," + status + "," + vehicle + "," + str(price) + "," + city + ")."
+                tmp_str = "encomenda(" + str(index) + "," + str(max_time) + "," + str(cod_client) + "," + str(cod_del) + "," + str(weight) + "," + str(volume) + "," + status + "," + vehicle + "," + str(price) + "," + city + ")."
                 file.write(tmp_str)
                 if index + 1 != how_many:
                     file.write("\n")
@@ -144,10 +144,12 @@ if __name__ == '__main__':
                 begin_code = int(input())
                 generate_stuff(how_many, option, begin_code, 0, 0)
             elif option == 3 or option == 4:
+                print("Código Inicial?")
+                begin_code = int(input())
                 print("Quantos clientes existem?")
                 clients = int(input())
                 print("Quantos estafetas existem?")
                 delivery = int(input())
-                generate_stuff(how_many, option, 0, clients, delivery)
+                generate_stuff(how_many, option, begin_code, clients, delivery)
         else:
             break
