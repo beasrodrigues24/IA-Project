@@ -288,19 +288,26 @@ encontraNomeEstafetas([Cod/N|T], [Nome/N|Res]) :- estafeta(Cod,Nome), encontraNo
 
 %------------------------------------- Query 9 ---------------------------------------------%
 
+% Estou a supor que o pedido da encomenda, mesmo quando ele é entregue, não
+% é apagado.
+%
 query9(DataInicial, DataFinal, Entregues,NEntregues) :-
-	findall(Estado,
-	(encomenda(_,_,_,_,_,_,Estado,_,_,DataEntrega,_,_), pertenceData(DataInicial, DataFinal, DataEntrega)),
-	Found),
-	countX(entregue, Found, Entregues),
-	countX(espera, Found, NEntregues).
+    findall(CodEnc,
+            (encomenda(CodEnc,_,_,_,_,_,_,_,DataCriacao,_),
+            pertenceData(DataInicial, DataFinal, DataCriacao)),
+            LDatas),
+    findall(CodEnc,
+            (encomenda(CodEnc,DataEntrega,_),
+             pertenceData(DataInicial, DataFinal, DataEntrega),
+             member(CodEnc, LDatas)),
+            LEntregues),
+    length(LEntregues, Entregues),
+    length(LDatas, Todos),
+    NEntregues is Todos - Entregues.
+
 
 query9(DataInicial, DataFinal) :-
-	findall(Estado,
-	(encomenda(_,_,_,_,_,_,Estado,_,_,DataEntrega,_,_), pertenceData(DataInicial, DataFinal, DataEntrega)),
-	Found),
-	countX(entregue, Found, Entregues),
-	countX(espera, Found, NEntregues),
+    query9(DataInicial, DataFinal, Entregues, NEntregues),
 	showQuery9(DataInicial, DataFinal, Entregues, NEntregues),
 	write('Insira n. para avançar'),read(_).
 
@@ -320,7 +327,7 @@ showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :-
 
 query10(Data, PesoTotal) :-
     findall(Peso,
-            encomenda(_,_,_,_,Peso,_,_,_,_,Data,_,_),
+            encomenda(_,_,_,_,Peso,_,_,_,Data,_),
             Pesos),
     sumMap(Pesos, PesoTotal).
 
