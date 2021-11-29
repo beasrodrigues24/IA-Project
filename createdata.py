@@ -163,7 +163,7 @@ if __name__ == '__main__':
     while 1:
         print("1. Gerar Estafetas")
         print("2. Gerar Clientes")
-        print("3. Gerar Encomendas Entregues")
+        print("3. Gerar Encomendas")
         print("0. Sair")
         option = int(input())
         if option != 1 and option != 2 and option != 3 and option != 0:
