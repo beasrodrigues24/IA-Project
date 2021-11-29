@@ -108,10 +108,6 @@ def get_min_hour(date):
 
 def get_is_same_day(begin_date, end_date):
     formated_end_date = end_date.strftime('%d/%m/%Y')
-    print(begin_date)
-    print(formated_end_date)
-    is_same_day =  begin_date == formated_end_date
-    print(is_same_day)
     return begin_date == formated_end_date    
 
 
