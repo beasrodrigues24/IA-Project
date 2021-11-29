@@ -82,6 +82,8 @@ cliente(6,batman).
 
 %- penalizado(CodEstafeta,DataInicio,DataFim)
 
+penalizado(2,10/10/1980,10/10/2030).
+
 :- dynamic(penalizado/3).
 
 %- precoEncomenda(Base, TempMax, Veiculo, Preco).
@@ -97,6 +99,7 @@ precoEncomenda(Base, 6, carro, Base + 4).
 precoEncomenda(Base, 24, carro, Base + 3).
 
 %- transporte(Nome,PesoMax,VelMedia)
+
 transporte(bicicleta,5,10).
 transporte(moto,20,35).
 transporte(carro,100,25).
@@ -122,34 +125,61 @@ transporte(carro,100,25).
 			).
 
 /*
-	Não permite a atribuição de encomendas a estafetas penalizados
 	Não permite a inserção de encomendas com o mesmo código
-	Não permite a inserção de encomendas com estados diferentes dos possíveis casos de uso
-	Detalhe do peso!
-+encomenda(Cod,_,CodCliente,_,_,_,criada,_,_,DataCriacao,_,_) :: (
-	findall(Cod,encomenda(Cod,_,_,_,_,_,_,_,_,criada,_,_),R),
-	!,
+*/
+
++encomenda(Cod,_,_,_,_,_,_,_,_,_,_,_) :: (
+	findall(Cod,encomenda(Cod,_,_,_,_,_,_,_,_,_,_,_),R),
 	length(R,N),
-	N == 1,
-	penalizado(CodCliente,DataInicio,DataFim),
-	not(pertenceData(DataInicio,DataFim,DataCriacao))
+	N == 1
 	).
 
-+encomenda(Cod,_,_,_,_,_,entregue,_,_,_,_,_) :: (findall(Cod,encomenda(Cod,_,_,_,_,_,_,_,_,_,_,_),R),
-	length(R,N),
-	N == 1,
-	).
+
+/*
+	Não permite a inserção de encomendas a estafetas que não estão registados
 */
+
++encomenda(Cod,_,_,CodEstafeta,_,_,_,_,_,_,_,_) :: (
+	estafeta(CodEstafeta,_)
+	).
+
+/*
+
+	Não permite a atribuição de encomendas a estafetas penalizados
+*/
+
++encomenda(Cod,_,_,CodEstafeta,_,_,_,_,_,DataEnc,_,_) :: (
+	findall(DataInicio/DataFim,penalizado(CodEstafeta,DataInicio,DataFim),R),
+	compareDatas(R,DataEnc)
+	).
+
+compareDatas([],_).
+compareDatas([Di/Df|T],De) :- not(pertenceData(Di,Df,De)), compareDatas(T,De). 
+
+/*
+	Não permite a inserção de encomendas associadas a transportes inexistentes ou que não a possam levar por conta do peso
+*/
+
++encomenda(Cod,_,_,_,Peso,_,_,Transporte,_,_,_,_) :: (
+	transporte(Transporte,PesoMax,_),
+	Peso =< PesoMax
+	).
 /*
 	Não permite a criação de penalizações para Estafeta com código inexistente
-	Não permite a criação de penalizações com intervalos de tempo negativos
 */
 +penalizado(CodEstafeta,DataInicio,DataFim) :: (
-	estafeta(CodEstafeta,_),
+	estafeta(CodEstafeta,_)
+	).
+
+/*
+
+	Não permite a criação de penalizações com intervalos de tempo negativos
+*/
+
++penalizado(CodEstafeta,DataInicio,DataFim) :: (
 	dataDiff(DataInicio,DataFim,N),
-	N < 0).
-
-
+	N < 0
+	).
 /*
 	Garante a evolução fidedigna de conhecimento
 */
