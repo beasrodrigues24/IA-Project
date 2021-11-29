@@ -15,13 +15,30 @@ names = ("superhomem", "supermulher", "flash", "thor", "loki", "drestranho", "vi
          "dumbledore", "weasley", "snape", "dobby", "bellatrix", "hagrid", "draco", "voldemort", "savitar",
          "zoom", "joe", "vibe", "caitlin", "wells", "bart", "wally", "killerfrost", "captainsnow", "venom",
          "thanos", "groot", "logan", "odin", "deadpool", "nickfury", "ultron", "shuri", "nebula", "ghostrider",
-         "shangchi", "ikaris", "caspian", "aslam", "palpatine", "ares", "zeus", "wanda", "apollo"
+         "shangchi", "ikaris", "caspian", "aslam", "palpatine", "ares", "zeus", "wanda", "apollo", "bb8", "c3po",
+         "noddy", "ruca", "bob", "gumball", "darwin", "bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleon",
+         "charizard", "squirtle", "wartortle", "blastoise", "caterpie", "metapod", "butterfree", "weedle", "kakuna",
+         "beedrill", "pidgey", "pidgeotto", "pidgeot", "rattata", "raticate", "spearow", "fearow", "ekans", "arbok",
+         "pikachu", "raichu", "sandshrew", "sandslash", "nidoran", "nidorina", "nidoqueen", "nidoran", "nidorino", 
+         "nidoking", "clefairy", "clefable", "vulpix", "ninetales", "jigglypuff", "jigglytuff", "zubat", "golbat",
+         "oddish", "gloom", "vileplume", "paras", "parasect", "venonat", "venomoth", "diglett", "dugtrio", "meowth",
+         "persian", "psyduck", "golduck", "mankey", "primeape", "growlithe", "arcanine", "poliwag", "poliwhirl",
+         "poliwrath", "abra", "kadabra", "alakazam", "machop", "machoke", "machamp", "bellsprout", "weepinbell",
+         "victreebel", "tentacool", "tentacruel", "geodude", "graveler", "golem", "ponyta", "rapidash", "slowpoke",
+         "slowbro", "magnemite", "magneton","doduo", "dodrio", "seel", "dewgong", "grimer", "muk", "shellder", "cloyster",
+         "gastly", "haunter", "gengar", "onix", "drowzee", "hypno", "krabby", "kingler", "voltorb", "electrode", "exeggcute",
+         "exeggutor", "cubone", "marowak", "hitmonlee", "hitmonchan","lickitung", "koffing", "weezing", "rhyhorn", "rhydon",
+         "chansey", "tangela", "kangaskhan", "horsea", "seadra", "goldeen", "seaking", "staryu", "starmie", "mrmime", "scyther",
+         "jynx", "electabuzz", "magmar", "pinsir", "tauros", "magikarp", "gyarados", "lapras", "ditto", "eevee", "vaporeon",
+         "jolteon", "flareon", "porygon", "omanyte", "omastar", "kabuto", "kabutops", "aerodactyl", "snorlax", "articuno",
+         "zapdos", "moltres", "dratini", "dragonair", "dragonite", "mewtwo", "mew"
          )
 
 cities = ("gothamCity", "centralCity", "starCity", "mordor", "hogwarts", "springfield", "asgard", "eastEgg", "westEgg",
           "gravityFalls", "capitol", "bedrock", "pawnee", "theShire", "narnia", "hogsmeade", "rivendell",
-          "kingsLanding", "jurassicPark",
-          "bikiniBottom", "dragonstone", "quahog", "wonderland", "westworld", "neverland", "themyscira", "tatooine")
+          "kingsLanding", "jurassicPark", "bikiniBottom", "dragonstone", "quahog", "wonderland", "westworld", 
+          "neverland", "themyscira", "tatooine"
+        )
 
 vehicles = ("bicicleta", "carro", "moto")
 
@@ -40,6 +57,7 @@ def get_random_date(fake):
     date = datetime.datetime.strptime(str(date_to_format), '%Y-%m-%d')
     random_hour = random.randint(0,23)
     return date.strftime('%d/%m/%Y') + "/" + str(random_hour)
+
 
 def get_random_date_between(fake, start, end, same_day, min_hour):
     date_to_format = fake.date_between(start_date=start, end_date=end)
@@ -66,22 +84,27 @@ def get_random_city():
 def get_random_float(start, end):
     return round(random.uniform(start, end), 2)
 
+
 def get_in_time():
     bingo = random.randint(1, 4)
     return not (bingo == 4)
 
+
 def was_delivered():
     bingo = random.randint(1,3)
     return bingo == 3
+
 
 def get_date_on_correct_format(date):
     elems = date.split('/')
     correct_format = elems[0] + "/" + elems[1] + "/" + elems[2]
     return correct_format
 
+
 def get_min_hour(date):
     elems = date.split('/')
     return elems[3]
+
 
 def get_is_same_day(begin_date, end_date):
     formated_end_date = end_date.strftime('%d/%m/%Y')
