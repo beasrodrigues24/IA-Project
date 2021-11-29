@@ -1,7 +1,8 @@
 :- module(knowledgeBase, [
 		tMaisEcologico/1,
 		estado/1,
-		encomenda/12,
+		encomenda/10,
+		encomenda/3,
 		estafeta/2,
 		cliente/2,
 		penalizado/3,
@@ -56,8 +57,22 @@ encomenda(12,70,2,4,34,23,bicicleta, 24.5, 21/11/2021/0, narnia).   %-- CodE:4 -
 %   codEncomenda,
 %   dataEntrega,
 %   classificação
-%)
+%) 
 
+:- dynamic(encomenda/3).
+
+encomenda(1, 21/11/2021/0, 4).
+encomenda(2, 21/11/2021/0, 3).
+encomenda(3, 01/06/2021/0, 2).
+encomenda(4, 01/06/2021/0, 5).
+encomenda(5, 11/09/2021/0, 3).
+encomenda(6, 23/02/2018/0, 2).
+encomenda(7, 12/02/2019/0, 3).
+encomenda(8, 21/11/2021/0, 5).
+encomenda(9, 24/12/2020/0, 1).
+encomenda(10, 26/12/2020/0, 4).
+encomenda(11, 01/01/2021/0, 5).
+encomenda(12, 21/11/2021/0, 5).
 
 /* 
 Optamos pelo código do estafeta para permitir a existência de estafetas com o mesmo nome, mas códigos de identificação distintos
