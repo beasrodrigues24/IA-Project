@@ -349,11 +349,12 @@ query12(Estafetas) :- findall(X/Y,estafeta(X,Y),Estafetas).
 
 carregaFicheiro(Name) :- open(Name,read,Str),
 					 leFicheiro(Str,Data),
-					 maplist(asserta, Data).								   
+					 maplist(auxCarrega, Data).
+
+auxCarrega(X) :- evolucao(X), asserta(X).						   
 
 leFicheiro(Stream,[]) :-
 	at_end_of_stream(Stream).
-
 
 leFicheiro(Stream,[X|L]) :-
 	\+ at_end_of_stream(Stream),
@@ -402,5 +403,5 @@ menu :- repeat,
 		doit(10) :- write('Insira a data: '), read(Data), query10(Data).
 		doit(11) :- query11(Clientes), write(Clientes).
 		doit(12) :- query12(Estafetas), write(Estafetas).
-		doit(13) :- write('Insira o termo: '), read(Termo), evolucao(Termo).
+		doit(13) :- write('Insira o termo: '), read(Termo), evolucao(Termo), asserta(Termo).
 		doit(14) :- write('Insira o nome do ficheiro: '), read(Data), term_to_atom(Data, Name), carregaFicheiro(Name).
