@@ -95,12 +95,20 @@ showQuery3([CodCliente|T]) :-
  * Descrição: Calcula o valor faturado pela Green Distribution num dado dia
  */
 
-%- query4(DataEntrega, Preco) :- 
-%-      findall(X, encomenda(_,_,_,_,_,_,_,X,DataEntrega), Found),
-%- 	foldl(plus, Found, 0, Preco).
+query4(D/M/Y/_,Preco) :-
+    findall(CodEnc,
+            encomenda(CodEnc, D/M/Y/_,_),
+            LEntregues),
+    findall(Preco,
+            (encomenda(CodEnc,_,_,_,_,_,_,Preco,_,_),
+             member(CodEnc, LEntregues)),
+            LPrecos),
+    sumMap(LPrecos, Preco).
 
-query4(DataEntrega,Preco) :- findall(X, encomenda(_,_,_,_,_,_,_,_,X,DataEntrega,_,_), Found),
-	sumMap(Found, Preco), showQuery4(DataEntrega, Preco). 
+query4(Data) :-
+    query4(Data, Preco),
+    showQuery4(Data, Preco).
+
 	% write('Insira n. para avançar'), read(_).
 
 
