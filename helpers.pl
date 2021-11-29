@@ -31,7 +31,7 @@ dataDiff(Data1,Data2, N) :- dataStamp(Data1, Stamp1),
                             dataStamp(Data2, Stamp2),
                             N is Stamp1 - Stamp2.
 
-dataStamp(DD/MM/YY, Stamp) :- date_time_stamp(date(YY,MM,DD,0,0,0,0,-,-), Stamp).
+dataStamp(DD/MM/YY/HH, Stamp) :- date_time_stamp(date(YY,MM,DD,HH,0,0,0,-,-), Stamp).
 
 countX(_, [], 0).
 countX(X, [X|T], N) :- countX(X,T,N1),

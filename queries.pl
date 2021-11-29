@@ -121,15 +121,19 @@ showQuery4(DataEntrega, Preco) :-
 			   2º Passo - Ordenar os pares por ordem crescente de frequência (ordDecrescente)
 			   3º Passo - Selecionar os Top primeiros elementos dessa lista (takeTopN)
 */
-query5(Top,ResultTruncado) :- findall(X, encomenda(_,_,_,_,_,_,_,_,_,_,X,_), ListaZonas),
+query5(Top) :- findall(X, (encomenda(Cod,_,_,_,_,_,_,_,_,X), encomenda(Cod,_,_)), ListaZonas),
 	calcParOcorr(ListaZonas, ListaPares),
 	!,
 	ordDecrescente(ListaPares, Result),
 	takeTopN(Top, Result, ResultTruncado),
 	!,
-	showQuery5(ResultTruncado).
-	% write('Insira n. para avançar'), read(_).
+	showQuery5(ResultTruncado),
+	write('Insira n. para avançar'), read(_).
 	
+/*
+ * Nome: showQuery5(Result)
+ * Descrição: Imprime Result no terminal
+*/
 showQuery5(Result) :-
 	write('\n'),
 	write('Zona com maior volume de entregas'),
@@ -140,6 +144,16 @@ showQuery5(Result) :-
 	write('\n').
 
 
+/*
+ * Nome: query5(Top,ResultTruncado)
+ * Descrição: Análoga à query5(Top). A variável extra é útil para a GUI.
+*/	
+query5(Top,ResultTruncado) :- findall(X, (encomenda(Cod,_,_,_,_,_,_,_,_,X), encomenda(Cod,_,_)), ListaZonas),
+		calcParOcorr(ListaZonas, ListaPares),
+		!,
+		ordDecrescente(ListaPares, Result),
+		takeTopN(Top, Result, ResultTruncado),
+		!.
 
 %------------------------------------- Query 6 ---------------------------------------------%
 
@@ -155,22 +169,36 @@ showQuery5(Result) :-
 			   5º Passo - Para efeitos de imprimir no ecrã, recolher o nome do estafeta. 
 			   6º Passo - Imprimir a classificação média e o nome do estafeta.
 */
-query6(CodEstafeta,ClassifMedia) :- findall(X, encomenda(_,_,CodEstafeta,_,_,_,_,_,_,_,_,X), ListaClassificacoes), 
+query6(CodEstafeta) :- findall(X, (encomenda(CodEncomenda,_,_,CodEstafeta,_,_,_,_,_,_), encomenda(CodEncomenda,_,X)), ListaClassificacoes), 
 					   length(ListaClassificacoes, NumeroClassif), 
 					   foldl(plus, ListaClassificacoes, 0, Total),
 					   (NumeroClassif > 0 -> ClassifMedia is Total/NumeroClassif; ClassifMedia is 0),
 					   estafeta(CodEstafeta, Estafeta),
-					   showQuery6(ClassifMedia, Estafeta).
-					   %write('Insira n. para avançar'),read(_).
+					   showQuery6(ClassifMedia, Estafeta),
+					   write('Insira n. para avançar'),read(_).
 
-
+/*
+ * Nome: showQuery6(Classif,Estafeta)
+ * Descrição: Imprime para o ecrã a informação
+*/ 
 showQuery6(Classif,Estafeta) :- 
-	nl, write('----------------------------------------------------'),nl,
-	write('Classificação média do estafeta '),
-	write(Estafeta),
-	write(' : '),
-	write(Classif), nl,
-	write('--------------------------------------------------------'),nl.
+						nl, write('----------------------------------------------------'),nl,
+						write('Classificação média do estafeta '),
+						write(Estafeta),
+						write(' : '),
+						write(Classif), nl,
+						write('--------------------------------------------------------'),nl.
+
+/*
+ * Nome: query6(CodEstafeta,ClassifMedia)
+ * Descrição: Análoga à query6(CodEstafeta). A variável extra é útil para a GUI.
+*/
+query6(CodEstafeta, ClassifMedia) :- findall(X, (encomenda(CodEncomenda,_,_,CodEstafeta,_,_,_,_,_,_), encomenda(CodEncomenda,_,X)), ListaClassificacoes), 
+	length(ListaClassificacoes, NumeroClassif), 
+	foldl(plus, ListaClassificacoes, 0, Total),
+	(NumeroClassif > 0 -> ClassifMedia is Total/NumeroClassif; ClassifMedia is 0),
+	estafeta(CodEstafeta, Estafeta).
+
 
 %------------------------------------- Query 7 ---------------------------------------------%
 
@@ -183,17 +211,33 @@ showQuery6(Classif,Estafeta) :-
  			   2º Passo - Criar uma lista de pares <Transporte, Frequência> (através da calcParOcorr).
   			   3º Passo - Imprimir os pares
 */
-query7(DataInicial,DataFinal,ParesTransporteOcorr) :- findall(X, (encomenda(_,_,_,_,_,_,_,X,_,DataEntrega,_,_), 
+query7(DataInicial,DataFinal) :- findall(X, (encomenda(CodEncomenda,_,_,_,_,_,X,_,_,_), 
+ 										encomenda(CodEnc,_,_),
 										pertenceData(DataInicial, DataFinal, DataEntrega)), ListaTransportes), 
 								calcParOcorr(ListaTransportes, ParesTransporteOcorr), 
 								!, 
-								showQuery7(ParesTransporteOcorr).
-								%write('Insira n. para avançar'),read(_).
+								showQuery7(ParesTransporteOcorr),
+								write('Insira n. para avançar'),read(_).
 
-
+/* 
+ * Nome: showQuery7(Pares)
+ * Descrição: Imprime a informação para o ecrã
+*/
 showQuery7(Pares) :- 
 	nl,
 	printListaPares(Pares).
+							
+/*
+ * Nome: query7(DataInicial,DataFinal,ParesTransporteOcorr)
+ * Descrição: Análoga à query7(DataInicial,DataFinal). A variável extra é útil à GUI.
+*/
+query7(DataInicial,DataFinal,ParesTransporteOcorr) :- findall(X, (encomenda(CodEncomenda,_,_,_,_,_,X,_,_,_), 
+																encomenda(CodEnc,_,_),
+		   														pertenceData(DataInicial, DataFinal, DataEntrega)), 
+															ListaTransportes), 
+   													  calcParOcorr(ListaTransportes, ParesTransporteOcorr), 
+   													  !.
+
 
 %------------------------------------- Query 8 ---------------------------------------------%
 
@@ -206,18 +250,33 @@ showQuery7(Pares) :-
 			   3º Passo - Criar uma lista que crie uma lista semelhante em que os códigos do estafeta passam a ser o seu nome
 			   4º Passo - Imprimir a nova lista de pares
 */
-query8(DataInicial,DataFinal,ParesCodEstafetaOcorr) :- findall(X, (encomenda(_,_,_,X,_,_,_,_,_,DataEntrega,_,_), 
+query8(DataInicial,DataFinal) :- findall(X, (encomenda(CodEnc,_,_,X,_,_,_,_,_,_), 
+ 									encomenda(CodEnc,DataEntrega,_),
 									pertenceData(DataInicial, DataFinal, DataEntrega)), ListaCodEstafetas), 
 								 calcParOcorr(ListaCodEstafetas, ParesCodEstafetaOcorr), 
 								 !, 
 								 encontraNomeEstafetas(ParesCodEstafetaOcorr, ParesNomeEstafetaOcorr),
-								 showQuery8(ParesNomeEstafetaOcorr).
-							 	%write('Insira n. para avançar'),read(_).
+								 showQuery8(ParesNomeEstafetaOcorr),
+							 	 write('Insira n. para avançar'), read(_).
 
-
+/*
+ * Nome: showQuery8(Pares)
+ * Descrição: Imprime o resultado para o ecrã
+*/
 showQuery8(Pares) :- 
 	nl,
 	printListaPares(Pares).	
+
+/*
+ * Nome: query8(DataInicial,DataFinal,ParesNomeEstafetaOcorr)
+ * Descrição: Análoga à query8(DataInicial,DataFinal). A variável extra é útil à GUI.
+*/
+query8(DataInicial,DataFinal,ParesNomeEstafetaOcorr) :- findall(X, (encomenda(CodEnc,_,_,X,_,_,_,_,_,_), 
+								 encomenda(CodEnc,DataEntrega,_),
+								pertenceData(DataInicial, DataFinal, DataEntrega)), ListaCodEstafetas), 
+							 calcParOcorr(ListaCodEstafetas, ParesCodEstafetaOcorr), 
+							 !, 
+							 encontraNomeEstafetas(ParesCodEstafetaOcorr, ParesNomeEstafetaOcorr).					
 
 /*
  * Nome: encontraNomeEstafetas(Lista de pares <Codigo,Frequencia>, Lista de pares <Nome,Frequencia>).
@@ -327,13 +386,13 @@ menu :- repeat,
 		doit(3) :- write('Insira o código do estafeta pretendido: '), read(Cod), query3(Cod,_).
 		doit(4) :- write('Insira a data de entrega pretendida: '), read(Data), query4(Data,_).
 		doit(5) :- write('Insira o número de resultados pretendidos: '), read(Num), query5(Num,_).
-		doit(6) :- write('Insira o código do estafeta pretendido: '), read(Cod), query6(Cod, _).
+		doit(6) :- write('Insira o código do estafeta pretendido: '), read(Cod), query6(Cod,_).
 		doit(7) :- write('Insira a data inicial: '), read(DataInicial), nl, 
 				   write('Insira a data final  : '), read(DataFinal), 
-				   query7(DataInicial, DataFinal, _).
+				   query7(DataInicial, DataFinal,_).
 		doit(8) :- write('Insira a data inicial: '), read(DataInicial), nl, 
 				   write('Insira a data final  : '), read(DataFinal), 
-				   query8(DataInicial,DataFinal, _).
+				   query8(DataInicial,DataFinal,_).
 		doit(9) :- write('Insira a data inicial: '), read(DataInicial), nl, 
 				   write('Insira a data final  : '), read(DataFinal), 
 		           query9(DataInicial,DataFinal).
