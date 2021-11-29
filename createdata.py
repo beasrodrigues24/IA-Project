@@ -112,7 +112,7 @@ def generate_stuff(how_many, option, begin_code, how_many_delivery, how_many_cli
     elif option == 3:
         with open('encomendas.txt', 'w') as file:
             fake = Faker()
-            for x in range(how_many):
+            for x in range(begin_code, how_many + begin_code):
                 index = x
                 cod_client = random.randrange(1, how_many_clients)
                 cod_del = random.randrange(1, how_many_delivery)
