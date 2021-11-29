@@ -38,7 +38,17 @@ def get_random_date(fake):
     end_date = datetime.date(day=31, month=12, year=2021)
     date_to_format = fake.date_between(start_date=start_date, end_date=end_date)
     date = datetime.datetime.strptime(str(date_to_format), '%Y-%m-%d')
-    return date.strftime('%d/%m/%Y')
+    random_hour = random.randint(0,23)
+    return date.strftime('%d/%m/%Y') + "/" + str(random_hour)
+
+def get_random_date_between(fake, start, end, same_day, min_hour):
+    date_to_format = fake.date_between(start_date=start, end_date=end)
+    date = datetime.datetime.strptime(str(date_to_format), '%Y-%m-%d')
+    if same_day:
+        random_hour = random.randint(min_hour,23)
+    else:
+        random_hour = random.randint(0, 23)
+    return date.strftime('%d/%m/%Y') + "/" + str(random_hour)
 
 
 def get_random_name():
@@ -55,6 +65,31 @@ def get_random_city():
 
 def get_random_float(start, end):
     return round(random.uniform(start, end), 2)
+
+def get_in_time():
+    bingo = random.randint(1, 4)
+    return not (bingo == 4)
+
+def was_delivered():
+    bingo = random.randint(1,3)
+    return bingo == 3
+
+def get_date_on_correct_format(date):
+    elems = date.split('/')
+    correct_format = elems[0] + "/" + elems[1] + "/" + elems[2]
+    return correct_format
+
+def get_min_hour(date):
+    elems = date.split('/')
+    return elems[3]
+
+def get_is_same_day(begin_date, end_date):
+    formated_end_date = end_date.strftime('%d/%m/%Y')
+    print(begin_date)
+    print(formated_end_date)
+    is_same_day =  begin_date == formated_end_date
+    print(is_same_day)
+    return begin_date == formated_end_date    
 
 
 def generate_stuff(how_many, option, begin_code, how_many_delivery, how_many_clients):
@@ -89,38 +124,36 @@ def generate_stuff(how_many, option, begin_code, how_many_delivery, how_many_cli
                 classification = random.randint(1, 5)
                 city = get_random_city()
                 volume = get_random_float(1.5, 150.5)
-                status = "entregue"
                 if vehicle == "bicicleta":
                     weight = random.randint(1, 5)
                 elif vehicle == "moto":
                     weight = random.randint(1, 20)
                 elif vehicle == "carro":
                     weight = random.randint(1, 100)
-                tmp_str = "encomenda(" + str(index) + "," + str(max_time) + "," + str(cod_client) + "," + str(cod_del) + "," + str(weight) + "," + str(volume) + "," + status + "," + vehicle + "," + str(price) + "," + date + "," + city + "," + str(classification) + ")."
+                tmp_str = "encomenda(" + str(index) + "," + str(max_time) + "," + str(cod_client) + "," + str(cod_del) + "," + str(weight) + "," + str(volume) +  "," + vehicle + "," + str(price) + "," + date + "," + city + ")."
                 file.write(tmp_str)
-                if index + 1 != how_many:
+                delivered = was_delivered()
+                if delivered:
                     file.write("\n")
-    elif option == 4:
-        with open('encomendas_n_entregues.txt', 'w') as file:
-            for x in range(how_many):
-                index = x
-                cod_client = random.randrange(1, how_many_clients)
-                cod_del = random.randrange(1, how_many_delivery)
-                vehicle = get_random_vehicle()
-                price = get_random_float(2.5, 150.5)
-                weight = 0
-                max_time = random.randint(1, 900)
-                city = get_random_city()
-                volume = get_random_float(1.5, 150.5)
-                status = "emAndamento"
-                if vehicle == "bicicleta":
-                    weight = random.randint(1, 5)
-                elif vehicle == "moto":
-                    weight = random.randint(1, 20)
-                elif vehicle == "carro":
-                    weight = random.randint(1, 100)
-                tmp_str = "encomenda(" + str(index) + "," + str(max_time) + "," + str(cod_client) + "," + str(cod_del) + "," + str(weight) + "," + str(volume) + "," + status + "," + vehicle + "," + str(price) + "," + city + ")."
-                file.write(tmp_str)
+                    in_time = get_in_time()
+                    min_hour = int(get_min_hour(date))
+                    date = get_date_on_correct_format(date)
+                    if in_time:
+                        begin_date = datetime.datetime.strptime(date, '%d/%m/%Y')
+                        time_to_add = random.randint(1, max_time)
+                        time_to_add = datetime.timedelta(hours=time_to_add)
+                        end_date = begin_date + time_to_add
+                        same_day = get_is_same_day(date, end_date)
+                        del_date = get_random_date_between(fake, begin_date, end_date, same_day, min_hour)
+                    else:
+                        begin_date = datetime.datetime.strptime(date, '%d/%m/%Y')
+                        time_to_add = random.randint(max_time + 1, 2000)
+                        time_to_add = datetime.timedelta(hours=time_to_add)
+                        end_date = begin_date + time_to_add
+                        same_day = get_is_same_day(date, end_date)
+                        del_date = get_random_date_between(fake, begin_date, end_date, same_day, min_hour)
+                    str2 = "encomenda(" + str(index) + "," + del_date + "," + str(classification) + ")."
+                    file.write(str2)
                 if index + 1 != how_many:
                     file.write("\n")
     print("Ficheiro Gerado Com Sucesso.")
@@ -131,10 +164,9 @@ if __name__ == '__main__':
         print("1. Gerar Estafetas")
         print("2. Gerar Clientes")
         print("3. Gerar Encomendas Entregues")
-        print("4. Gerar Encomendas Não Entregues")
         print("0. Sair")
         option = int(input())
-        if option != 1 and option != 2 and option != 3 and option != 4 and option != 0:
+        if option != 1 and option != 2 and option != 3 and option != 0:
             print("Opção Desconhecida. Insere novamente:")
         elif option != 0:
             print("Quantos?")
@@ -143,7 +175,7 @@ if __name__ == '__main__':
                 print("Código Inicial?")
                 begin_code = int(input())
                 generate_stuff(how_many, option, begin_code, 0, 0)
-            elif option == 3 or option == 4:
+            elif option == 3:
                 print("Código Inicial?")
                 begin_code = int(input())
                 print("Quantos clientes existem?")
