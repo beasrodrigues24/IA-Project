@@ -211,8 +211,8 @@ query6(CodEstafeta, ClassifMedia) :- findall(X, (encomenda(CodEncomenda,_,_,CodE
  			   2º Passo - Criar uma lista de pares <Transporte, Frequência> (através da calcParOcorr).
   			   3º Passo - Imprimir os pares
 */
-query7(DataInicial,DataFinal) :- findall(X, (encomenda(CodEncomenda,_,_,_,_,_,X,_,_,_), 
- 										encomenda(CodEnc,_,_),
+query7(DataInicial,DataFinal) :- findall(X, (encomenda(CodEnc,_,_,_,_,_,X,_,_,_), 
+ 										encomenda(CodEnc,DataEntrega,_),
 										pertenceData(DataInicial, DataFinal, DataEntrega)), ListaTransportes), 
 								calcParOcorr(ListaTransportes, ParesTransporteOcorr), 
 								!, 
@@ -385,14 +385,14 @@ menu :- repeat,
 		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod,_).
 		doit(3) :- write('Insira o código do estafeta pretendido: '), read(Cod), query3(Cod,_).
 		doit(4) :- write('Insira a data de entrega pretendida: '), read(Data), query4(Data,_).
-		doit(5) :- write('Insira o número de resultados pretendidos: '), read(Num), query5(Num,_).
-		doit(6) :- write('Insira o código do estafeta pretendido: '), read(Cod), query6(Cod,_).
+		doit(5) :- write('Insira o número de resultados pretendidos: '), read(Num), query5(Num).
+		doit(6) :- write('Insira o código do estafeta pretendido: '), read(Cod), query6(Cod).
 		doit(7) :- write('Insira a data inicial: '), read(DataInicial), nl, 
 				   write('Insira a data final  : '), read(DataFinal), 
-				   query7(DataInicial, DataFinal,_).
+				   query7(DataInicial, DataFinal).
 		doit(8) :- write('Insira a data inicial: '), read(DataInicial), nl, 
 				   write('Insira a data final  : '), read(DataFinal), 
-				   query8(DataInicial,DataFinal,_).
+				   query8(DataInicial,DataFinal).
 		doit(9) :- write('Insira a data inicial: '), read(DataInicial), nl, 
 				   write('Insira a data final  : '), read(DataFinal), 
 		           query9(DataInicial,DataFinal).
