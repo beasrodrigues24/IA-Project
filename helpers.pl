@@ -28,7 +28,7 @@ pertenceData(DataInicial, DataFinal, Data) :- dataDiff(Data, DataInicial, N1),
                                               N2 =< 0.
 
 dataDiff(Data1,Data2, N) :- dataStamp(Data1, Stamp1),
-                            dataStamp(Data2, Stamp2)
+                            dataStamp(Data2, Stamp2),
                             N is Stamp1 - Stamp2.
 
 dataStamp(DD/MM/YY/HH, Stamp) :- date_time_stamp(date(YY,MM,DD,HH,0,0,0,-,-), Stamp).
