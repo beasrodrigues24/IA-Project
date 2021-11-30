@@ -353,9 +353,13 @@ query12(Estafetas) :- findall(X/Y,estafeta(X,Y),Estafetas).
 
 carregaFicheiro(Name) :- open(Name,read,Str),
 					 leFicheiro(Str,Data),
-					 maplist(auxCarrega, Data).
+					 aplicaEvolucao(Data).
 
-auxCarrega(X) :- evolucao(X), asserta(X).						   
+aplicaEvolucao([]).
+aplicaEvolucao([H|T]) :- evolucao(H),aplicaEvolucao(T).
+aplicaEvolucao([H|T]) :- aplicaEvolucao(T).
+
+auxCarrega(X) :- evolucao(X).						   
 
 leFicheiro(Stream,[]) :-
 	at_end_of_stream(Stream).
@@ -383,11 +387,10 @@ menu :- repeat,
 		write('| 11.  Imprimir os clientes.																											 |'),nl,
 		write('| 12.  Imprimir os estafetas.																										 |'),nl,
 		write('| 13.  Inserir conhecimento.																											 |'),nl,
-		write('| 14.  Carregar ficheiro.																											 |'),nl,
 		write('|                                                                                                                                     |'),nl,
 		write('|-------------------------------------------------------------------------------------------------------------------------------------|'),nl,nl,
 		write('Insira a Query pretendida: '), nl,
-		read(Choice), Choice > 0, Choice =< 14,
+		read(Choice), Choice > 0, Choice =< 33,
 		doit(Choice), Choice = 0, !.
 		doit(1) :- query1(_).
 		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod,_).
@@ -408,4 +411,3 @@ menu :- repeat,
 		doit(11) :- query11(Clientes), write(Clientes).
 		doit(12) :- query12(Estafetas), write(Estafetas).
 		doit(13) :- write('Insira o termo: '), read(Termo), evolucao(Termo), asserta(Termo).
-		doit(14) :- write('Insira o nome do ficheiro: '), read(Data), term_to_atom(Data, Name), carregaFicheiro(Name).
