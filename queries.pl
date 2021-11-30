@@ -9,6 +9,8 @@ Descrição: identifica o estafeta que utilizou mais vezes um meio de transporte
 Ex: consideramos, atualmente em nossa base de conhecimento, a bicicleta sendo o transporte mais ecológico. Assim, o resultado desta query será a identificação do estafeta que mais vezes realizou entregas usando bicicleta. 
 */ 
 
+query1() :- query1(Estafetas),showQuery1(Estafetas),write('Insira n. para avançar'),read(_).
+
 query1(Estafetas) :- 
 	findall(CodEstafeta,(
 			encomenda(X,_,_),
@@ -19,12 +21,11 @@ query1(Estafetas) :-
 	calcParOcorr(ListEstafetas,[H|T]),
 	maxOcor(T,H,Max),
 	getEstafetasMax([H|T],Max,EstafetasCod),
-	getEstafetasNome(EstafetasCod,Estafetas),
-	showQuery1(Estafetas). 
-	%write('Insira n. para avançar'), read(_).
+	getEstafetasNome(EstafetasCod,Estafetas).
 
-showQuery1([]).
+showQuery1([]) :- write('\n').
 showQuery1([EstafetaCod/EstafetaNome|T]) :-
+	write('\n'),
 	write('Nome: '),write(EstafetaNome),
 	write('\n'),
 	write('Código: '),write(EstafetaCod),
@@ -43,22 +44,19 @@ getEstafetasNome([EstafetaCod|T],[EstafetaCod/EstafetaNome|T2]) :- estafeta(Esta
 Nome: query2(Código de cliente)
 Descrição: Identifica  que  estafetas  entregaram encomenda(s) a  um determinado cliente; 
 */
+
+query2(CodCliente) :- query2(CodCliente,Estafetas),showQuery2(Estafetas),write('Insira n. para avançar'),read(_).
+
 query2(CodCliente,Estafetas) :- findall(CodEstafeta,(
 			encomenda(X,_,_),
 			encomenda(X,_,CodCliente,CodEstafeta,_,_,_,_,_,_)
 		),ListEstafetas),
 	!,
 	removeRepetidos(ListEstafetas,EstafetasCod),
-	getEstafetasNome(EstafetasCod,Estafetas),
-	showQuery2(EstafetasCod).
-	%    write('Insira n. para avançar'),read(_).
-
+	getEstafetasNome(EstafetasCod,Estafetas).
 	
-showQuery2([]).
-showQuery2([CodEstafeta|T]) :-
-				write('Estafeta: '),
-				estafeta(CodEstafeta,Nome),
-				write(Nome),
+showQuery2([]) :- write('\n').
+showQuery2([CodEstafeta/NomeEstafeta|T]) :-  write('Estafeta: '),write(NomeEstafeta),
 				write(' - Código:'),
 				write(CodEstafeta),
 				write('\n'),
@@ -69,26 +67,23 @@ showQuery2([CodEstafeta|T]) :-
 Nome: query2(Código de estafeta)
 Descrição: Identifica que clientes foram servidos por um determinado estafeta
 */
+
+query3(CodEstafeta) :- query3(CodEstafeta,Clientes),showQuery3(Clientes),write('Insira n. para avançar'), read(_).
+
 query3(CodEstafeta,Clientes) :-	findall(CodCliente,(
 			encomenda(X,_,_),
 			encomenda(X,_,CodCliente,CodEstafeta,_,_,_,_,_,_)
 		),ListClientes),
 	!,
 	removeRepetidos(ListClientes,ListSemRepetidos),
-	getClientesNome(ListSemRepetidos,Clientes),
-	!,
-	showQuery3(ListSemRepetidos).
-	% write('Insira n. para avançar'), read(_).
-		
+	getClientesNome(ListSemRepetidos,Clientes).	
 
 getClientesNome([],[]).
 getClientesNome([ClienteCod|T],[ClienteCod/ClienteNome|T2]) :- cliente(ClienteCod,ClienteNome), getClientesNome(T,T2).
 	
 showQuery3([]).
-showQuery3([CodCliente|T]) :- 
-				write('Cliente: '),
-				cliente(CodCliente,Nome),
-				write(Nome),
+showQuery3([CodCliente/NomeCliente|T]) :-   write('Cliente: '),
+				write(NomeCliente),
 				write(' - Código:'),
 				write(CodCliente),
 				write('\n'),
@@ -396,9 +391,9 @@ menu :- repeat,
 		write('Insira a Query pretendida: '), nl,
 		read(Choice), Choice > 0, Choice =< 33,
 		doit(Choice), Choice = 0, !.
-		doit(1) :- query1(_).
-		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod,_).
-		doit(3) :- write('Insira o código do estafeta pretendido: '), read(Cod), query3(Cod,_).
+		doit(1) :- query1().
+		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod).
+		doit(3) :- write('Insira o código do estafeta pretendido: '), read(Cod), query3(Cod).
 		doit(4) :- write('Insira a data de entrega pretendida: '), read(Data), query4(Data,_).
 		doit(5) :- write('Insira o número de resultados pretendidos: '), read(Num), query5(Num).
 		doit(6) :- write('Insira o código do estafeta pretendido: '), read(Cod), query6(Cod).
