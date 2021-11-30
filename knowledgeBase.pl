@@ -103,7 +103,7 @@ cliente(6,batman).
 
 %- penalizado(CodEstafeta,DataInicio,DataFim)
 
-penalizado(2,10/10/1980,10/10/2030).
+penalizado(2,10/10/1980/0,10/10/2030/0).
 
 :- dynamic(penalizado/3).
 
@@ -130,7 +130,7 @@ transporte(carro,100,25).
 :- op(900,xfy,'::').
 
 /*
-	Não permite a inserção de clientes com o mesmo código
+ * Não permite a inserção de clientes com o mesmo código
 */
 +cliente(Cod,_) :: (findall(Nome,cliente(Cod,Nome),R),
 			length(R,N),
@@ -138,7 +138,7 @@ transporte(carro,100,25).
 			).
 
 /*
-	Não permite a inserção de estafetas com o mesmo código
+ * Não permite a inserção de estafetas com o mesmo código
 */
 +estafeta(Cod,_) :: (findall(Nome,estafeta(Cod,Nome),R),
 			length(R,N),
@@ -146,30 +146,29 @@ transporte(carro,100,25).
 			).
 
 /*
-	Não permite a inserção de encomendas com o mesmo código
+ * Não permite a inserção de encomendas com o mesmo código
 */
 
-+encomenda(Cod,_,_,_,_,_,_,_,_,_,_,_) :: (
-	findall(Cod,encomenda(Cod,_,_,_,_,_,_,_,_,_,_,_),R),
++encomenda(Cod,_,_,_,_,_,_,_,_,_) :: (
+	findall(Cod,encomenda(Cod,_,_,_,_,_,_,_,_,_),R),
 	length(R,N),
 	N == 1
 	).
 
 
 /*
-	Não permite a inserção de encomendas a estafetas que não estão registados
+ * Não permite a inserção de encomendas a estafetas que não estão registados
 */
 
-+encomenda(_,_,_,CodEstafeta,_,_,_,_,_,_,_,_) :: (
++encomenda(_,_,_,CodEstafeta,_,_,_,_,_,_) :: (
 	estafeta(CodEstafeta,_)
 	).
 
 /*
-
-	Não permite a atribuição de encomendas a estafetas penalizados
+ * Não permite a atribuição de encomendas a estafetas penalizados
 */
 
-+encomenda(_,_,_,CodEstafeta,_,_,_,_,_,DataEnc,_,_) :: (
++encomenda(_,_,_,CodEstafeta,_,_,_,_,DataEnc,_) :: (
 	findall(DataInicio/DataFim,penalizado(CodEstafeta,DataInicio,DataFim),R),
 	compareDatas(R,DataEnc)
 	).
@@ -178,23 +177,29 @@ compareDatas([],_).
 compareDatas([Di/Df|T],De) :- not(pertenceData(Di,Df,De)), compareDatas(T,De). 
 
 /*
-	Não permite a inserção de encomendas associadas a transportes inexistentes ou que não a possam levar por conta do peso
+ * Não permite a inserção de encomendas associadas a transportes inexistentes ou que não a possam levar por conta do peso
 */
 
-+encomenda(_,_,_,_,Peso,_,_,Transporte,_,_,_,_) :: (
++encomenda(_,_,_,_,Peso,_,Transporte,_,_,_) :: (
 	transporte(Transporte,PesoMax,_),
 	Peso =< PesoMax
 	).
+
 /*
-	Não permite a criação de penalizações para Estafeta com código inexistente
+ * Não permite a inserção de encomendas registadas como entregues sem terem sido inicialmente registadas como criadas
+*/
+
++encomenda(Cod,_,_) :: encomenda(Cod,_,_,_,_,_,_,_,_,_).
+
+ /*
+ * Não permite a criação de penalizações para Estafeta com código inexistente
 */
 +penalizado(CodEstafeta,_,_) :: (
 	estafeta(CodEstafeta,_)
 	).
 
 /*
-
-	Não permite a criação de penalizações com intervalos de tempo negativos
+ * Não permite a criação de penalizações com intervalos de tempo negativos
 */
 
 +penalizado(_,DataInicio,DataFim) :: (
@@ -202,7 +207,7 @@ compareDatas([Di/Df|T],De) :- not(pertenceData(Di,Df,De)), compareDatas(T,De).
 	N < 0
 	).
 /*
-	Garante a evolução fidedigna de conhecimento
+ * Garante a evolução fidedigna de conhecimento
 */
 
 evolucao(Termo) :- findall(Invariante,+Termo::Invariante,Lista),insercao(Termo),teste(Lista).
