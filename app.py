@@ -4,6 +4,7 @@ from pyswip import Prolog
 from tkinter import ttk
 from pyswip import Variable,Query
 from tkinter import messagebox
+from tkinter import filedialog
 
 prolog = Prolog()
 prolog.consult("queries.pl")
@@ -74,7 +75,7 @@ def query2Aux():
     textString.set("Estafetas que serviram o Cliente: " + cod)
     text = Label(frame,textvariable=textString)
     text.pack()
-    table = ttk.Treeview(frame)
+    table = ttk.Treeview(frame,height=30)
     table['columns'] = ('Código','Estafeta')
 
     table.column("#0",width=0,stretch=NO)
@@ -113,7 +114,7 @@ def query3Aux():
     textString.set("Clientes servidos pelo estafeta: " + cod)
     text = Label(frame,textvariable=textString)
     text.pack()
-    table = ttk.Treeview(frame)
+    table = ttk.Treeview(frame,height=30)
     table['columns'] = ('Código','Cliente')
 
     table.column("#0",width=0,stretch=NO)
@@ -304,7 +305,7 @@ def query8Aux():
     text = Label(frame ,text = "Entregas por estafeta entre " + di + " e " + df)
     text.pack()
 
-    table = ttk.Treeview(frame)
+    table = ttk.Treeview(frame,height=30)
     table['columns'] = ('Código Estafeta','Quantidade')
 
     table.column("#0",width=0,stretch=NO)
@@ -404,7 +405,7 @@ def query11():
     textString.set("Clientes Registados")
     text = Label(frame,textvariable=textString)
     text.pack()
-    table = ttk.Treeview(frame)
+    table = ttk.Treeview(frame,height=30)
     table['columns'] = ('Código','Cliente')
 
     table.column("#0",width=0,stretch=NO)
@@ -432,8 +433,9 @@ def query12():
     textString.set("Estafetas Registados")
     text = Label(frame,textvariable=textString)
     text.pack()
-    table = ttk.Treeview(frame)
+    table = ttk.Treeview(frame,height=30)
     table['columns'] = ('Código','Estafeta')
+    
 
     table.column("#0",width=0,stretch=NO)
     table.column("Código",width=400,anchor=CENTER)
@@ -641,9 +643,15 @@ def insertPenalizacaoEntregueAux():
         messagebox.showinfo("Sucesso","Inserção realizada")
     if res == False:
         messagebox.showwarning("Erro", "Invariante não verificado")
- 
+
 def consult():
-    print("TODO")
+    filename = filedialog.askopenfilename()
+    with open(filename, "r") as ins:
+        for line in ins:
+            lineWithoutPoint = line.split('.')
+            res = bool(list(prolog.query("evolucao("+lineWithoutPoint[0]+")")))
+            if res == True:
+                prolog.assertz(lineWithoutPoint[0])
 
 
 # ----------------------------------------------------------------------- DONE
@@ -655,7 +663,7 @@ def query1():
     textString.set("Estafetas que mais usaram o transporte mais ecológico")
     text = Label(frame,textvariable=textString)
     text.pack()
-    table = ttk.Treeview(frame)
+    table = ttk.Treeview(frame,height=30)
     table['columns'] = ('Código','Estafeta')
 
     table.column("#0",width=0,stretch=NO)

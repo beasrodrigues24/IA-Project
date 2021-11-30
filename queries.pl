@@ -351,6 +351,10 @@ query12(Estafetas) :- findall(X/Y,estafeta(X,Y),Estafetas).
 
 %-------------------------------  Leitura de ficheiros  ---------------------%
 
+
+carregaFicheiro(Name,Data) :- open(Name,read,Str),
+					 leFicheiro(Str,Data).
+
 carregaFicheiro(Name) :- open(Name,read,Str),
 					 leFicheiro(Str,Data),
 					 aplicaEvolucao(Data).
