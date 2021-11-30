@@ -32,9 +32,9 @@ estado(criada).
 %-	Peso,
 %-	Volume,
 %-	Transporte,
-%- PrecoBase,
-%- DataCriação,
-%- ZonaEntrega
+%- 	PrecoBase,
+%- 	DataCriação,
+%- 	ZonaEntrega
 %).
 
 :- dynamic(encomenda/10).

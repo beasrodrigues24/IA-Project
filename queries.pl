@@ -7,20 +7,16 @@
 Nome: query1().
 Descrição: identifica o estafeta que utilizou mais vezes um meio de transporte mais ecológico. Caso existir um novo meio de transporte mais ecológico do que a bicicleta, basta alterar o facto "tMaisEscologico".
 Ex: consideramos, atualmente em nossa base de conhecimento, a bicicleta sendo o transporte mais ecológico. Assim, o resultado desta query será a identificação do estafeta que mais vezes realizou entregas usando bicicleta. 
-
-Raciocínio: 
-	1º Passo: identificar todos os estafetas que possuem encomendas com estado de "entregue" e que utilizaram bicicleta como meio de transporte. Este passo é feito através do "findall", sendo que a condição "encomenda(_,_,X,_,_,entregue,Transporte),tMaisEcologico(Transporte)" permite traduzir o que foi descrito anteriormente. Após este passo, temos uma lista com os códigos dos estafetas que satisfazem o que foi dito. Detalhe: essa lista terá códigos repetidos, isto é, caso o estafeta com código 2 tenha entregue 3 encomendas de bicicleta, o seu código vai aparecer 3 vezes nessa lista. Logo o próximo passo será justamente calcular quantas encomendas fez cada estafeta.
-	2º Passo: criar uma lista em que cada elemento consiste no par (estafeta,número de entregas feitas com o transporte mais ecológico). Este passo é feito pela regra "calcParOcorr". A explicação dessa regra encontra-se nela.
-	3º Passo: filtrar o estafeta que fez mais entregas a partir da lista que foi anteriormente obtida. Repare que nomeamos [H|T] nessa situação, para facilitar a invocação da regra "maxElem", apenas por isso. Isso porque, o 2º parâmetro dessa regra é o parâmetro temporário corresponde ao "estafeta que fez mais entregas". Dando a cabeça da lista a ele na primeira invocação, estamos de certa forma a inicar o processo apenas. O estafeta que tiver feito mais entregas será colocado na variável "Estafeta".
-	Detalhe: Se existir mais que um estafeta no topo do ranking de entregas, essa regra ainda não lida com isso, devolvendo apenas um deles. Porém para corrigir isso basta a regra "maxElem" devolver o número máximo de entregas e depois filtrar da Lista obtida em "calcParOcorr" OS os estafetas que tiverem efetuado esse número de entregas. 
 */ 
 
-query1(Estafetas) :- findall(X,(
-	encomenda(_,_,_,X,_,_,entregue,Transporte,_,_,_,_),
-	tMaisEcologico(Transporte)
-	),ListEstafetas),
-	calcParOcorr(ListEstafetas,[H|T]),
+query1(Estafetas) :- 
+	findall(CodEstafeta,(
+			encomenda(X,_,_),
+			encomenda(X,_,_,CodEstafeta,_,_,Transporte,_,_,_),
+			tMaisEcologico(Transporte)
+		),ListEstafetas),
 	!,
+	calcParOcorr(ListEstafetas,[H|T]),
 	maxOcor(T,H,Max),
 	getEstafetasMax([H|T],Max,EstafetasCod),
 	getEstafetasNome(EstafetasCod,Estafetas),
@@ -34,7 +30,10 @@ showQuery1([EstafetaCod/EstafetaNome|T]) :-
 	write('Código: '),write(EstafetaCod),
 	showQuery1(T).
 
-	
+/* 
+ * Nome: getEstafetasNome(Lista de Códigos de Estafetas, Lista de Pares <CodEstafeta,NomeEstafeta>)
+ * Descrição: Recebe uma lista Códigos de Estefetas e preenche a segunda lista com o Código + nome do Estafeta.
+*/
 getEstafetasNome([],[]).
 getEstafetasNome([EstafetaCod|T],[EstafetaCod/EstafetaNome|T2]) :- estafeta(EstafetaCod,EstafetaNome), getEstafetasNome(T,T2).
 
@@ -44,10 +43,13 @@ getEstafetasNome([EstafetaCod|T],[EstafetaCod/EstafetaNome|T2]) :- estafeta(Esta
 Nome: query2(Código de cliente)
 Descrição: Identifica  que  estafetas  entregaram encomenda(s) a  um determinado cliente; 
 */
-query2(CodCliente,Estafetas) :- findall(X,encomenda(_,_,CodCliente,X,_,_,_,_,_,_,_,_),ListEstafetas),
+query2(CodCliente,Estafetas) :- findall(CodEstafeta,(
+			encomenda(X,_,_),
+			encomenda(X,_,CodCliente,CodEstafeta,_,_,_,_,_,_)
+		),ListEstafetas),
+	!,
 	removeRepetidos(ListEstafetas,EstafetasCod),
 	getEstafetasNome(EstafetasCod,Estafetas),
-	!,
 	showQuery2(EstafetasCod).
 	%    write('Insira n. para avançar'),read(_).
 
@@ -67,7 +69,11 @@ showQuery2([CodEstafeta|T]) :-
 Nome: query2(Código de estafeta)
 Descrição: Identifica que clientes foram servidos por um determinado estafeta
 */
-query3(CodEstafeta,Clientes) :-	findall(X,encomenda(_,_,X,CodEstafeta,_,_,_,_,_,_,_,_),ListClientes),
+query3(CodEstafeta,Clientes) :-	findall(CodCliente,(
+			encomenda(X,_,_),
+			encomenda(X,_,CodCliente,CodEstafeta,_,_,_,_,_,_)
+		),ListClientes),
+	!,
 	removeRepetidos(ListClientes,ListSemRepetidos),
 	getClientesNome(ListSemRepetidos,Clientes),
 	!,

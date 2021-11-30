@@ -163,3 +163,4 @@ printListaPares([Nome/Freq|T]) :-
 	printListaPares(T).	
 
 clear() :- nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl.
+
