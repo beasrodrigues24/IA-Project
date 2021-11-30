@@ -160,7 +160,7 @@ transporte(carro,100,25).
 	Não permite a inserção de encomendas a estafetas que não estão registados
 */
 
-+encomenda(Cod,_,_,CodEstafeta,_,_,_,_,_,_,_,_) :: (
++encomenda(_,_,_,CodEstafeta,_,_,_,_,_,_,_,_) :: (
 	estafeta(CodEstafeta,_)
 	).
 
@@ -169,7 +169,7 @@ transporte(carro,100,25).
 	Não permite a atribuição de encomendas a estafetas penalizados
 */
 
-+encomenda(Cod,_,_,CodEstafeta,_,_,_,_,_,DataEnc,_,_) :: (
++encomenda(_,_,_,CodEstafeta,_,_,_,_,_,DataEnc,_,_) :: (
 	findall(DataInicio/DataFim,penalizado(CodEstafeta,DataInicio,DataFim),R),
 	compareDatas(R,DataEnc)
 	).
@@ -181,14 +181,14 @@ compareDatas([Di/Df|T],De) :- not(pertenceData(Di,Df,De)), compareDatas(T,De).
 	Não permite a inserção de encomendas associadas a transportes inexistentes ou que não a possam levar por conta do peso
 */
 
-+encomenda(Cod,_,_,_,Peso,_,_,Transporte,_,_,_,_) :: (
++encomenda(_,_,_,_,Peso,_,_,Transporte,_,_,_,_) :: (
 	transporte(Transporte,PesoMax,_),
 	Peso =< PesoMax
 	).
 /*
 	Não permite a criação de penalizações para Estafeta com código inexistente
 */
-+penalizado(CodEstafeta,DataInicio,DataFim) :: (
++penalizado(CodEstafeta,_,_) :: (
 	estafeta(CodEstafeta,_)
 	).
 
@@ -197,7 +197,7 @@ compareDatas([Di/Df|T],De) :- not(pertenceData(Di,Df,De)), compareDatas(T,De).
 	Não permite a criação de penalizações com intervalos de tempo negativos
 */
 
-+penalizado(CodEstafeta,DataInicio,DataFim) :: (
++penalizado(_,DataInicio,DataFim) :: (
 	dataDiff(DataInicio,DataFim,N),
 	N < 0
 	).

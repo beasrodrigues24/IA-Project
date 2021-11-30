@@ -80,13 +80,13 @@ maxElem([_/N|T],ZonaMaior/N2,Res) :- N =< N2, maxElem(T, ZonaMaior/N2, Res).
 /*
 */
 
-maxOcor([],Zona/Max,Max).
+maxOcor([],_/Max,Max).
 maxOcor([Zona/N|T],_/N2,Max) :- N > N2, maxOcor(T, Zona/N, Max).
 maxOcor([_/N|T],ZonaMaior/N2,Max) :- N =< N2, maxOcor(T, ZonaMaior/N2, Max).
 
 getEstafetasMax([],_,[]).
 getEstafetasMax([CodEstafeta/N|T1],Max,[CodEstafeta|T2]) :- N == Max, getEstafetasMax(T1,Max,T2). 
-getEstafetasMax([CodEstafeta/N|T1],Max,Res) :- N =\= Max, getEstafetasMax(T1,Max,Res). 
+getEstafetasMax([_/N|T1],Max,Res) :- N =\= Max, getEstafetasMax(T1,Max,Res). 
 
 /*
 Nome: calcParOcorr(Lista A <Lista de elementos>, Lista de pares <Elementos, nº de ocorrências associadas>)
