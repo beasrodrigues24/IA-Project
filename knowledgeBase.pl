@@ -165,6 +165,14 @@ transporte(carro,100,25).
 	).
 
 /*
+ * Não permite a inserção de encomendas a clientes que não estão registados
+*/
+
++encomenda(_,_,CodCliente,_,_,_,_,_,_,_) :: (
+	cliente(CodCliente,_)
+	).
+
+/*
  * Não permite a atribuição de encomendas a estafetas penalizados
 */
 
@@ -190,6 +198,17 @@ compareDatas([Di/Df|T],De) :- not(pertenceData(Di,Df,De)), compareDatas(T,De).
 */
 
 +encomenda(Cod,_,_) :: encomenda(Cod,_,_,_,_,_,_,_,_,_).
+
+
+/*
+ * Não permite a inserção de uma encomenda entregue 2x
+ */
+
++encomenda(Cod,_,_) :: (
+	findall(Cod,encomenda(Cod,_,_),R),
+	length(R,N),
+	N == 1
+	).
 
  /*
  * Não permite a criação de penalizações para Estafeta com código inexistente

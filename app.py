@@ -39,7 +39,6 @@ volume = StringVar()
 transporte = StringVar()
 codEncomenda = StringVar()
 zonaEntrega = StringVar()
-estado = StringVar()
 tempMax = StringVar()
 precoBase = StringVar()
 classif = StringVar()
@@ -530,23 +529,17 @@ def insertEncomenda():
     text6 = Label(frame ,text = "Volume")
     textInsert6 = Entry(frame,textvariable=volume)
     
-    text7 = Label(frame ,text = "Estado")
-    textInsert7 = Entry(frame,textvariable=estado)
+    text7 = Label(frame ,text = "Transporte")
+    textInsert7 = Entry(frame,textvariable=transporte)
     
-    text8 = Label(frame ,text = "Transporte")
-    textInsert8 = Entry(frame,textvariable=transporte)
+    text8 = Label(frame ,text = "Preço base")
+    textInsert8 = Entry(frame,textvariable=precoBase)
     
-    text9 = Label(frame ,text = "Preço base")
-    textInsert9 = Entry(frame,textvariable=precoBase)
+    text9 = Label(frame ,text = "Data")
+    textInsert9 = Entry(frame,textvariable=dataInicial)
     
-    text10 = Label(frame ,text = "Data")
-    textInsert10 = Entry(frame,textvariable=dataInicial)
-    
-    text11 = Label(frame ,text = "Zona de entrega")
-    textInsert11 = Entry(frame,textvariable=zonaEntrega)
-    
-    text12 = Label(frame ,text = "Classificação")
-    textInsert12 = Entry(frame,textvariable=classif)
+    text10 = Label(frame ,text = "Zona de entrega")
+    textInsert10 = Entry(frame,textvariable=zonaEntrega)
     
     btn = ttk.Button(frame,text="Adicionar",command=insertEncomendaAux)
     
@@ -570,25 +563,85 @@ def insertEncomenda():
     textInsert9.pack()
     text10.pack()
     textInsert10.pack()
-    text11.pack()
-    textInsert11.pack()
-    text12.pack()
-    textInsert12.pack()
     btn.pack()
 
 def insertEncomendaAux():
 
-    res = bool(list(prolog.query("evolucao(encomenda("+codEncomenda.get()+","+tempMax.get()+","+codClient.get()+","+codEstafeta.get()+","+peso.get()+","+volume.get()+","+estado.get()+","+transporte.get()+","+precoBase.get()+","+dataInicial.get()+","+zonaEntrega.get()+","+classif.get()+"))")))
+    res = bool(list(prolog.query("evolucao(encomenda("+codEncomenda.get()+","+tempMax.get()+","+codClient.get()+","+codEstafeta.get()+","+peso.get()+","+volume.get()+","+transporte.get()+","+precoBase.get()+","+dataInicial.get()+","+zonaEntrega.get()+"))")))
     
     if res == True:
-        prolog.assertz("encomenda("+codEncomenda.get()+","+tempMax.get()+","+codClient.get()+","+codEstafeta.get()+","+peso.get()+","+volume.get()+","+estado.get()+","+transporte.get()+","+precoBase.get()+","+dataInicial.get()+","+zonaEntrega.get()+","+classif.get()+")")
+        prolog.assertz("encomenda("+codEncomenda.get()+","+tempMax.get()+","+codClient.get()+","+codEstafeta.get()+","+peso.get()+","+volume.get()+","+transporte.get()+","+precoBase.get()+","+dataInicial.get()+","+zonaEntrega.get()+")")
         messagebox.showinfo("Sucesso","Inserção realizada")
     if res == False:
         messagebox.showwarning("Erro", "Invariante não verificado")
 
-def insertPenalizacao():
-    print("TODO")
+# ---------------------------------------------------------------- DONE
+def insertEncomendaEntregue():
+    clearFrame()
+    
+    text = Label(frame ,text = "Código encomenda")
+    textInsert = Entry(frame,textvariable=codEncomenda)
+    
+    text2 = Label(frame ,text = "Data de entrega")
+    textInsert2 = Entry(frame,textvariable=dataFinal)
+    
+    text3 = Label(frame ,text = "Classificação")
+    textInsert3 = Entry(frame,textvariable=classif)
+     
+    btn = ttk.Button(frame,text="Adicionar",command=insertEncomendaEntregueAux)
+    
+    text.pack()
+    textInsert.pack()
+    text2.pack()
+    textInsert2.pack()
+    text3.pack()
+    textInsert3.pack()
+    btn.pack()
 
+def insertEncomendaEntregueAux():
+
+    res = bool(list(prolog.query("evolucao(encomenda("+codEncomenda.get()+","+dataFinal.get()+","+classif.get()+"))")))
+    
+    if res == True:
+        prolog.assertz("encomenda("+codEncomenda.get()+","+dataInicial.get()+","+classif.get()+")")
+        messagebox.showinfo("Sucesso","Inserção realizada")
+    if res == False:
+        messagebox.showwarning("Erro", "Invariante não verificado")
+
+# ----------------------------------------------------------------------- DONE
+
+def insertPenalizacao():
+    clearFrame()
+    
+    text = Label(frame ,text = "Código Estafeta")
+    textInsert = Entry(frame,textvariable=codEstafeta)
+    
+    text2 = Label(frame ,text = "Data de inicio")
+    textInsert2 = Entry(frame,textvariable=dataInicial)
+    
+    text3 = Label(frame ,text = "Data de fim")
+    textInsert3 = Entry(frame,textvariable=dataFinal)
+     
+    btn = ttk.Button(frame,text="Adicionar",command=insertPenalizacaoEntregueAux)
+    
+    text.pack()
+    textInsert.pack()
+    text2.pack()
+    textInsert2.pack()
+    text3.pack()
+    textInsert3.pack()
+    btn.pack()
+
+def insertPenalizacaoEntregueAux():
+
+    res = bool(list(prolog.query("evolucao(penalizado("+codEstafeta.get()+","+dataInicial.get()+","+dataFinal.get()+"))")))
+    
+    if res == True:
+        prolog.assertz("penalizado("+codEstafeta.get()+","+dataInicial.get()+","+dataFinal.get()+")")
+        messagebox.showinfo("Sucesso","Inserção realizada")
+    if res == False:
+        messagebox.showwarning("Erro", "Invariante não verificado")
+ 
 def consult():
     print("TODO")
 
@@ -644,7 +697,8 @@ menuQueries.add_command(label="Estafetas (EXTRA)",command=query12)
 menuFiles.add_command(label="Carregar ficheiro",command=consult)
 
 menuInsert.add_command(label="Cliente (EXTRA)",command=insertCliente)
-menuInsert.add_command(label="Encomenda (EXTRA) ",command=insertEncomenda)
+menuInsert.add_command(label="Registar nova encomenda (EXTRA) ",command=insertEncomenda)
+menuInsert.add_command(label="Registar encomenda como entregue (EXTRA) ",command=insertEncomendaEntregue)
 menuInsert.add_command(label="Estafeta (EXTRA) ",command=insertEstafeta)
 menuInsert.add_command(label="Penalização (EXTRA) ",command=insertPenalizacao)
 
