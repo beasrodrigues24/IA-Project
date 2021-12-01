@@ -1,6 +1,5 @@
 :- module(knowledgeBase, [
 		tMaisEcologico/1,
-		estado/1,
 		encomenda/10,
 		encomenda/3,
 		estafeta/2,
@@ -12,17 +11,13 @@
 
 :- use_module(helpers).
 
+:- discontiguous knowledgeBase: :: / 2.
+
 /* 
 A explicação desse facto "tMaisEcologico" será útil para flexibilidade na primeira query (explicação adiante)
 */
 tMaisEcologico(bicicleta).
 
-/*
-	Possíveis estados da encomenda
-*/
-
-estado(entregue).
-estado(criada).
 
 %-encomenda(
 %	codEncomenda,

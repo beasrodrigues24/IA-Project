@@ -1,6 +1,8 @@
 :- use_module(helpers).
 :- use_module(knowledgeBase).
 
+:-set_prolog_flag(discontiguous_warnings,off).
+
 %------------------------------ Query 1 -------------------------------------%
 
 /*
@@ -108,9 +110,8 @@ query4(D/M/Y/_,Preco) :-
 
 query4(Data) :-
     query4(Data, Preco),
-    showQuery4(Data, Preco).
-
-	% write('Insira n. para avançar'), read(_).
+    showQuery4(Data, Preco),
+	write('Insira n. para avançar'), read(_).
 
 
 showQuery4(DataEntrega, Preco) :- 
@@ -356,9 +357,8 @@ carregaFicheiro(Name) :- open(Name,read,Str),
 
 aplicaEvolucao([]).
 aplicaEvolucao([H|T]) :- evolucao(H),aplicaEvolucao(T).
-aplicaEvolucao([H|T]) :- aplicaEvolucao(T).
+aplicaEvolucao([_|T]) :- aplicaEvolucao(T).
 
-auxCarrega(X) :- evolucao(X).						   
 
 leFicheiro(Stream,[]) :-
 	at_end_of_stream(Stream).
@@ -371,42 +371,48 @@ leFicheiro(Stream,[X|L]) :-
 %-------------------------------  Menu  -------------------------------------%
 menu :- repeat,
 		clear(),
-		write('|-----------------------------------------------------    Green Distribution    ------------------------------------------------------|'),nl,
-		write('|                                                                                                                                     |'),nl,
-		write('|  1.  Identificar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.                                           |'),nl,
-		write('|  2.  Identificar que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente.                                     |'),nl,
-		write('|  3.  Identificar os clientes servidos por um determinado estafeta.                                                                  |'),nl,
-		write('|  4.  Calcular o valor faturado pela Green Distribution num determinado dia.                                                         |'),nl,
-		write('|  5.  Identificar quais as zonas com maior volume de entregas por parte da Green Distribution.                                       |'),nl,
-		write('|  6.  Calcular a classificação média de satisfação de cliente para um determinado estafeta.                                          |'),nl,
-		write('|  7.  Identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo.               |'),nl,
-		write('|  8.  Identificar  o  número  total  de  entregas  pelos  estafetas,  num  determinado intervalo de tempo.                           |'),nl,
-		write('|  9.  Calcular  o  número  de  encomendas  entregues  e  não  entregues  pela  Green Distribution, num determinado período de tempo. |'),nl,
-		write('| 10.  Calcular o peso total transportado por estafeta num determinado dia.                                                           |'),nl,
-		write('| 11.  Imprimir os clientes.																											 |'),nl,
-		write('| 12.  Imprimir os estafetas.																										 |'),nl,
-		write('| 13.  Inserir conhecimento.																											 |'),nl,
-		write('|                                                                                                                                     |'),nl,
-		write('|-------------------------------------------------------------------------------------------------------------------------------------|'),nl,nl,
-		write('Insira a Query pretendida: '), nl,
-		read(Choice), Choice > 0, Choice =< 33,
-		doit(Choice), Choice = 0, !.
-		doit(1) :- query1().
-		doit(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod).
-		doit(3) :- write('Insira o código do estafeta pretendido: '), read(Cod), query3(Cod).
-		doit(4) :- write('Insira a data de entrega pretendida: '), read(Data), query4(Data,_).
-		doit(5) :- write('Insira o número de resultados pretendidos: '), read(Num), query5(Num).
-		doit(6) :- write('Insira o código do estafeta pretendido: '), read(Cod), query6(Cod).
-		doit(7) :- write('Insira a data inicial: '), read(DataInicial), nl, 
-				   write('Insira a data final  : '), read(DataFinal), 
-				   query7(DataInicial, DataFinal).
-		doit(8) :- write('Insira a data inicial: '), read(DataInicial), nl, 
-				   write('Insira a data final  : '), read(DataFinal), 
-				   query8(DataInicial,DataFinal).
-		doit(9) :- write('Insira a data inicial: '), read(DataInicial), nl, 
-				   write('Insira a data final  : '), read(DataFinal), 
-		           query9(DataInicial,DataFinal).
-		doit(10) :- write('Insira a data: '), read(Data), query10(Data).
-		doit(11) :- query11(Clientes), write(Clientes).
-		doit(12) :- query12(Estafetas), write(Estafetas).
-		doit(13) :- write('Insira o termo: '), read(Termo), evolucao(Termo), asserta(Termo).
+		writeln('-----------------------------------------------------    Green Distribution    ------------------------------------------------------'),
+		nl,
+		writeln('  1.  Identificar o estafeta que utilizou mais vezes um meio de transporte mais ecológico.'),
+		writeln('  2.  Identificar que estafetas entregaram determinada(s) encomenda(s) a um determinado cliente.'),
+		writeln('  3.  Identificar os clientes servidos por um determinado estafeta.'),
+		writeln('  4.  Calcular o valor faturado pela Green Distribution num determinado dia.'),
+		writeln('  5.  Identificar quais as zonas com maior volume de entregas por parte da Green Distribution.'),
+		writeln('  6.  Calcular a classificação média de satisfação de cliente para um determinado estafeta.'),
+		writeln('  7.  Identificar o número total de entregas pelos diferentes meios de transporte, num determinado intervalo de tempo.'),
+		writeln('  8.  Identificar  o  número  total  de  entregas  pelos  estafetas,  num  determinado intervalo de tempo.'),
+		writeln('  9.  Calcular  o  número  de  encomendas  entregues  e  não  entregues  pela  Green Distribution, num determinado período de tempo.'),
+		writeln(' 10.  Calcular o peso total transportado por estafeta num determinado dia.'),
+		writeln(' 11.  Imprimir os clientes.'),
+		writeln(' 12.  Imprimir os estafetas.'),
+		writeln(' 13.  Inserir conhecimento.'),
+		writeln(' 14.  Carregar conhecimento a partir de um ficheiro.'),
+		writeln('  0.  Sair do menu.'),
+		nl,																																	  
+		writeln('-------------------------------------------------------------------------------------------------------------------------------------'),nl,
+		writeln('Insira a Query pretendida: '),
+		read(Choice), Choice >= 0, Choice =< 14,
+		(Choice = 0 -> !,fail;true), 
+		case(Choice),fail.
+
+case(0) :- fail.
+case(1) :- query1(),!.
+case(2) :- write('Insira o código do cliente pretendido: '), read(Cod), query2(Cod),!.
+case(3) :- write('Insira o código do estafeta pretendido: '), read(Cod), query3(Cod),!.
+case(4) :- write('Insira a data de entrega pretendida: '), read(Data), query4(Data),!.
+case(5) :- write('Insira o número de resultados pretendidos: '), read(Num), query5(Num),!.
+case(6) :- write('Insira o código do estafeta pretendido: '), read(Cod), query6(Cod),!.
+case(7) :- write('Insira a data inicial: '), read(DataInicial), nl, 
+		   write('Insira a data final  : '), read(DataFinal), 
+		   query7(DataInicial, DataFinal), !.
+case(8) :- write('Insira a data inicial: '), read(DataInicial), nl, 
+		   write('Insira a data final  : '), read(DataFinal), 
+		   query8(DataInicial,DataFinal),!.
+case(9) :- write('Insira a data inicial: '), read(DataInicial), nl, 
+		   write('Insira a data final  : '), read(DataFinal), 
+           query9(DataInicial,DataFinal),!.
+case(10) :- write('Insira a data: '), read(Data), query10(Data),!.
+case(11) :- query11(Clientes), writeln(Clientes), write('Insira n. para avançar'),read(_), !.
+case(12) :- query12(Estafetas), writeln(Estafetas), write('Insira n. para avançar'), read(_), !.
+case(13) :- write('Insira o termo: '), read(Termo), evolucao(Termo), write(Termo), !.
+case(14) :- write('Insira o nome do ficheiro: '), read(Data), term_to_atom(Data,Nome), carregaFicheiro(Nome),!.
