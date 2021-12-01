@@ -93,10 +93,14 @@ showQuery3([CodCliente/NomeCliente|T]) :-   write('Cliente: '),
 
 %------------------------------------- Query 4 ---------------------------------------------%
 
-/*
- * Nome: query4(DataEntrega) ou query(DataEntrega, Preco)
- * Descrição: Calcula o valor faturado pela Green Distribution num dado dia
- */
+%
+% Nome: query4(DataEntrega, Preco)
+% Descrição: Calcula o valor faturado pela Green Distribution num dado dia
+% Raciocínio: 1º Passo - Verifica as encomendas entregues num determinado dia
+%             2º Passo - Cria uma lista com os preços de cada encomenda pertence
+%             à lista do 1º Passo.
+%             3º Passo - Soma os preços todos.
+%
 
 query4(D/M/Y/_,Preco) :-
     findall(CodEnc,
@@ -280,10 +284,26 @@ encontraNomeEstafetas([Cod/N|T], [Nome/N|Res]) :- estafeta(Cod,Nome), encontraNo
 
 
 %------------------------------------- Query 9 ---------------------------------------------%
-
-% Estou a supor que o pedido da encomenda, mesmo quando ele é entregue, não
-% é apagado.
-%
+/*
+ * Nome: query9(DataInicial, DataFinal, Entregues,NEntregues)
+ *
+ * Descrição: Calcula o número de encomendas entregues e não entregues, com base num
+ * intervalo de tempo. Assim dada uma DataInicial uma entrega é entregue se houver
+ * um registo de encomenda no intervalo de DataInicial
+ * e DataFinal e se a entrega for feita até DataFinal.
+ * Uma entrega é não entregue se houver um registo de encomenda no intervalo de
+ * DataInicial e DataFinal, no entanto não haja registo de entrega ou então a data
+ * de entrega seja superior a DataFinal.
+ *
+ * Raciocínio: 1º Passo - Filtrar os códigos de encomendas que estão associados a uma
+ *                          data de registo entre DataInicial e DataFinal.
+ *             2º Passo - Filtrar os códigos de encomendas entregues entre DataInicial e DataFinal
+ *                          e pertençam à lista do 1º Passo.
+ *             3º Passo - Calcular tamanho da lista do 2º Passo
+ *             4º Passo - Calular tamamho da lista 1º Passo
+ *             5º Passo - Entregues são o resultado 3º Passo e não entregues a diferença entre
+ *                          os resultados 4º e 3º Passos
+*/
 query9(DataInicial, DataFinal, Entregues,NEntregues) :-
     findall(CodEnc,
             (encomenda(CodEnc,_,_,_,_,_,_,_,DataCriacao,_),
@@ -294,6 +314,7 @@ query9(DataInicial, DataFinal, Entregues,NEntregues) :-
              pertenceData(DataInicial, DataFinal, DataEntrega),
              member(CodEnc, LDatas)),
             LEntregues),
+
     length(LEntregues, Entregues),
     length(LDatas, Todos),
     NEntregues is Todos - Entregues.
@@ -318,10 +339,19 @@ showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :-
 
 %------------------------------------- Query 10 ---------------------------------------------%
 
+%
+% Nome : query10(Data, PesoTotais)
+%
+% Descrição: Calcula o peso total transportado/entregue por cada estafeta numa determinada data
+%
+% Raciocínio: 1º Passo - Recolher todas as entradas de códigos de estafetas e peso de
+%                           encomendas entregues em Data.
+%             2º Passo - Somar todos os Pesos relativos ao mesmo código de Estafeta.
+
 query10(Data, PesoTotais) :-
     findall(CodEstafeta/Peso,
-            (encomenda(CodEncomenda,_,_,CodEstafeta,Peso,_,_,_,_,_),
-             encomenda(CodEncomenda,Data,_)),
+            (encomenda(CodEncomenda,Data,_),
+             encomenda(CodEncomenda,_,_,CodEstafeta,Peso,_,_,_,_,_)),
             PesosEstafeta),
     joinPesos(PesosEstafeta, PesoTotais).
 
@@ -346,9 +376,20 @@ showQuery10List([CodEstafeta/PesoTotal|T]) :-
     nl,
     showQuery10List(T).
 
+% Nome : joinPesos(List, JoinedList)
+% Descrição : Soma os Pesos de códigos iguais, para que fique apenas uma lista com códigos todos distintos
+% Raciocínio : Faz-se uma inserção especial de todos os regitos a partir de uma lista vazia.
 joinPesos([],[]).
 joinPesos([H|T], Joined) :- joinPesos(T, JoinedTail), insertPeso(H, JoinedTail, Joined).
 
+% Nome: insertPeso(Registos, List, JoinedList)
+% Descrição: Insere um registo (Codigo/Peso) numa JoinedList ordenada por códigos de estafeta.
+%               Se a JoinedList for vazia insere apenas o registo.
+%               Se o valor do código do estafeta à cabeça da JoinedList for menor que o registo
+%               que se pretende inserir, insere-se esse registo na tail da JoinedList.
+%               Se o valor do código do estafeta à cabeça da JoinesList for maior que o registo
+%               que se pretende inserir, insere-se esse registo na posição da entrada à cabeça
+%               da JoinedList.
 insertPeso(Cod/Peso, [] ,[Cod/Peso]).
 insertPeso(Cod/Peso, [Cod/PesoJ|T] , [Cod/PesoR|T]) :- PesoR is Peso + PesoJ.
 insertPeso(Cod/Peso, [CodJ/PesoJ|T] , [CodJ/PesoJ|R]) :- Cod > CodJ, insertPeso(Cod/Peso, T, R).
