@@ -1,0 +1,15 @@
+encomenda(5,372,3,2,14,136.79,moto,104.43,22/09/2014/8,asgard).
+encomenda(5,28/09/2014/23,3).
+encomenda(6,7,9,2,15,87.72,moto,20.34,19/02/2015/17,hogsmeade).
+encomenda(6,19/02/2015/18,3).
+encomenda(7,45,5,4,8,37.4,carro,111.75,15/09/2001/0,quahog).
+encomenda(8,188,9,3,79,76.91,carro,51.91,17/02/2013/11,starCity).
+encomenda(8,18/02/2013/3,2).
+encomenda(9,38,6,5,16,66.28,moto,122.37,14/02/2016/6,themyscira).
+encomenda(9,14/02/2016/6,2).encomenda(10,465,5,9,2,64.14,moto,50.79,07/07/2018/18,mordor).
+encomenda(11,870,6,1,11,88.69,moto,102.58,04/01/2016/15,asgard).
+encomenda(11,09/01/2016/5,3).
+encomenda(12,344,4,1,43,16.55,carro,118.19,20/10/2004/9,eastEgg).
+encomenda(13,634,5,5,35,55.42,carro,80.3,27/01/2009/5,mordor).
+encomenda(13,10/02/2009/7,3).
+encomenda(14,900,9,2,12,15.82,moto,96.69,22/09/2011/17,westEgg).
