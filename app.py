@@ -457,6 +457,36 @@ def query12():
     
     table.pack()
 
+# --------------------------------------------------------- DONE
+
+def query13():
+    clearFrame()
+    
+    textString = StringVar()
+    textString.set("Encomendas Entregues")
+    text = Label(frame,textvariable=textString)
+    text.pack()
+    table = ttk.Treeview(frame,height=30)
+    table['columns'] = ('Código Encomenda','Data','Classificação')
+    
+
+    table.column("#0",width=0,stretch=NO)
+    table.column("Código Encomenda",width=300,anchor=CENTER)
+    table.column("Data",width=300,anchor=CENTER)
+    table.column("Classificação",width=300,anchor=CENTER)
+   
+    table.heading("Código Encomenda",text="Código Encomenda",anchor=CENTER)
+    table.heading("Data",text="Data",anchor=CENTER)
+    table.heading("Classificação",text="Classificação",anchor=CENTER)
+   
+    i = 0
+    res = list(prolog.query("query13(Encomendas)"))
+    for answer in (res[0]['Encomendas']):
+        table.insert(parent='',index='end',iid=i,values=(answer.args[0].args[0],str(answer.args[0].args[1].args[0].args[0].args[0]) + "/" + str(answer.args[0].args[1].args[0].args[0].args[1]) + "/" + str(answer.args[0].args[1].args[0].args[1]),answer.args[1]))
+        i = i + 1
+    
+    table.pack()
+
 # ---------------------------------------------- DONE
 
 def insertCliente():
@@ -652,11 +682,18 @@ def insertPenalizacaoEntregueAux():
 def consult():
     filename = filedialog.askopenfilename()
     with open(filename, "r") as ins:
+        i = 0
         for line in ins:
-            lineWithoutPoint = line.split('.')
-            res = bool(list(prolog.query("evolucao("+lineWithoutPoint[0]+")")))
+            l = line[:-1] 
+            l2 = l[:-1]
+            if (l2[-1] != ')'):
+                    l2 = l2 + ')'
+            res = bool(list(prolog.query("evolucao("+l2+")")))
             if res == True:
-                prolog.assertz(lineWithoutPoint[0])
+                prolog.assertz(l2)
+            if res == False:
+                print(str(i) + ":" + l2)
+                i = i + 1
 
 
 # ----------------------------------------------------------------------- DONE
@@ -706,6 +743,7 @@ menuQueries.add_separator()
 
 menuQueries.add_command(label="Clientes (EXTRA)",command=query11)
 menuQueries.add_command(label="Estafetas (EXTRA)",command=query12)
+menuQueries.add_command(label="Encomendas Entregues (EXTRA)",command=query13)
 
 menuFiles.add_command(label="Carregar ficheiro",command=consult)
 
