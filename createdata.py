@@ -173,8 +173,7 @@ def generate_stuff(how_many, option, begin_code, how_many_delivery, how_many_cli
                         del_date = get_random_date_between(fake, begin_date, end_date, same_day, min_hour)
                     str2 = "encomenda(" + str(index) + "," + del_date + "," + str(classification) + ")."
                     file.write(str2)
-                if index + 1 != how_many:
-                    file.write("\n")
+                file.write("\n")
     print("Ficheiro Gerado Com Sucesso.")
 
 
