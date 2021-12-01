@@ -5,6 +5,7 @@ from tkinter import ttk
 from pyswip import Variable,Query
 from tkinter import messagebox
 from tkinter import filedialog
+from PIL import ImageTk,Image  
 
 prolog = Prolog()
 prolog.consult("queries.pl")
@@ -24,6 +25,10 @@ labelHello2.config(font=("Helvetica", 15),background="white")
 labelHello2.pack()
 labelHello.pack()
 
+canvas = Canvas(app, width = 600, height = 600)  
+canvas.pack()  
+img = ImageTk.PhotoImage(Image.open("green3.jpg"))  
+canvas.create_image(5, 5, anchor=NW, image=img) 
 
 # GLOBAL VARIABLES
 
