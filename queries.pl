@@ -318,25 +318,41 @@ showQuery9(DataInicial, DataFinal, Entregues, NEntregues) :-
 
 %------------------------------------- Query 10 ---------------------------------------------%
 
-query10(Data, PesoTotal) :-
-    findall(Peso,
-            encomenda(_,_,_,_,Peso,_,_,_,Data,_),
-            Pesos),
-    sumMap(Pesos, PesoTotal).
+query10(Data, PesoTotais) :-
+    findall(CodEstafeta/Peso,
+            (encomenda(CodEncomenda,_,_,CodEstafeta,Peso,_,_,_,_,_),
+             encomenda(CodEncomenda,Data,_)),
+            PesosEstafeta),
+    joinPesos(PesosEstafeta, PesoTotais).
 
 query10(Data) :-
-    query10(Data, PesoTotal),
-    showQuery10(Data, PesoTotal),
+    query10(Data, PesoTotais),
+    showQuery10(Data, PesoTotais),
 	write('Insira n. para avançar'),read(_).
 
 
-showQuery10(Data, PesoTotal) :- 
-								write('Peso Total em '),
-                                write(Data),
-                                write(': '),
-                                write(PesoTotal),
-                                nl.
+showQuery10(Data, PesoTotais) :-
+    write('Pesos Totais por Estafeta em '),
+    write(Data),
+    write(' :'), nl,
+    showQuery10List(PesoTotais).
 
+showQuery10List([]).
+showQuery10List([CodEstafeta/PesoTotal|T]) :-
+    write('Codigo Estafeta: '),
+    write(CodEstafeta),
+    write('; Peso Total: '),
+    write(PesoTotal),
+    nl,
+    showQuery10List(T).
+
+joinPesos([],[]).
+joinPesos([H|T], Joined) :- joinPesos(T, JoinedTail), insertPeso(H, JoinedTail, Joined).
+
+insertPeso(Cod/Peso, [] ,[Cod/Peso]).
+insertPeso(Cod/Peso, [Cod/PesoJ|T] , [Cod/PesoR|T]) :- PesoR is Peso + PesoJ.
+insertPeso(Cod/Peso, [CodJ/PesoJ|T] , [CodJ/PesoJ|R]) :- Cod > CodJ, insertPeso(Cod/Peso, T, R).
+insertPeso(Cod/Peso, [CodJ/PesoJ|T] ,[Cod/Peso|[CodJ/PesoJ|T]]) :- Cod < CodJ.
 %------------------------------------- Query 11 ---------------------------------------------%
 
 query11(Clientes) :- findall(X/Y,cliente(X,Y),Clientes).
