@@ -403,9 +403,14 @@ query11(Clientes) :- findall(X/Y,cliente(X,Y),Clientes).
 query12(Estafetas) :- findall(X/Y,estafeta(X,Y),Estafetas).
 
 
-%------------------------------------- Query 12 ---------------------------------------------%
+%------------------------------------- Query 13 ---------------------------------------------%
 
 query13(Encomendas) :- findall(X/Y/Z,encomenda(X,Y,Z),Encomendas).
+
+
+%------------------------------------- Query 14 ---------------------------------------------%
+
+query14(Encomendas) :- findall(A/B/C/D/E/F/G/H/I/J,encomenda(A,B,C,D,E,F,G,H,I,J),Encomendas).
 
 %-------------------------------  Leitura de ficheiros  ---------------------%
 

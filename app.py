@@ -16,6 +16,7 @@ app.geometry("800x400")
 app.configure(background="white")
 frame = Frame(app)
 frame.pack()
+
 labelHello = Label(frame, text = 'Green Distribution')
 labelHello.config(width=200)
 labelHello.config(font=("Helvetica", 35),background="white")
@@ -25,7 +26,7 @@ labelHello2.config(font=("Helvetica", 15),background="white")
 labelHello2.pack()
 labelHello.pack()
 
-canvas = Canvas(app, width = 600, height = 600)  
+canvas = Canvas(frame, width = 600, height = 600)  
 canvas.pack()  
 img = ImageTk.PhotoImage(Image.open("green3.jpg"))  
 canvas.create_image(5, 5, anchor=NW, image=img) 
@@ -392,12 +393,24 @@ def query10Aux():
     text = Label(frame ,text = "Peso Transportado pelos estafetas em " + di)
     text.pack()
 
-    textResString = StringVar()
-    res = list(prolog.query("query10("+di+",Y)"))
-    textRes = Label(frame,textvariable=textResString)
-    print(res)
-    textResString.set(str(res[0]['Y']) + " Kg")
-    textRes.pack()
+    table = ttk.Treeview(frame,height=30)
+    table['columns'] = ('Código Estafeta','Peso Transportado')
+
+    table.column("#0",width=0,stretch=NO)
+    table.column("Código Estafeta",width=400,anchor=CENTER)
+    table.column("Peso Transportado",width=400,anchor=CENTER)
+   
+    table.heading("Código Estafeta",text="Código Estafeta",anchor=CENTER)
+    table.heading("Peso Transportado",text="Peso Transportado",anchor=CENTER)
+   
+    i = 0
+    res = list(prolog.query("query10("+di+",X)"))
+    for answer in (res[0]['X']):
+        table.insert(parent='',index='end',iid=i,values=(str(answer.args[0]),str(answer.args[1]) + " Kg"))
+        i = i + 1
+    
+    table.pack()
+
     
 
 
@@ -486,6 +499,66 @@ def query13():
         i = i + 1
     
     table.pack()
+
+# --------------------------------------------------------- DONE
+
+def query14():
+    clearFrame()
+    
+    textString = StringVar()
+    textString.set("Encomendas Criadas")
+    text = Label(frame,textvariable=textString)
+    text.pack()
+    table = ttk.Treeview(frame,height=30)
+    table['columns'] = ('Código Encomenda','Tempo Max','Código Cliente','Código Estafeta','Peso','Volume','Transporte','Preço Base','Data Criação','Zona de Entrega')
+    
+
+    table.column("#0",width=0,stretch=NO)
+    table.column("Código Encomenda",width=145,anchor=CENTER)
+    table.column("Tempo Max",width=135,anchor=CENTER)
+    table.column("Código Cliente",width=135,anchor=CENTER)
+    table.column("Código Estafeta",width=135,anchor=CENTER)
+    table.column("Peso",width=135,anchor=CENTER)
+    table.column("Volume",width=135,anchor=CENTER)
+    table.column("Transporte",width=135,anchor=CENTER)
+    table.column("Preço Base",width=135,anchor=CENTER)
+    table.column("Data Criação",width=135,anchor=CENTER)
+    table.column("Zona de Entrega",width=135,anchor=CENTER)
+   
+    table.heading("Código Encomenda",text="Código Encomenda",anchor=CENTER)
+    table.heading("Tempo Max",text="Tempo Max",anchor=CENTER)
+    table.heading("Código Cliente",text="Código Cliente",anchor=CENTER)
+    table.heading("Código Estafeta",text="Código Estafeta",anchor=CENTER)
+    table.heading("Peso",text="Peso",anchor=CENTER)
+    table.heading("Volume",text="Volume",anchor=CENTER)
+    table.heading("Transporte",text="Transporte",anchor=CENTER)
+    table.heading("Preço Base",text="Preço Base",anchor=CENTER)
+    table.heading("Data Criação",text="Data Criação",anchor=CENTER)
+    table.heading("Zona de Entrega",text="Zona de Entrega",anchor=CENTER)
+   
+    i = 0
+    res = list(prolog.query("query14(Encomendas)"))
+    for answer in (res[0]['Encomendas']):
+        arg1 = answer.args[0].args[0].args[0].args[0].args[0].args[0].args[0].args[0].args[0]
+        arg2 = answer.args[0].args[0].args[0].args[0].args[0].args[0].args[0].args[0].args[1]
+        arg3 = answer.args[0].args[0].args[0].args[0].args[0].args[0].args[0].args[1]
+        arg3 = answer.args[0].args[0].args[0].args[0].args[0].args[0].args[0].args[1]
+        arg4 = answer.args[0].args[0].args[0].args[0].args[0].args[0].args[1]
+        arg5 = answer.args[0].args[0].args[0].args[0].args[0].args[1]
+        arg5 = answer.args[0].args[0].args[0].args[0].args[0].args[1]
+        arg6 = answer.args[0].args[0].args[0].args[0].args[1]
+        arg7 = answer.args[0].args[0].args[0].args[1]
+        arg8 = answer.args[0].args[0].args[1]
+        arg91 = answer.args[0].args[1].args[0].args[0].args[0]
+        arg92 = answer.args[0].args[1].args[0].args[0].args[1]
+        arg93 = answer.args[0].args[1].args[0].args[1]
+        arg94 = answer.args[0].args[1].args[1]
+        arg10 = answer.args[1]
+        table.insert(parent='',index='end',iid=i,values=(str(arg1),str(arg2),str(arg3),str(arg4),str(arg5),str(arg6),arg7,str(arg8),str(arg91) + "/" + str(arg92) + "/" + str(arg93) + " às " + str(arg94) + " h", arg10))
+        i = i + 1
+    
+    table.pack()
+
 
 # ---------------------------------------------- DONE
 
@@ -691,8 +764,9 @@ def consult():
             res = bool(list(prolog.query("evolucao("+l2+")")))
             if res == True:
                 prolog.assertz(l2)
+                print("Deu: " + l2)
             if res == False:
-                print(str(i) + ":" + l2)
+                print(str(i) + " - Não Deu: " + l2)
                 i = i + 1
 
 
@@ -743,6 +817,7 @@ menuQueries.add_separator()
 
 menuQueries.add_command(label="Clientes (EXTRA)",command=query11)
 menuQueries.add_command(label="Estafetas (EXTRA)",command=query12)
+menuQueries.add_command(label="Encomendas Criadas (EXTRA)",command=query14)
 menuQueries.add_command(label="Encomendas Entregues (EXTRA)",command=query13)
 
 menuFiles.add_command(label="Carregar ficheiro",command=consult)
