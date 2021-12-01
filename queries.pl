@@ -66,7 +66,7 @@ showQuery2([CodEstafeta/NomeEstafeta|T]) :-  write('Estafeta: '),write(NomeEstaf
 
 %------------------------------------- Query 3 ---------------------------------------------%
 /*
-Nome: query2(Código de estafeta)
+Nome: query3(Código de estafeta)
 Descrição: Identifica que clientes foram servidos por um determinado estafeta
 */
 
@@ -414,10 +414,17 @@ query14(Encomendas) :- findall(A/B/C/D/E/F/G/H/I/J,encomenda(A,B,C,D,E,F,G,H,I,J
 
 %-------------------------------  Leitura de ficheiros  ---------------------%
 
-
+/*
+ * Nome: carregaFicheiro(Name,Data)
+ * Descrição: Permite carregar um ficheiro linha a linha para uma lista
+*/
 carregaFicheiro(Name,Data) :- open(Name,read,Str),
 					 leFicheiro(Str,Data).
 
+/*
+ * Nome: carregaFicheiro(Name)
+ * Descrição: Análoga a carregaFicheiro(Name,Data)
+*/
 carregaFicheiro(Name) :- open(Name,read,Str),
 					 leFicheiro(Str,Data),
 					 aplicaEvolucao(Data).
@@ -436,6 +443,10 @@ leFicheiro(Stream,[X|L]) :-
 	leFicheiro(Stream,L).
 
 %-------------------------------  Menu  -------------------------------------%
+
+printIndividuos([]).
+printIndividuos([Cod/Name|T]) :- write('Codigo: '), write(Cod), write('   '), write('Nome: '), writeln(Name), printIndividuos(T).
+
 menu :- repeat,
 		clear(),
 		writeln('-----------------------------------------------------    Green Distribution    ------------------------------------------------------'),
@@ -479,7 +490,7 @@ case(9) :- write('Insira a data inicial: '), read(DataInicial), nl,
 		   write('Insira a data final  : '), read(DataFinal), 
            query9(DataInicial,DataFinal),!.
 case(10) :- write('Insira a data: '), read(Data), query10(Data),!.
-case(11) :- query11(Clientes), writeln(Clientes), write('Insira n. para avançar'),read(_), !.
-case(12) :- query12(Estafetas), writeln(Estafetas), write('Insira n. para avançar'), read(_), !.
+case(11) :- query11(Clientes), printIndividuos(Clientes), write('Insira n. para avançar'),read(_), !.
+case(12) :- query12(Estafetas), printIndividuos(Estafetas), write('Insira n. para avançar'), read(_), !.
 case(13) :- write('Insira o termo: '), read(Termo), evolucao(Termo), write(Termo), !.
 case(14) :- write('Insira o nome do ficheiro: '), read(Data), term_to_atom(Data,Nome), carregaFicheiro(Nome),!.
