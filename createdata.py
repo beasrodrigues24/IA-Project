@@ -144,11 +144,11 @@ def generate_stuff(how_many, option, begin_code, how_many_delivery, how_many_cli
                 city = get_random_city()
                 volume = get_random_float(1.5, 150.5)
                 if vehicle == "bicicleta":
-                    weight = random.randint(1, 5)
+                    weight = random.randint(1, 4)
                 elif vehicle == "moto":
-                    weight = random.randint(1, 20)
+                    weight = random.randint(1, 19)
                 elif vehicle == "carro":
-                    weight = random.randint(1, 100)
+                    weight = random.randint(1, 99)
                 tmp_str = "encomenda(" + str(index) + "," + str(max_time) + "," + str(cod_client) + "," + str(cod_del) + "," + str(weight) + "," + str(volume) +  "," + vehicle + "," + str(price) + "," + date + "," + city + ")."
                 file.write(tmp_str)
                 delivered = was_delivered()
