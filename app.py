@@ -713,7 +713,7 @@ def insertEncomendaEntregueAux():
     res = bool(list(prolog.query("evolucao(encomenda("+codEncomenda.get()+","+dataFinal.get()+","+classif.get()+"))")))
     
     if res == True:
-        prolog.assertz("encomenda("+codEncomenda.get()+","+dataInicial.get()+","+classif.get()+")")
+        prolog.assertz("encomenda("+codEncomenda.get()+","+dataFinal.get()+","+classif.get()+")")
         messagebox.showinfo("Sucesso","Inserção realizada")
     if res == False:
         messagebox.showwarning("Erro", "Invariante não verificado")
