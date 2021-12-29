@@ -290,3 +290,8 @@ estima(tatooine, springfield,78,45).
 estima(starCity,westworld,80,25).
 estima(eastEgg,mordor,85,39).
 estima(theShire,wonderland,30,56).
+estima(capitol,asgard,100,9).
+estima(mordor,neverland,48,21).
+estima(mordor,gothamCity,94,16).
+estima(mordor,bikinibottom,60,43).
+estima(mordor,bedrock,74,39).
