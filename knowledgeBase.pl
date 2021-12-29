@@ -7,7 +7,8 @@
 		penalizado/3,
 		precoEncomenda/4,
 		evolucao/1,
-		edge/4
+		edge/4,
+		estima/4
 	]).
 
 :- use_module(helpers).
@@ -245,6 +246,9 @@ insercao(Termo) :- retract(Termo),!,fail.
 teste([]).
 teste([R|LR]) :- R,teste(LR).
 
+/*
+ * Graph
+ */
 
 edge(gothamCity, centralCity, dcStreet, 17).
 edge(gothamCity, capitol, katnissStreet, 52).
@@ -278,4 +282,11 @@ edge(dragonstone, narnia, lionStreet, 17).
 edge(narnia, kingsLanding, aslanAvenue, 22).
 edge(kingsLanding, asgard, odinStreet, 30).
 
+% estima(Orig,Dest,Distancia Linha Reta,Probabilidade de transito(valor de 0 a 100))
 
+estima(capitol,neverland,30,37).
+estima(gothamCity, hogwarts,120,13).
+estima(tatooine, springfield,78,45).
+estima(starCity,westworld,80,25).
+estima(eastEgg,mordor,85,39).
+estima(theShire,wonderland,30,56).
