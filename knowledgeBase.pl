@@ -6,7 +6,8 @@
 		cliente/2,
 		penalizado/3,
 		precoEncomenda/4,
-		evolucao/1
+		evolucao/1,
+		edge/4
 	]).
 
 :- use_module(helpers).
