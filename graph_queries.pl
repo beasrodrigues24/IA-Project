@@ -1,14 +1,18 @@
 :- use_module(graph_helpers).
 :- use_module(knowledgeBase).
 
-% - PROCURAS NÃO INFORMADAS
+% PROCURAS NÃO INFORMADAS
 
-% - DFS
+% DFS
 
-dfs(Origem,Destino,Caminho) :- profundidade(Origem,Destino,Caminho).
+dfsQ(Origem,Destino,Caminho) :- profundidade(Origem,Destino,Caminho).
 
-% - BFS
+% BFS
 
-bfs(Origem,Destino,Caminho) :- largura(Origem,Destino,Caminho).
+bfsQ(Origem,Destino,Caminho) :- largura(Origem,Destino,Caminho).
 
-% - PROCURAS INFORMADAS
+% PROCURAS INFORMADAS
+
+% Gulosa
+
+gulosaQ(Origem,Destino,CaminhoDist,CaminhoTran) :- gulosa(Origem,Destino,CaminhoDist,CaminhoTran).
