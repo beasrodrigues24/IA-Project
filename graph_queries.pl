@@ -2,6 +2,8 @@
 :- use_module(knowledgeBase).
 :- use_module(helpers).
 
+origem(neverland).
+
 % PROCURAS NÃO INFORMADAS
 
 % DFS
@@ -18,10 +20,17 @@ bfsQ(Origem,Destino,Caminho) :- largura(Origem,Destino,Caminho).
 
 gulosaQ(Origem,Destino,CaminhoDist,CaminhoTran) :- gulosa(Origem,Destino,CaminhoDist,CaminhoTran).
 
-
 % AEstrela
 
 aestrelaQ(Origem,Destino,CaminhoDist,CaminhoTran) :- aestrela(Origem,Destino,CaminhoDist,CaminhoTran).
+
+% Gerar Circuitos
+
+gerarCircuitos(Circuitos) :- 
+	gerarGulosa(Circuitos).
+	%gerarDfs(Dfs),
+	%gerarBfs(Bfs),
+	%gerarAestrela(Aestrela).
 
 % Calcular tempo de um percurso dado peso e transporte
 

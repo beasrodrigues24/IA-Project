@@ -2,8 +2,26 @@
    	profundidade/3,
 	largura/3,
 	gulosa/4,
-	aestrela/4
+	aestrela/4,
+	gerarGulosa/1
 	]).
+
+:- use_module(helpers).
+
+% ------------------------------------------------------------ Gera todos os circuitos usando Gulosa da origem para todos os destinos
+
+gerarGulosa(Circuitos) :-
+	findall(Nodo,(edge(Nodo,_,_,_,_),not(origem(Nodo))),Nodos),
+	findall(Nodo,(edge(_,Nodo,_,_,_),not(origem(Nodo))),Nodos2),
+	append(Nodos,Nodos2,Todos),
+	removeRepetidos(Todos,TodosDests),
+	gerarGulosaAux(Circuitos,TodosDests).
+
+gerarGulosaAux([],[]).
+gerarGulosaAux([Circuito1D/Circuito1T|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	gulosa(Orig,Dest,Circuito1D,Circuito1T),
+	gerarGulosaAux(OutrosCircuitos,OutrosDest).
 
 
 % ------------------------------------------------------------- Pesquisa não informada - Profundidade
@@ -72,7 +90,7 @@ gulosaAuxTransito(Dest,Caminhos,SolucaoCaminho) :-
 
 % CONTEXTO - dado uma Lista de possíveis caminhos a se seguir, escolho aquele com melhor estimativa de acordo com a heurística utilizada.
 % IDEIA - como a lista de possível caminhos, enviada como parâmetro, é composta em cada elemento por: (Caminho/estimativa da heurística deste caminho), para sabermos o caminho que vamos escolher, basta comparar as estimativas !
-% EDGE CASES - caso uma das estimativas da comparação for desconhecida, será considerado como melhor caminho aquele que tiver uma estimativa conhecida. Caso ambas forem desconhecidas, será considerado a primeira opção (nesse caso a pesquisa se assemelha a DPS).
+% EDGE CASES - caso uma das estimativas da comparação for desconhecida, será considerado como melhor caminho aquele que tiver uma estimativa conhecida. Caso ambas forem desconhecidas, será considerado a primeira opção (nesse caso a pesquisa se assemelha a DFS).
 
 obtem_melhor_g([Caminho],Caminho) :- !.
 
@@ -137,6 +155,8 @@ aestrelaAuxTransito(Dest,Caminhos,SolucaoCaminho) :-
 	aestrelaAuxTransito(Dest,NovosCaminhos,SolucaoCaminho).
 
 %--------
+
+% EDGE CASES - caso uma das estimativas da comparação for desconhecida, será considerado como melhor caminho aquele que tiver uma estimativa conhecida. Caso ambas forem desconhecidas, será considerado a opção cujo custo do caminho até ela seja o menor (nesse caso a pesquisa se aproxima da pesquisa do custo uniforme).
 
 obtem_melhor_a([Caminho],Caminho) :- !.
 
