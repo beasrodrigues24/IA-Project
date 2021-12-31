@@ -12,12 +12,15 @@
 		transporte/3,
 		velocidadeDiminui/2,
 		caminho/2,
-		encomendaCaminho/2
+		encomendaCaminho/2,
+		origem/1
 	]).
 
 :- use_module(helpers).
 
 :- discontiguous knowledgeBase: :: / 2.
+
+origem(neverland).
 
 /* 
 A explicação desse facto "tMaisEcologico" será útil para flexibilidade na primeira query (explicação adiante)
