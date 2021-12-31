@@ -7,7 +7,7 @@
 		penalizado/3,
 		precoEncomenda/4,
 		evolucao/1,
-		edge/4,
+		edge/5,
 		estima/4
 	]).
 
@@ -250,37 +250,37 @@ teste([R|LR]) :- R,teste(LR).
  * Graph
  */
 
-edge(gothamCity, centralCity, dcStreet, 17).
-edge(gothamCity, capitol, katnissStreet, 52).
-edge(gothamCity, westEgg, batmanAvenue, 100).
-edge(eastEgg, westEgg, gatsbyBoulevard, 20).
-edge(centralCity, starCity, fastStreet, 31).
-edge(centralCity, gravityFalls, pineStreet, 13).
-edge(westEgg, westworld, westAvenue, 5).
-edge(westworld,rivendell, elfStreet, 30).
-edge(capitol, pawnee, swansonBoulevard, 50).
-edge(capitol, hogwarts, potterStreet, 100).
-edge(gravityFalls, bikiniBottom, patrickAvenue, 4).
-edge(pawnee, bikiniBottom, squidStreet, 26).
-edge(pawnee, neverland, panAvenue, 20).
-edge(rivendell, theShire, bilboStreet, 15).
-edge(mordor, theShire, ringBoulevard, 30).
-edge(neverland, wonderland, dreamStreet, 5). 
-edge(neverland, hogwarts, wandAvenue, 10).
-edge(bikiniBottom, springfield, yellowBoulevard, 2).
-edge(springfield, quahog, griffinAvenue, 3).
-edge(springfield, bedrock, rockBoulevard, 32).
-edge(theShire, hogwarts, magicStreet, 25).
-edge(theShire, asgard, gandalfStreet, 90).
-edge(theShire, narnia, closetedStreet, 52).
-edge(hogwarts, hogsmeade, hermioneAvenue, 2).
-edge(hogsmeade, narnia, sweetBoulevard, 120).
-edge(bedrock, jurassicPark, dinosaurAvenue, 10).
-edge(jurassicPark, tatooine, skyStreet, 50).
-edge(tatooine, dragonstone, falconBoulevard, 100).
-edge(dragonstone, narnia, lionStreet, 17).
-edge(narnia, kingsLanding, aslanAvenue, 22).
-edge(kingsLanding, asgard, odinStreet, 30).
+edge(gothamCity, centralCity, dcStreet, 17, 20).
+edge(gothamCity, capitol, katnissStreet, 52, 30).
+edge(gothamCity, westEgg, batmanAvenue, 100, 45).
+edge(eastEgg, westEgg, gatsbyBoulevard, 20, 13).
+edge(centralCity, starCity, fastStreet, 31, 78).
+edge(centralCity, gravityFalls, pineStreet, 13, 81).
+edge(westEgg, westworld, westAvenue, 5, 56).
+edge(westworld,rivendell, elfStreet, 30, 13).
+edge(capitol, pawnee, swansonBoulevard, 50, 14).
+edge(capitol, hogwarts, potterStreet, 100, 52).
+edge(gravityFalls, bikiniBottom, patrickAvenue, 4, 98).
+edge(pawnee, bikiniBottom, squidStreet, 26, 34).
+edge(pawnee, neverland, panAvenue, 20, 67).
+edge(rivendell, theShire, bilboStreet, 15, 12).
+edge(mordor, theShire, ringBoulevard, 30, 29).
+edge(neverland, wonderland, dreamStreet, 5, 71). 
+edge(neverland, hogwarts, wandAvenue, 10, 43).
+edge(bikiniBottom, springfield, yellowBoulevard, 2, 79).
+edge(springfield, quahog, griffinAvenue, 3, 74).
+edge(springfield, bedrock, rockBoulevard, 32, 45).
+edge(theShire, hogwarts, magicStreet, 25, 47).
+edge(theShire, asgard, gandalfStreet, 90, 46).
+edge(theShire, narnia, closetedStreet, 52, 9).
+edge(hogwarts, hogsmeade, hermioneAvenue, 2, 17).
+edge(hogsmeade, narnia, sweetBoulevard, 120, 86).
+edge(bedrock, jurassicPark, dinosaurAvenue, 10, 72).
+edge(jurassicPark, tatooine, skyStreet, 50, 35).
+edge(tatooine, dragonstone, falconBoulevard, 100, 90).
+edge(dragonstone, narnia, lionStreet, 17, 23).
+edge(narnia, kingsLanding, aslanAvenue, 22, 56).
+edge(kingsLanding, asgard, odinStreet, 30, 89).
 
 % estima(Orig,Dest,Distancia Linha Reta,Probabilidade de transito(valor de 0 a 100))
 
