@@ -8,7 +8,11 @@
 		precoEncomenda/4,
 		evolucao/1,
 		edge/5,
-		estima/4
+		estima/4,
+		transporte/3,
+		velocidadeDiminui/2,
+		caminho/2,
+		encomendaCaminho/2
 	]).
 
 :- use_module(helpers).
@@ -20,6 +24,10 @@ A explicação desse facto "tMaisEcologico" será útil para flexibilidade na pr
 */
 tMaisEcologico(bicicleta).
 
+/*
+Cidade onde se localiza o armazém
+*/
+cidadeBase(neverland).
 
 %-encomenda(
 %	codEncomenda,
@@ -121,6 +129,28 @@ precoEncomenda(Base, 24, carro, Base + 3).
 transporte(bicicleta,5,10).
 transporte(moto,20,35).
 transporte(carro,100,25).
+
+% - velocidadeDiminui(Transporte, Diminuição por kg)
+
+velocidadeDiminui(bicicleta, 0.7).
+velocidadeDiminui(moto, 0.5).
+velocidadeDiminui(carro, 0.1).
+
+% - caminho(CodCaminho, Caminho)
+
+:-dynamic(caminho/2).
+
+caminho(1, [gravityFalls, centralCity, gothamCity]).
+caminho(2, [neverland,wonderland]).
+
+% - encomendaCaminho(CodCaminho, CodEncomenda)
+
+:-dynamic(encomendaCaminho/2).
+
+encomendaCaminho(1,1).
+encomendaCaminho(1,2).
+encomendaCaminho(2,6).
+
 
 /***************** INVARIANTES ******************/
 
