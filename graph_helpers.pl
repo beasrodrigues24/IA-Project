@@ -38,11 +38,15 @@ larguraAux(Dest,[EstadosA|OutrosEstados],Solucao) :-
 % gulosa(Origem,Destino,Caminho Seguindo a heurística da distância/Custo de distância desse caminho, Caminho seguindo a heurística do trânsito/Custo de transito desse caminho)
 
 gulosa(Orig,Dest,CaminhoDistancia/CustoDist,CaminhoTransito/CustoTran) :-
-	estima(Orig,Dest,EstimaD,EstimaT),
+	estimaAux(Orig,Dest,EstimaD,EstimaT),
 	gulosaAuxDist(Dest,[[Orig]/0/EstimaD],InvCaminhoDist/CustoDist/_),
 	gulosaAuxTransito(Dest,[[Orig]/0/EstimaT],InvCaminhoTransito/CustoTran/_),
 	reverse(InvCaminhoDist,CaminhoDistancia),
 	reverse(InvCaminhoTransito,CaminhoTransito).
+
+estimaAux(Orig,Dest,EstimaD,EstimaT) :- estima(Orig,Dest,EstimaD,EstimaT), !.
+
+estimaAux(Orig,Dest,desconhecido,desconhecido).
 
 % gulosaAuxDist e gulosaAuxTransito são SIMETRICAS. Diferem apenas no expande_gulosa (uma anexa aos caminhos expandidos a estimativa da herística da sitância, enquanto outra anexo aos caminhos expandidos a estimativa da heurística do trânsito).
 
@@ -54,7 +58,7 @@ gulosaAuxDist(Dest,Caminhos,SolucaoCaminho) :-
 	seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
 	expande_dist(Dest,MelhorCaminho,ExpCaminhos),
 	append(OutrosCaminhos,ExpCaminhos,NovosCaminhos),
-	gulosaAuxDist(NovosCaminhos,SolucaoCaminho).
+	gulosaAuxDist(Dest,NovosCaminhos,SolucaoCaminho).
 
 gulosaAuxTransito(Dest,Caminhos,Caminho) :-
 	obtem_melhor_g(Caminhos,Caminho),
@@ -64,19 +68,39 @@ gulosaAuxTransito(Dest,Caminhos,SolucaoCaminho) :-
 	seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
 	expande_tran(Dest,MelhorCaminho,ExpCaminhos),
 	append(OutrosCaminhos,ExpCaminhos,NovosCaminhos),
-	gulosaAuxDist(NovosCaminhos,SolucaoCaminho).
+	gulosaAuxTransito(Dest,NovosCaminhos,SolucaoCaminho).
 
 % CONTEXTO - dado uma Lista de possíveis caminhos a se seguir, escolho aquele com melhor estimativa de acordo com a heurística utilizada.
 % IDEIA - como a lista de possível caminhos, enviada como parâmetro, é composta em cada elemento por: (Caminho/estimativa da heurística deste caminho), para sabermos o caminho que vamos escolher, basta comparar as estimativas !
+% EDGE CASES - caso uma das estimativas da comparação for desconhecida, será considerado como melhor caminho aquele que tiver uma estimativa conhecida. Caso ambas forem desconhecidas, será considerado a primeira opção (nesse caso a pesquisa se assemelha a DPS).
 
 obtem_melhor_g([Caminho],Caminho) :- !.
-obtem_melhor_g([Caminho1/Custo1/EstimaD1,_/_/EstimaD2|Caminhos],MelhorCaminho) :- 
+
+obtem_melhor_g([Caminho1/Custo1/EstimaD1,_/_/EstimaD2|Caminhos],MelhorCaminho) :-
+	EstimaD1 \= desconhecido,
+	EstimaD2 \= desconhecido,
 	EstimaD1 =< EstimaD2,
-	!,
 	obtem_melhor_g([Caminho1/Custo1/EstimaD1|Caminhos],MelhorCaminho).
 
-obtem_melhor_g([_|Caminhos],MelhorCaminho) :-
-	obtem_melhor_g(Caminhos,MelhorCaminho).
+
+obtem_melhor_g([_/_/EstimaD1,Caminho2/Custo2/EstimaD2|Caminhos],MelhorCaminho) :-
+	EstimaD1 \= desconhecido,
+	EstimaD2 \= desconhecido,
+	EstimaD1 >= EstimaD2,
+	obtem_melhor_g([Caminho2/Custo2/EstimaD2|Caminhos],MelhorCaminho).
+
+
+obtem_melhor_g([_/_/desconhecido,Caminho2/Custo2/EstimaD2|Caminhos],MelhorCaminho) :-
+	EstimaD2 \= desconhecido,
+	obtem_melhor_g([Caminho2/Custo2/EstimaD2|Caminhos],MelhorCaminho).
+
+obtem_melhor_g([Caminho1/Custo1/EstimaD1,_/_/desconhecido|Caminhos],MelhorCaminho) :-
+	EstimaD1 \= desconhecido,
+	obtem_melhor_g([Caminho1/Custo1/EstimaD1|Caminhos],MelhorCaminho).
+
+
+obtem_melhor_g([Caminho1/Custo1/desconhecido,_/_/desconhecido|Caminhos],MelhorCaminho) :-
+	obtem_melhor_g([Caminho1/Custo1/desconhecido|Caminhos],MelhorCaminho).
 
 % ------------------------------------------------------------------------------- Pesquisa Informada - A Estrela
 
@@ -84,7 +108,7 @@ obtem_melhor_g([_|Caminhos],MelhorCaminho) :-
 % difere da gulosa apenas no obtem_melhor - nodo a ser expandido (que agora considera também o custo percorrido total).
 
 aestrela(Orig,Dest,CaminhoDistancia/CustoDist,CaminhoTransito/CustoTran) :-
-	estima(Orig,Dest,EstimaD,EstimaT),
+	estimaAux(Orig,Dest,EstimaD,EstimaT),
 	aestrelaAuxDist(Dest,[[Orig]/0/EstimaD],InvCaminhoDist/CustoDist/_),
 	aestrelaAuxTransito(Dest,[[Orig]/0/EstimaT],InvCaminhoTransito/CustoTran/_),
 	reverse(InvCaminhoDist,CaminhoDistancia),
@@ -98,31 +122,53 @@ aestrelaAuxDist(Dest,Caminhos,Caminho) :-
 aestrelaAuxDist(Dest,Caminhos,SolucaoCaminho) :-
 	obtem_melhor_a(Caminhos,MelhorCaminho),
 	seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
-	expande_aestrela_dist(Dest,MelhorCaminho,ExpCaminhos),
+	expande_dist(Dest,MelhorCaminho,ExpCaminhos),
 	append(OutrosCaminhos,ExpCaminhos,NovosCaminhos),
-	aestrelaAuxDist(NovosCaminhos,SolucaoCaminho).
-
+	aestrelaAuxDist(Dest,NovosCaminhos,SolucaoCaminho).
 
 aestrelaAuxTransito(Dest,Caminhos,Caminho) :-
 	obtem_melhor_a(Caminhos,Caminho),
 	Caminho = [Dest|_]/_/_.
-aestrelaAuxDist(Dest,Caminhos,SolucaoCaminho) :-
+aestrelaAuxTransito(Dest,Caminhos,SolucaoCaminho) :-
 	obtem_melhor_a(Caminhos,MelhorCaminho),
 	seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
-	expande_aestrela_tran(Dest,MelhorCaminho,ExpCaminhos),
+	expande_tran(Dest,MelhorCaminho,ExpCaminhos),
 	append(OutrosCaminhos,ExpCaminhos,NovosCaminhos),
-	aestrelaAuxTransito(NovosCaminhos,SolucaoCaminho).
+	aestrelaAuxTransito(Dest,NovosCaminhos,SolucaoCaminho).
 
 %--------
 
 obtem_melhor_a([Caminho],Caminho) :- !.
-obtem_melhor_a([Caminho1/Custo1/EstimaD1,_/Custo2/EstimaD2|Caminhos],MelhorCaminho) :- 
+
+obtem_melhor_a([Caminho1/Custo1/EstimaD1,_/Custo2/EstimaD2|Caminhos],MelhorCaminho) :-
+	EstimaD1 \= desconhecido,
+	EstimaD2 \= desconhecido,
 	Custo1 + EstimaD1 =< Custo2 + EstimaD2,
-	!,
 	obtem_melhor_a([Caminho1/Custo1/EstimaD1|Caminhos],MelhorCaminho).
 
-obtem_melhor_a([_|Caminhos],MelhorCaminho) :-
-	obtem_melhor_a(Caminhos,MelhorCaminho).
+obtem_melhor_a([_/Custo1/EstimaD1,Caminho2/Custo2/EstimaD2|Caminhos],MelhorCaminho) :-
+	EstimaD1 \= desconhecido,
+	EstimaD2 \= desconhecido,
+	Custo1 + EstimaD1 >= Custo2 + EstimaD2,
+	obtem_melhor_a([Caminho2/Custo2/EstimaD2|Caminhos],MelhorCaminho).
+
+obtem_melhor_a([_/_/desconhecido,Caminho2/Custo2/EstimaD2|Caminhos],MelhorCaminho) :-
+	EstimaD2 \= desconhecido,
+	obtem_melhor_a([Caminho2/Custo2/EstimaD2|Caminhos],MelhorCaminho).
+
+obtem_melhor_a([Caminho1/Custo1/EstimaD1,_/_/desconhecido|Caminhos],MelhorCaminho) :-
+	EstimaD1 \= desconhecido,
+	obtem_melhor_a([Caminho1/Custo1/EstimaD1|Caminhos],MelhorCaminho).
+
+
+obtem_melhor_a([Caminho1/Custo1/desconhecido,_/Custo2/desconhecido|Caminhos],MelhorCaminho) :-
+	Custo1 =< Custo2, 
+	obtem_melhor_a([Caminho1/Custo1/desconhecido|Caminhos],MelhorCaminho).
+
+
+obtem_melhor_a([_/Custo1/desconhecido,Caminho2/Custo2/desconhecido|Caminhos],MelhorCaminho) :-
+	Custo1 >= Custo2, 
+	obtem_melhor_a([Caminho2/Custo2/desconhecido|Caminhos],MelhorCaminho).
 
 % ------------------------------------------------------------------------------- Helpers
 
@@ -130,13 +176,18 @@ adjacente(Nodo,ProxNodo,PassoDist,PassoTran) :- edge(Nodo,ProxNodo,_,PassoDist,P
 adjacente(Nodo,ProxNodo,PassoDist,PassoTran) :- edge(ProxNodo,Nodo,_,PassoDist,PassoTran).
 
 % CONTEXO - expande_gulosa e expande_aestrela com a heurística da distância
-% RETORNO - Nodo adjacente já incorporado na lista do caminho até ele + Custo total do caminho até esse nodo adjacente + valor da heuristica da distância desse nodo adjacente.
+% RETORNO - Nodo adjacente já incorporado na lista do caminho até ele + Custo total do caminho até esse nodo adjacente + valor da heuristica da distância desse nodo adjacente. Caso o valor da heurística não for conhecido, então é inserido "desconhecido" para este valor.
 
 adjacenteDist(Dest,[Nodo|Caminho]/Custo/_,[NextNodo,Nodo|Caminho]/NovoCusto/EstDist) :-
 	adjacente(Nodo,NextNodo,PassoCusto,_),
 	not(member(NextNodo,Caminho)),
 	NovoCusto is Custo + PassoCusto,
-	estima(NextNodo,Dest,_,EstDist,_).
+	estima(NextNodo,Dest,EstDist,_).
+
+adjacenteDist(_,[Nodo|Caminho]/Custo/_,[NextNodo,Nodo|Caminho]/NovoCusto/desconhecido) :-
+	adjacente(Nodo,NextNodo,PassoCusto,_),
+	not(member(NextNodo,Caminho)),
+	NovoCusto is Custo + PassoCusto.
 
 % simetrico ao anterior mas para a heurística do trânsito.
 
@@ -144,7 +195,13 @@ adjacenteTran(Dest,[Nodo|Caminho]/Custo/_,[NextNodo,Nodo|Caminho]/NovoCusto/EstT
 	adjacente(Nodo,NextNodo,_,PassoCusto),
 	not(member(NextNodo,Caminho)),
 	NovoCusto is Custo + PassoCusto,
-	estima(NextNodo,Dest,_,_,EstTran).
+	estima(NextNodo,Dest,_,EstTran).
+
+
+adjacenteTran(_,[Nodo|Caminho]/Custo/_,[NextNodo,Nodo|Caminho]/NovoCusto/desconhecido) :-
+	adjacente(Nodo,NextNodo,_,PassoCusto),
+	not(member(NextNodo,Caminho)),
+	NovoCusto is Custo + PassoCusto.
 
 % CONTEXTO - pesquisas informadas
 % IDEIA - dado um caminho E e uma lista de caminhos, retorna a lista de caminhos sem o caminho E dado

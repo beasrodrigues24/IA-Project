@@ -258,7 +258,7 @@ edge(centralCity, starCity, fastStreet, 31, 78).
 edge(centralCity, gravityFalls, pineStreet, 13, 81).
 edge(westEgg, westworld, westAvenue, 5, 56).
 edge(westworld,rivendell, elfStreet, 30, 13).
-edge(capitol, pawnee, swansonBoulevard, 50, 14).
+edge(capitol, pawnee, swansonBoulevard, 20, 14).
 edge(capitol, hogwarts, potterStreet, 100, 52).
 edge(gravityFalls, bikiniBottom, patrickAvenue, 4, 98).
 edge(pawnee, bikiniBottom, squidStreet, 26, 34).
@@ -295,3 +295,4 @@ estima(mordor,neverland,48,21).
 estima(mordor,gothamCity,94,16).
 estima(mordor,bikinibottom,60,43).
 estima(mordor,bedrock,74,39).
+
