@@ -1,7 +1,8 @@
 :- module(graph_helpers, [
    	profundidade/3,
 	largura/3,
-	gulosa/4
+	gulosa/4,
+	aestrela/4
 	]).
 
 
@@ -14,7 +15,7 @@ profundidade(Orig,Dest,[Orig|Caminho]) :-
 
 profundidadeAux(Nodo,_,[],Nodo).
 profundidadeAux(Nodo,Historico,[ProxNodo|Caminho],Dest) :-
-	adjacente(Nodo,ProxNodo),
+	adjacente(Nodo,ProxNodo,_,_),
 	not(member(ProxNodo,Historico)),
 	profundidadeAux(ProxNodo,[ProxNodo|Historico],Caminho,Dest).
 
@@ -28,18 +29,18 @@ larguraAux(Dest,[[Dest|T]|_],Solucao) :- reverse([Dest|T],Solucao).
 larguraAux(Dest,[EstadosA|OutrosEstados],Solucao) :-
 	EstadosA = [Atual|_],
 	findall([EstadoX|EstadosA],
-		(edge(Atual,EstadoX,_,_),not(member(EstadoX,EstadosA))),Novos),
+		(adjacente(Atual,EstadoX,_,_),not(member(EstadoX,EstadosA))),Novos),
 	append(OutrosEstados,Novos,Todos),
 	larguraAux(Dest,Todos,Solucao).
 
 % ------------------------------------------------------------- Pesquisa informada - gulosa
 
-% gulosa(Origem,Destino,Caminho)
+% gulosa(Origem,Destino,Caminho Seguindo a heurística da distância/Custo de distância desse caminho, Caminho seguindo a heurística do trânsito/Custo de transito desse caminho)
 
-gulosa(Orig,Dest,CaminhoDistancia,CaminhoTransito) :-
+gulosa(Orig,Dest,CaminhoDistancia/CustoDist,CaminhoTransito/CustoTran) :-
 	estima(Orig,Dest,EstimaD,EstimaT),
-	gulosaAuxDist(Dest,[[Orig]/EstimaD],InvCaminhoDist),
-	gulosaAuxTransito(Dest,[[Orig]/EstimaT],InvCaminhoTransito),
+	gulosaAuxDist(Dest,[[Orig]/0/EstimaD],InvCaminhoDist/CustoDist/_),
+	gulosaAuxTransito(Dest,[[Orig]/0/EstimaT],InvCaminhoTransito/CustoTran/_),
 	reverse(InvCaminhoDist,CaminhoDistancia),
 	reverse(InvCaminhoTransito,CaminhoTransito).
 
@@ -47,21 +48,21 @@ gulosa(Orig,Dest,CaminhoDistancia,CaminhoTransito) :-
 
 gulosaAuxDist(Dest,Caminhos,Caminho) :-
 	obtem_melhor_g(Caminhos,Caminho),
-	Caminho = [Dest|_]/_.
+	Caminho = [Dest|_]/_/_.
 gulosaAuxDist(Dest,Caminhos,SolucaoCaminho) :-
 	obtem_melhor_g(Caminhos,MelhorCaminho),
 	seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
-	expande_gulosa_dist(Dest,MelhorCaminho,ExpCaminhos),
+	expande_dist(Dest,MelhorCaminho,ExpCaminhos),
 	append(OutrosCaminhos,ExpCaminhos,NovosCaminhos),
 	gulosaAuxDist(NovosCaminhos,SolucaoCaminho).
 
 gulosaAuxTransito(Dest,Caminhos,Caminho) :-
 	obtem_melhor_g(Caminhos,Caminho),
-	Caminho = [Dest|_]/_.
+	Caminho = [Dest|_]/_/_.
 gulosaAuxTransito(Dest,Caminhos,SolucaoCaminho) :-
 	obtem_melhor_g(Caminhos,MelhorCaminho),
 	seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
-	expande_gulosa_tran(Dest,MelhorCaminho,ExpCaminhos),
+	expande_tran(Dest,MelhorCaminho,ExpCaminhos),
 	append(OutrosCaminhos,ExpCaminhos,NovosCaminhos),
 	gulosaAuxDist(NovosCaminhos,SolucaoCaminho).
 
@@ -69,47 +70,95 @@ gulosaAuxTransito(Dest,Caminhos,SolucaoCaminho) :-
 % IDEIA - como a lista de possível caminhos, enviada como parâmetro, é composta em cada elemento por: (Caminho/estimativa da heurística deste caminho), para sabermos o caminho que vamos escolher, basta comparar as estimativas !
 
 obtem_melhor_g([Caminho],Caminho) :- !.
-obtem_melhor_g([Caminho1/EstimaD1,_/EstimaD2|Caminhos],MelhorCaminho) :- 
+obtem_melhor_g([Caminho1/Custo1/EstimaD1,_/_/EstimaD2|Caminhos],MelhorCaminho) :- 
 	EstimaD1 =< EstimaD2,
 	!,
-	obtem_melhor_g([Caminho1/EstimaD1|Caminhos],MelhorCaminho).
+	obtem_melhor_g([Caminho1/Custo1/EstimaD1|Caminhos],MelhorCaminho).
 
 obtem_melhor_g([_|Caminhos],MelhorCaminho) :-
 	obtem_melhor_g(Caminhos,MelhorCaminho).
 
-% CONTEXTO - não só encontra os nodos adjacentes do nodo mais externo do Caminho, como também devolve os nodos adjacentes já anexados ao caminho dado como parâmetro. Para além disto é anexado ao caminho também e estimativa da heurística da distância para depois já ter em conta quando formos decidir se vamos seguir por ele.
-
-expande_gulosa_dist(Dest,Caminho,ExpCaminhos) :-
-	findall(NovoCaminho,adjacenteDist(Dest,Caminho,NovoCaminho),ExpCaminhos).
-
-
-% simetrica a anterior, diferindo apenas que a heurística a utilizar é a do trânsito.
-
-expande_gulosa_tran(Dest,Caminho,ExpCaminhos) :-
-	findall(NovoCaminho,adjacenteTran(Dest,Caminho,NovoCaminho),ExpCaminhos).
-
 % ------------------------------------------------------------------------------- Pesquisa Informada - A Estrela
 
-% Graph helpers
+% aestrela(Origem,Destino,Caminho Seguindo a heurística da distância/Custo de distância desse caminho, Caminho seguindo a heurística do trânsito/Custo de transito desse caminho)
+% difere da gulosa apenas no obtem_melhor - nodo a ser expandido (que agora considera também o custo percorrido total).
 
-adjacente(Nodo,ProxNodo) :- edge(Nodo,ProxNodo,_,_).
-adjacente(Nodo,ProxNodo) :- edge(ProxNodo,Nodo,_,_).
+aestrela(Orig,Dest,CaminhoDistancia/CustoDist,CaminhoTransito/CustoTran) :-
+	estima(Orig,Dest,EstimaD,EstimaT),
+	aestrelaAuxDist(Dest,[[Orig]/0/EstimaD],InvCaminhoDist/CustoDist/_),
+	aestrelaAuxTransito(Dest,[[Orig]/0/EstimaT],InvCaminhoTransito/CustoTran/_),
+	reverse(InvCaminhoDist,CaminhoDistancia),
+	reverse(InvCaminhoTransito,CaminhoTransito).
 
-% CONTEXO - expande_gulosa com a heurística da distância
+%-------
 
-adjacenteDist(Dest,[Nodo|Caminho]/_,[NextNodo,Nodo|Caminho]/EstDist) :-
-	adjacente(Nodo,NextNodo,_,_),
+aestrelaAuxDist(Dest,Caminhos,Caminho) :-
+	obtem_melhor_a(Caminhos,Caminho),
+	Caminho = [Dest|_]/_/_.
+aestrelaAuxDist(Dest,Caminhos,SolucaoCaminho) :-
+	obtem_melhor_a(Caminhos,MelhorCaminho),
+	seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
+	expande_aestrela_dist(Dest,MelhorCaminho,ExpCaminhos),
+	append(OutrosCaminhos,ExpCaminhos,NovosCaminhos),
+	aestrelaAuxDist(NovosCaminhos,SolucaoCaminho).
+
+
+aestrelaAuxTransito(Dest,Caminhos,Caminho) :-
+	obtem_melhor_a(Caminhos,Caminho),
+	Caminho = [Dest|_]/_/_.
+aestrelaAuxDist(Dest,Caminhos,SolucaoCaminho) :-
+	obtem_melhor_a(Caminhos,MelhorCaminho),
+	seleciona(MelhorCaminho,Caminhos,OutrosCaminhos),
+	expande_aestrela_tran(Dest,MelhorCaminho,ExpCaminhos),
+	append(OutrosCaminhos,ExpCaminhos,NovosCaminhos),
+	aestrelaAuxTransito(NovosCaminhos,SolucaoCaminho).
+
+%--------
+
+obtem_melhor_a([Caminho],Caminho) :- !.
+obtem_melhor_a([Caminho1/Custo1/EstimaD1,_/Custo2/EstimaD2|Caminhos],MelhorCaminho) :- 
+	Custo1 + EstimaD1 =< Custo2 + EstimaD2,
+	!,
+	obtem_melhor_a([Caminho1/Custo1/EstimaD1|Caminhos],MelhorCaminho).
+
+obtem_melhor_a([_|Caminhos],MelhorCaminho) :-
+	obtem_melhor_a(Caminhos,MelhorCaminho).
+
+% ------------------------------------------------------------------------------- Helpers
+
+adjacente(Nodo,ProxNodo,PassoDist,PassoTran) :- edge(Nodo,ProxNodo,_,PassoDist,PassoTran).
+adjacente(Nodo,ProxNodo,PassoDist,PassoTran) :- edge(ProxNodo,Nodo,_,PassoDist,PassoTran).
+
+% CONTEXO - expande_gulosa e expande_aestrela com a heurística da distância
+% RETORNO - Nodo adjacente já incorporado na lista do caminho até ele + Custo total do caminho até esse nodo adjacente + valor da heuristica da distância desse nodo adjacente.
+
+adjacenteDist(Dest,[Nodo|Caminho]/Custo/_,[NextNodo,Nodo|Caminho]/NovoCusto/EstDist) :-
+	adjacente(Nodo,NextNodo,PassoCusto,_),
 	not(member(NextNodo,Caminho)),
-	estima(NextNodo,Dest,EstDist,_).
+	NovoCusto is Custo + PassoCusto,
+	estima(NextNodo,Dest,_,EstDist,_).
 
+% simetrico ao anterior mas para a heurística do trânsito.
 
-adjacenteTran(Dest,[Nodo|Caminho]/_,[NextNodo,Nodo|Caminho]/EstTran) :-
-	adjacente(Nodo,NextNodo,_,_),
+adjacenteTran(Dest,[Nodo|Caminho]/Custo/_,[NextNodo,Nodo|Caminho]/NovoCusto/EstTran) :-
+	adjacente(Nodo,NextNodo,_,PassoCusto),
 	not(member(NextNodo,Caminho)),
-	estima(NextNodo,Dest,_,EstTran).
+	NovoCusto is Custo + PassoCusto,
+	estima(NextNodo,Dest,_,_,EstTran).
 
 % CONTEXTO - pesquisas informadas
 % IDEIA - dado um caminho E e uma lista de caminhos, retorna a lista de caminhos sem o caminho E dado
 
 seleciona(E,[E|Xs],Xs).
 seleciona(E,[X|Xs],[X|Ys]) :- seleciona(E,Xs,Ys).
+
+
+% CONTEXTO - não só encontra os nodos adjacentes do nodo mais externo do Caminho, como também devolve os nodos adjacentes já anexados ao caminho dado como parâmetro. Para além disto é anexado ao caminho também o custo total da distância percorrida pelo caminho todo e também a estimativa da heurística da distância para depois já ter em conta quando formos decidir se vamos seguir por ele.
+
+expande_dist(Dest,Caminho,ExpCaminhos) :-
+	findall(NovoCaminho,adjacenteDist(Dest,Caminho,NovoCaminho),ExpCaminhos).
+
+% simetrica a anterior, diferindo apenas que a heurística a utilizar é a do trânsito.
+
+expande_tran(Dest,Caminho,ExpCaminhos) :-
+	findall(NovoCaminho,adjacenteTran(Dest,Caminho,NovoCaminho),ExpCaminhos).

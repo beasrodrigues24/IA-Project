@@ -16,3 +16,8 @@ bfsQ(Origem,Destino,Caminho) :- largura(Origem,Destino,Caminho).
 % Gulosa
 
 gulosaQ(Origem,Destino,CaminhoDist,CaminhoTran) :- gulosa(Origem,Destino,CaminhoDist,CaminhoTran).
+
+
+% AEstrela
+
+aestrelaQ(Origem,Destino,CaminhoDist,CaminhoTran) :- aestrela(Origem,Destino,CaminhoDist,CaminhoTran).
