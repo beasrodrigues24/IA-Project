@@ -8,6 +8,10 @@
 
 dfsQ(Origem,Destino,Caminho) :- profundidade(Origem,Destino,Caminho).
 
+% DFS Iterativa
+
+dfsIQ(Origem,Destino,Caminho) :- profundidadeIterativa(Origem,Destino,Caminho).
+
 % BFS
 
 bfsQ(Origem,Destino,Caminho) :- largura(Origem,Destino,Caminho).
@@ -24,13 +28,14 @@ aestrelaQ(Origem,Destino,CaminhoDist,CaminhoTran) :- aestrela(Origem,Destino,Cam
 
 % Gerar Circuitos
 
-gerarCircuitos([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT,CircuitosBFS,CircuitosDFS]) :- 
+gerarCircuitos([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT,CircuitosBFS,CircuitosDFS,CircuitosDFSI]) :- 
 	gerarGulosaDist(CircuitosGD),
 	gerarGulosaTran(CircuitosGT),
 	gerarAestrelaDist(CircuitosAD),
 	gerarAestrelaTran(CircuitosAT),
 	gerarBFS(CircuitosBFS),
-	gerarDFS(CircuitosDFS).	
+	gerarDFS(CircuitosDFS),
+	gerarDFSIterativa(CircuitosDFSI).
 
 % Calcular tempo de um percurso dado peso e transporte
 

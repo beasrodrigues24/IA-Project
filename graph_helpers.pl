@@ -8,7 +8,9 @@
 	gerarAestrelaDist/1,
 	gerarAestrelaTran/1,
 	gerarBFS/1,
-	gerarDFS/1
+	gerarDFS/1,
+	profundidadeIterativa/3,
+	gerarDFSIterativa/1
 	]).
 
 :- use_module(helpers).
@@ -42,6 +44,21 @@ gerarDFSAux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
 	origem(Orig),
 	profundidade(Orig,Dest,Circuito),
 	gerarDFSAux(OutrosCircuitos,OutrosDest).
+
+% ----------------------------------------------------------- Gera todos os circuitos usando DFS Iterativa para todos os destinos (otimizando sub-percursos de percursos).
+
+gerarDFSIterativa(CircuitosOtimizados) :-
+	getDests(TodosDests),
+	gerarDFSIterativaAux(Circuitos,TodosDests),
+	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
+
+% OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando o algoritmo DFS Iterativo.
+
+gerarDFSIterativaAux([],[]).
+gerarDFSIterativaAux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	profundidadeIterativa(Orig,Dest,Circuito),
+	gerarDFSIterativaAux(OutrosCircuitos,OutrosDest).
 
 % ------------------------------------------------------------ Gera todos os circuitos usando Aestrela da origem para todos os destinos (otimizando sub-percursos de percursos), com a heurística da distância.
 
@@ -146,6 +163,27 @@ profundidadeAux(Nodo,Historico,[ProxNodo|Caminho],Dest) :-
 	not(member(ProxNodo,Historico)),
 	profundidadeAux(ProxNodo,[ProxNodo|Historico],Caminho,Dest).
 
+% ------------------------------------------------------------- Pesquisa não informada - Profundidade Iterativa
+
+% profundidadeIterativa(Origem,Destino,Caminho)
+
+profundidadeIterativa(Orig,Dest,[Orig|Caminho]) :-
+	profundidadeIterativaAux(Orig,Dest,0,Caminho).
+
+profundidadeIterativaAux(Orig,Dest,NumeroIteracoes,Caminho) :-
+	auxIteracao(Orig,[Orig],Caminho,NumeroIteracoes,Dest).
+
+profundidadeIterativaAux(Orig,Dest,NumeroIteracoes,Caminho) :-
+	ProxNumeroIteracoes is NumeroIteracoes + 1,
+	profundidadeIterativaAux(Orig,Dest,ProxNumeroIteracoes,Caminho).
+
+auxIteracao(Nodo,_,[],N,Nodo) :- N >= 0.
+auxIteracao(Nodo,Historico,[ProxNodo|Caminho],Iteracao,Dest) :-
+	Iteracao >= 0,
+	adjacente(Nodo,ProxNodo,_,_),
+	not(member(ProxNodo,Historico)),
+	ProxIteracao is Iteracao - 1,
+	auxIteracao(ProxNodo,[ProxNodo|Historico],Caminho,ProxIteracao,Dest).
 % ------------------------------------------------------------- Pesquisa não informada - largura
 
 % largura(Origem,Destino,Caminho)
