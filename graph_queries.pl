@@ -2,8 +2,6 @@
 :- use_module(knowledgeBase).
 :- use_module(helpers).
 
-origem(neverland).
-
 % PROCURAS NÃO INFORMADAS
 
 % DFS
@@ -26,8 +24,9 @@ aestrelaQ(Origem,Destino,CaminhoDist,CaminhoTran) :- aestrela(Origem,Destino,Cam
 
 % Gerar Circuitos
 
-gerarCircuitos(Circuitos) :- 
-	gerarGulosa(Circuitos).
+gerarCircuitos([CircuitosGD,CircuitosGT]) :- 
+	gerarGulosaDist(CircuitosGD),
+	gerarGulosaTran(CircuitosGT).
 	%gerarDfs(Dfs),
 	%gerarBfs(Bfs),
 	%gerarAestrela(Aestrela).

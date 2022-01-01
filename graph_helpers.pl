@@ -3,26 +3,68 @@
 	largura/3,
 	gulosa/4,
 	aestrela/4,
-	gerarGulosa/1
+	gerarGulosaDist/1,
+	gerarGulosaTran/1
 	]).
 
 :- use_module(helpers).
 
 % ------------------------------------------------------------ Gera todos os circuitos usando Gulosa da origem para todos os destinos
 
-gerarGulosa(Circuitos) :-
+gerarGulosaDist(CircuitosOtimizados) :-
+	getDests(TodosDests),
+	gerarGulosaAuxDist(Circuitos,TodosDests),
+	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
+
+% OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando a heurística da distância para o algoritmo guloso.
+
+gerarGulosaAuxDist([],[]).
+gerarGulosaAuxDist([CircuitoD|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	gulosa(Orig,Dest,CircuitoD,_),
+	gerarGulosaAuxDist(OutrosCircuitos,OutrosDest).
+
+% -----
+
+gerarGulosaTran(CircuitosOtimizados) :-
+	getDests(TodosDests),
+	gerarGulosaAuxTran(Circuitos,TodosDests),
+	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
+
+% OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando a heurística do trânsito para o algoritmo guloso.
+
+gerarGulosaAuxTran([],[]).
+gerarGulosaAuxTran([CircuitoT|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	gulosa(Orig,Dest,_,CircuitoT),
+	gerarGulosaAuxTran(OutrosCircuitos,OutrosDest).
+
+% -----
+
+otimizaCircuitos([],_,[]).
+
+otimizaCircuitos([H|OutrosCircuitos],T2,[H|T]) :-
+	otimizaCircuitosAux(H,OutrosCircuitos),
+	otimizaCircuitosAux(H,T2),
+	otimizaCircuitos(OutrosCircuitos,[H|T2],T).
+
+otimizaCircuitos([_|OutrosCircuitos],HistoricoOtimizados,CircuitosOtimizados) :-
+	otimizaCircuitos(OutrosCircuitos,HistoricoOtimizados,CircuitosOtimizados).
+
+% OBJETIVO - verificar se um circuito é parte de um circuito maior. Caso não fizer parte, a regra é verdadeira.
+
+otimizaCircuitosAux(_,[]).
+otimizaCircuitosAux(C/Custo,[Cs/_|T]) :-
+	not(prefix(C,Cs)),
+	otimizaCircuitosAux(C/Custo,T).
+
+% -----
+%
+getDests(TodosDests) :-
 	findall(Nodo,(edge(Nodo,_,_,_,_),not(origem(Nodo))),Nodos),
 	findall(Nodo,(edge(_,Nodo,_,_,_),not(origem(Nodo))),Nodos2),
 	append(Nodos,Nodos2,Todos),
-	removeRepetidos(Todos,TodosDests),
-	gerarGulosaAux(Circuitos,TodosDests).
-
-gerarGulosaAux([],[]).
-gerarGulosaAux([Circuito1D/Circuito1T|OutrosCircuitos],[Dest|OutrosDest]) :-
-	origem(Orig),
-	gulosa(Orig,Dest,Circuito1D,Circuito1T),
-	gerarGulosaAux(OutrosCircuitos,OutrosDest).
-
+	removeRepetidos(Todos,TodosDests).
 
 % ------------------------------------------------------------- Pesquisa não informada - Profundidade
 
@@ -64,7 +106,7 @@ gulosa(Orig,Dest,CaminhoDistancia/CustoDist,CaminhoTransito/CustoTran) :-
 
 estimaAux(Orig,Dest,EstimaD,EstimaT) :- estima(Orig,Dest,EstimaD,EstimaT), !.
 
-estimaAux(Orig,Dest,desconhecido,desconhecido).
+estimaAux(_,_,desconhecido,desconhecido).
 
 % gulosaAuxDist e gulosaAuxTransito são SIMETRICAS. Diferem apenas no expande_gulosa (uma anexa aos caminhos expandidos a estimativa da herística da sitância, enquanto outra anexo aos caminhos expandidos a estimativa da heurística do trânsito).
 
