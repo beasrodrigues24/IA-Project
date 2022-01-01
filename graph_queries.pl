@@ -28,6 +28,20 @@ aestrelaQ(Origem,Destino,CaminhoDist,CaminhoTran) :- aestrela(Origem,Destino,Cam
 
 % Gerar Circuitos
 
+gerarBFSQ(Circuitos) :- gerarBFS(Circuitos).
+
+gerarDFSQ(Circuitos) :- gerarDFS(Circuitos).
+
+gerarDFSIQ(Circuitos) :- gerarDFSIterativa(Circuitos).
+
+gerarGulosaDistQ(Circuitos) :- gerarGulosaDist(Circuitos).
+
+gerarGulosaTranQ(Circuitos) :- gerarGulosaTran(Circuitos).
+
+gerarAEstrelaDistQ(Circuitos) :- gerarAestrelaDist(Circuitos).
+
+gerarAEstrelaTranQ(Circuitos) :- gerarAestrelaTran(Circuitos).
+
 gerarCircuitos([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT,CircuitosBFS,CircuitosDFS,CircuitosDFSI]) :- 
 	gerarGulosaDist(CircuitosGD),
 	gerarGulosaTran(CircuitosGT),
