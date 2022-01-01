@@ -267,6 +267,28 @@ compareDatas([Di/Df|T],De) :- not(pertenceData(Di,Df,De)), compareDatas(T,De).
 	dataDiff(DataInicio,DataFim,N),
 	N < 0
 	).
+
+
+/* 
+ * Não permite a associação de uma CodEncomenda a mais de um circuito
+ */
+
++encomendaCaminho(_,CodEncomenda) :: (
+	findall(CodCaminho,encomendaCaminho(CodCaminho,CodEncomenda),Lista),
+	length(Lista,N),
+	N == 1
+	).
+
+/* 
+ * Não permite mais de um caminho com o mesmo código de caminho
+ */
+
++caminho(CodCaminho,_) :: (
+	findall(CodCaminho,caminho(CodCaminho,_),Lista),
+	length(Lista,N),
+	N == 1
+	).
+
 /*
  * Garante a evolução fidedigna de conhecimento
 */
