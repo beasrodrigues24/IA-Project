@@ -24,9 +24,11 @@ aestrelaQ(Origem,Destino,CaminhoDist,CaminhoTran) :- aestrela(Origem,Destino,Cam
 
 % Gerar Circuitos
 
-gerarCircuitos([CircuitosGD,CircuitosGT]) :- 
+gerarCircuitos([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT]) :- 
 	gerarGulosaDist(CircuitosGD),
-	gerarGulosaTran(CircuitosGT).
+	gerarGulosaTran(CircuitosGT),
+	gerarAestrelaDist(CircuitosAD),
+	gerarAestrelaTran(CircuitosAT).
 	%gerarDfs(Dfs),
 	%gerarBfs(Bfs),
 	%gerarAestrela(Aestrela).

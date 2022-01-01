@@ -4,12 +4,44 @@
 	gulosa/4,
 	aestrela/4,
 	gerarGulosaDist/1,
-	gerarGulosaTran/1
+	gerarGulosaTran/1,
+	gerarAestrelaDist/1,
+	gerarAestrelaTran/1
 	]).
 
 :- use_module(helpers).
 
-% ------------------------------------------------------------ Gera todos os circuitos usando Gulosa da origem para todos os destinos
+% ------------------------------------------------------------ Gera todos os circuitos usando Aestrela da origem para todos os destinos (otimizando sub-percursos de percursos), com a heurística da distância.
+
+gerarAestrelaDist(CircuitosOtimizados) :-
+	getDests(TodosDests),
+	gerarAestrelaAuxDist(Circuitos,TodosDests),
+	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
+
+% OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando a heurística da distância para o algoritmo Aestrela.
+
+gerarAestrelaAuxDist([],[]).
+gerarAestrelaAuxDist([CircuitoD|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	aestrela(Orig,Dest,CircuitoD,_),
+	gerarAestrelaAuxDist(OutrosCircuitos,OutrosDest).
+
+% simetrica a gerarAestrelaDist, mas com a heurística do trânsito.
+
+gerarAestrelaTran(CircuitosOtimizados) :-
+	getDests(TodosDests),
+	gerarAestrelaAuxTran(Circuitos,TodosDests),
+	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
+
+% OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando a heurística do trânsito para o algoritmo aestrela.
+
+gerarAestrelaAuxTran([],[]).
+gerarAestrelaAuxTran([CircuitoT|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	aestrela(Orig,Dest,_,CircuitoT),
+	gerarAestrelaAuxTran(OutrosCircuitos,OutrosDest).
+
+% ------------------------------------------------------------ Gera todos os circuitos usando Gulosa da origem para todos os destinos (otimizando sub-percursos de percursos), com a heurística da distância.
 
 gerarGulosaDist(CircuitosOtimizados) :-
 	getDests(TodosDests),
@@ -24,7 +56,7 @@ gerarGulosaAuxDist([CircuitoD|OutrosCircuitos],[Dest|OutrosDest]) :-
 	gulosa(Orig,Dest,CircuitoD,_),
 	gerarGulosaAuxDist(OutrosCircuitos,OutrosDest).
 
-% -----
+% simetrica a gerarGulosaDist, mas com a heurística do trânsito.
 
 gerarGulosaTran(CircuitosOtimizados) :-
 	getDests(TodosDests),
@@ -39,7 +71,9 @@ gerarGulosaAuxTran([CircuitoT|OutrosCircuitos],[Dest|OutrosDest]) :-
 	gulosa(Orig,Dest,_,CircuitoT),
 	gerarGulosaAuxTran(OutrosCircuitos,OutrosDest).
 
-% -----
+% --------------------------------------------------------------------------
+
+% OBJETIVO - Dado a lista dos circuitos da origem para todos os destinos, filtrar apenas os circuitos maiores, retirando aqueles que são sub-circuitos.
 
 otimizaCircuitos([],_,[]).
 
@@ -59,7 +93,7 @@ otimizaCircuitosAux(C/Custo,[Cs/_|T]) :-
 	otimizaCircuitosAux(C/Custo,T).
 
 % -----
-%
+
 getDests(TodosDests) :-
 	findall(Nodo,(edge(Nodo,_,_,_,_),not(origem(Nodo))),Nodos),
 	findall(Nodo,(edge(_,Nodo,_,_,_),not(origem(Nodo))),Nodos2),
