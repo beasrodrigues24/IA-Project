@@ -24,14 +24,13 @@ aestrelaQ(Origem,Destino,CaminhoDist,CaminhoTran) :- aestrela(Origem,Destino,Cam
 
 % Gerar Circuitos
 
-gerarCircuitos([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT]) :- 
+gerarCircuitos([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT,CircuitosBFS,CircuitosDFS]) :- 
 	gerarGulosaDist(CircuitosGD),
 	gerarGulosaTran(CircuitosGT),
 	gerarAestrelaDist(CircuitosAD),
-	gerarAestrelaTran(CircuitosAT).
-	%gerarDfs(Dfs),
-	%gerarBfs(Bfs),
-	%gerarAestrela(Aestrela).
+	gerarAestrelaTran(CircuitosAT),
+	gerarBFS(CircuitosBFS),
+	gerarDFS(CircuitosDFS).	
 
 % Calcular tempo de um percurso dado peso e transporte
 

@@ -6,10 +6,42 @@
 	gerarGulosaDist/1,
 	gerarGulosaTran/1,
 	gerarAestrelaDist/1,
-	gerarAestrelaTran/1
+	gerarAestrelaTran/1,
+	gerarBFS/1,
+	gerarDFS/1
 	]).
 
 :- use_module(helpers).
+
+% ------------------------------------------------------------ Gera todos os circuitos usando BFS da origem para todos os destinos (otimizando sub-percursos de percursos).
+
+gerarBFS(CircuitosOtimizados) :-
+	getDests(TodosDests),
+	gerarBFSAux(Circuitos,TodosDests),
+	otimizaCircuitos2(Circuitos,[],CircuitosOtimizados).
+
+% OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando o algoritmo BFS.
+
+gerarBFSAux([],[]).
+gerarBFSAux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	largura(Orig,Dest,Circuito),
+	gerarBFSAux(OutrosCircuitos,OutrosDest).
+
+% ------------------------------------------------------------ Gera todos os circuitos usando DFS da origem para todos os destinos (otimizando sub-percursos de percursos).
+
+gerarDFS(CircuitosOtimizados) :-
+	getDests(TodosDests),
+	gerarDFSAux(Circuitos,TodosDests),
+	otimizaCircuitos2(Circuitos,[],CircuitosOtimizados).
+
+% OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando o algoritmo DFS.
+
+gerarDFSAux([],[]).
+gerarDFSAux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	profundidade(Orig,Dest,Circuito),
+	gerarDFSAux(OutrosCircuitos,OutrosDest).
 
 % ------------------------------------------------------------ Gera todos os circuitos usando Aestrela da origem para todos os destinos (otimizando sub-percursos de percursos), com a heurística da distância.
 
@@ -85,12 +117,27 @@ otimizaCircuitos([H|OutrosCircuitos],T2,[H|T]) :-
 otimizaCircuitos([_|OutrosCircuitos],HistoricoOtimizados,CircuitosOtimizados) :-
 	otimizaCircuitos(OutrosCircuitos,HistoricoOtimizados,CircuitosOtimizados).
 
+otimizaCircuitos2([],_,[]).
+
+otimizaCircuitos2([H|OutrosCircuitos],T2,[H|T]) :-
+	otimizaCircuitosAux2(H,OutrosCircuitos),
+	otimizaCircuitosAux2(H,T2),
+	otimizaCircuitos2(OutrosCircuitos,[H|T2],T).
+
+otimizaCircuitos2([_|OutrosCircuitos],HistoricoOtimizados,CircuitosOtimizados) :-
+	otimizaCircuitos2(OutrosCircuitos,HistoricoOtimizados,CircuitosOtimizados).
+
 % OBJETIVO - verificar se um circuito é parte de um circuito maior. Caso não fizer parte, a regra é verdadeira.
 
 otimizaCircuitosAux(_,[]).
 otimizaCircuitosAux(C/Custo,[Cs/_|T]) :-
 	not(prefix(C,Cs)),
 	otimizaCircuitosAux(C/Custo,T).
+
+otimizaCircuitosAux2(_,[]).
+otimizaCircuitosAux2(C,[Cs|T]) :-
+	not(prefix(C,Cs)),
+	otimizaCircuitosAux2(C,T).
 
 % -----
 
