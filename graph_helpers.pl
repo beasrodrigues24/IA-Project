@@ -18,7 +18,7 @@
 gerarBFS(CircuitosOtimizados) :-
 	getDests(TodosDests),
 	gerarBFSAux(Circuitos,TodosDests),
-	otimizaCircuitos2(Circuitos,[],CircuitosOtimizados).
+	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
 
 % OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando o algoritmo BFS.
 
@@ -33,7 +33,7 @@ gerarBFSAux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
 gerarDFS(CircuitosOtimizados) :-
 	getDests(TodosDests),
 	gerarDFSAux(Circuitos,TodosDests),
-	otimizaCircuitos2(Circuitos,[],CircuitosOtimizados).
+	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
 
 % OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando o algoritmo DFS.
 
@@ -117,27 +117,13 @@ otimizaCircuitos([H|OutrosCircuitos],T2,[H|T]) :-
 otimizaCircuitos([_|OutrosCircuitos],HistoricoOtimizados,CircuitosOtimizados) :-
 	otimizaCircuitos(OutrosCircuitos,HistoricoOtimizados,CircuitosOtimizados).
 
-otimizaCircuitos2([],_,[]).
-
-otimizaCircuitos2([H|OutrosCircuitos],T2,[H|T]) :-
-	otimizaCircuitosAux2(H,OutrosCircuitos),
-	otimizaCircuitosAux2(H,T2),
-	otimizaCircuitos2(OutrosCircuitos,[H|T2],T).
-
-otimizaCircuitos2([_|OutrosCircuitos],HistoricoOtimizados,CircuitosOtimizados) :-
-	otimizaCircuitos2(OutrosCircuitos,HistoricoOtimizados,CircuitosOtimizados).
 
 % OBJETIVO - verificar se um circuito é parte de um circuito maior. Caso não fizer parte, a regra é verdadeira.
 
 otimizaCircuitosAux(_,[]).
-otimizaCircuitosAux(C/Custo,[Cs/_|T]) :-
+otimizaCircuitosAux(C,[Cs|T]) :-
 	not(prefix(C,Cs)),
-	otimizaCircuitosAux(C/Custo,T).
-
-otimizaCircuitosAux2(_,[]).
-otimizaCircuitosAux2(C,[Cs|T]) :-
-	not(prefix(C,Cs)),
-	otimizaCircuitosAux2(C,T).
+	otimizaCircuitosAux(C,T).
 
 % -----
 
@@ -178,10 +164,10 @@ larguraAux(Dest,[EstadosA|OutrosEstados],Solucao) :-
 
 % gulosa(Origem,Destino,Caminho Seguindo a heurística da distância/Custo de distância desse caminho, Caminho seguindo a heurística do trânsito/Custo de transito desse caminho)
 
-gulosa(Orig,Dest,CaminhoDistancia/CustoDist,CaminhoTransito/CustoTran) :-
+gulosa(Orig,Dest,CaminhoDistancia,CaminhoTransito) :-
 	estimaAux(Orig,Dest,EstimaD,EstimaT),
-	gulosaAuxDist(Dest,[[Orig]/0/EstimaD],InvCaminhoDist/CustoDist/_),
-	gulosaAuxTransito(Dest,[[Orig]/0/EstimaT],InvCaminhoTransito/CustoTran/_),
+	gulosaAuxDist(Dest,[[Orig]/0/EstimaD],InvCaminhoDist/_/_),
+	gulosaAuxTransito(Dest,[[Orig]/0/EstimaT],InvCaminhoTransito/_/_),
 	reverse(InvCaminhoDist,CaminhoDistancia),
 	reverse(InvCaminhoTransito,CaminhoTransito).
 
@@ -248,10 +234,10 @@ obtem_melhor_g([Caminho1/Custo1/desconhecido,_/_/desconhecido|Caminhos],MelhorCa
 % aestrela(Origem,Destino,Caminho Seguindo a heurística da distância/Custo de distância desse caminho, Caminho seguindo a heurística do trânsito/Custo de transito desse caminho)
 % difere da gulosa apenas no obtem_melhor - nodo a ser expandido (que agora considera também o custo percorrido total).
 
-aestrela(Orig,Dest,CaminhoDistancia/CustoDist,CaminhoTransito/CustoTran) :-
+aestrela(Orig,Dest,CaminhoDistancia,CaminhoTransito) :-
 	estimaAux(Orig,Dest,EstimaD,EstimaT),
-	aestrelaAuxDist(Dest,[[Orig]/0/EstimaD],InvCaminhoDist/CustoDist/_),
-	aestrelaAuxTransito(Dest,[[Orig]/0/EstimaT],InvCaminhoTransito/CustoTran/_),
+	aestrelaAuxDist(Dest,[[Orig]/0/EstimaD],InvCaminhoDist/_/_),
+	aestrelaAuxTransito(Dest,[[Orig]/0/EstimaT],InvCaminhoTransito/_/_),
 	reverse(InvCaminhoDist,CaminhoDistancia),
 	reverse(InvCaminhoTransito,CaminhoTransito).
 
