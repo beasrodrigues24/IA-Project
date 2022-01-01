@@ -237,7 +237,7 @@ gulosaAuxTransito(Dest,Caminhos,SolucaoCaminho) :-
 
 % CONTEXTO - dado uma Lista de possíveis caminhos a se seguir, escolho aquele com melhor estimativa de acordo com a heurística utilizada.
 % IDEIA - como a lista de possível caminhos, enviada como parâmetro, é composta em cada elemento por: (Caminho/estimativa da heurística deste caminho), para sabermos o caminho que vamos escolher, basta comparar as estimativas !
-% EDGE CASES - caso uma das estimativas da comparação for desconhecida, será considerado como melhor caminho aquele que tiver uma estimativa conhecida. Caso ambas forem desconhecidas, será considerado a primeira opção (nesse caso a pesquisa se assemelha a DFS).
+% EDGE CASES - caso uma das estimativas da comparação for desconhecida, será considerado como melhor caminho aquele que tiver uma estimativa conhecida. Caso ambas forem desconhecidas, será considerado a primeira opção (nesse caso a pesquisa se assemelha a BFS).
 
 obtem_melhor_g([Caminho],Caminho) :- !.
 
