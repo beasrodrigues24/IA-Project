@@ -6,6 +6,7 @@ from pyswip import Variable,Query
 from tkinter import messagebox
 from tkinter import filedialog
 from PIL import ImageTk,Image  
+import graph
 
 prolog = Prolog()
 prolog.consult("queries.pl")
@@ -802,6 +803,7 @@ menuBar = Menu(app)
 menuQueries = Menu(menuBar)
 menuFiles = Menu(menuBar)
 menuInsert = Menu(menuBar)
+menuCircuitos = Menu(menuBar)
 
 menuQueries.add_command(label="Estafeta que utilizou mais vezes um meio de transporte mais ecológico",command=query1)
 menuQueries.add_command(label="Estafetas que entregaram determinadas encomendas a um cliente",command=query2)
@@ -822,6 +824,14 @@ menuQueries.add_command(label="Encomendas Entregues (EXTRA)",command=query13)
 
 menuFiles.add_command(label="Carregar ficheiro",command=consult)
 
+menuCircuitos.add_command(label="Gerar circuitos usando DFS",command=lambda: graph.gerarDFS(frame))
+menuCircuitos.add_command(label="Gerar circuitos usando BFS",command=lambda: graph.gerarBFS(frame))
+menuCircuitos.add_command(label="Gerar circuitos usando DFS Iterativa",command=lambda: graph.gerarDFSI(frame))
+menuCircuitos.add_command(label="Gerar circuitos usando Gulosa - distância",command=lambda: graph.gerarGulosaD(frame))
+menuCircuitos.add_command(label="Gerar circuitos usando Gulosa - trânsito",command=lambda: graph.gerarGulosaT(frame))
+menuCircuitos.add_command(label="Gerar circuitos usando AEstrela - distância",command=lambda: graph.gerarAEstrelaD(frame))
+menuCircuitos.add_command(label="Gerar circuitos usando AEstrela - trânsito",command=lambda: graph.gerarAEstrelaT(frame))
+
 menuInsert.add_command(label="Cliente (EXTRA)",command=insertCliente)
 menuInsert.add_command(label="Registar nova encomenda (EXTRA) ",command=insertEncomenda)
 menuInsert.add_command(label="Registar encomenda como entregue (EXTRA) ",command=insertEncomendaEntregue)
@@ -831,6 +841,7 @@ menuInsert.add_command(label="Penalização (EXTRA) ",command=insertPenalizacao)
 menuBar.add_cascade(label="Ficheiro",menu = menuFiles)
 menuBar.add_cascade(label="Consultar",menu = menuQueries)
 menuBar.add_cascade(label="Inserir",menu = menuInsert)
+menuBar.add_cascade(label="Cicuitos",menu = menuCircuitos)
 
 app.config(menu=menuBar)
 
