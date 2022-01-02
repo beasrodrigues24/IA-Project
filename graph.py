@@ -50,11 +50,28 @@ def compararCircuitos(frame):
     text2Insert.pack()
     btn.pack()
 
-def top():
+def top(frame):
+    clearFrame(frame)
     if (topOpt.get() == "Peso"):
-        print("Peso")
+        res = list(prolog.query("ordenaCircuitosPeso("+str(topN.get())+",Res)"))
     elif (topOpt.get() == "Volume"):
-        print("Volume")
+        res = list(prolog.query("ordenaCircuitosVolume("+str(topN.get())+",Res)"))
+
+    table = ttk.Treeview(frame)
+    table['columns'] = ('Posição','Codigo Circuito')
+    table.column('#0',width=0,stretch=NO)
+    table.column('Posição',width=300,anchor=CENTER)
+    table.column('Codigo Circuito',width=400,anchor=CENTER)
+    table.heading("Posição",text="Posição",anchor=CENTER)
+    table.heading("Codigo Circuito",text="Codigo Circuito",anchor=CENTER)
+        
+    i = 1
+    for answer in (res[0]['Res']):
+        table.insert(parent='',index='end',iid=i,values=(i,answer))
+        i = i + 1
+
+    table.pack()
+    
     print(topN.get())
 
 def obterTopCircuitos(frame):
@@ -71,14 +88,16 @@ def obterTopCircuitos(frame):
     w.pack()
     text = Label(frame,text="Top")
     textInsert = Entry(frame,textvariable=topN)
-    btn = ttk.Button(frame,text="Obter",command=top)
+    btn = ttk.Button(frame,text="Obter",command=lambda: top(frame))
     text.pack()
     textInsert.pack()
     btn.pack()
 
 def associarCE():
-    print(codCircuito.get())
-    print(codEncomenda.get())
+    res = bool(list(prolog.query("evolucao(encomendaCaminho("+codCircuito.get()+","+codEncomenda.get()+"))")))
+    if res == True:
+        prolog.assertz("encomendaCaminho("+codCircuito.get()+","+codEncomenda.get()+")")
+        print("Inserido !")
 
 def associarEncomendaCaminho(frame):
     clearFrame(frame)
