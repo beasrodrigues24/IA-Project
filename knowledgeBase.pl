@@ -150,9 +150,9 @@ velocidadeDiminui(carro, 0.1).
 
 :-dynamic(encomendaCaminho/2).
 
-%encomendaCaminho(1,1).
-%encomendaCaminho(1,2).
-%encomendaCaminho(2,6).
+encomendaCaminho(1,1).
+encomendaCaminho(1,2).
+encomendaCaminho(2,6).
 
 
 /***************** INVARIANTES ******************/

@@ -1,6 +1,21 @@
+:- module(graph_queries, [
+	gerarBFSQ/1,
+	gerarDFSQ/1,
+    gerarDFSIQ/1,
+    gerarGulosaDistQ/1,
+    gerarGulosaTranQ/1,
+    gerarAEstrelaDistQ/1,
+    gerarAEstrelaTranQ/1,
+    gerarCircuitos/1,
+    ordenaCircuitosPeso/1,
+    ordenaCircuitosVolume/1,
+    insereEncomendaCaminho/2
+]).
+
 :- use_module(graph_helpers).
 :- use_module(knowledgeBase).
 :- use_module(helpers).
+
 
 % PROCURAS NÃO INFORMADAS
 
@@ -63,7 +78,13 @@ tempo([Nodo1,Nodo2|OutrosNodos], Transporte, Peso, Tempo) :-
     tempo([Nodo2|OutrosNodos], Transporte, Peso, Tempo2), 
     Tempo is Distancia/Velocidade + Tempo2.
 
-% Identificar circuitos com maior número de entregas (por volume e peso). Recebem LISTA de caminhos.
+% Identificar circuitos com maior número de entregas (por volume e peso). Recebem número de parâmetros pretendidos.
+
+% Permite escrever para o terminal uma lista com os códigos do circuito
+writeTopNCodigos([]).
+writeTopNCodigos([H|T]) :- write('Código do circuito: '),
+                           writeln(H),
+                           writeTopNCodigos(T).
 
 %% Por peso  
 
@@ -78,6 +99,9 @@ ligaCircuitosAoPesoEncomendas([CodCaminho|OutrosCodigos], [CodCaminho/PesoTotal|
     findall(CodEncomenda, encomendaCaminho(CodCaminho, CodEncomenda), ListaEncomendas),
     sumPesos(ListaEncomendas, PesoTotal),
     ligaCircuitosAoPesoEncomendas(OutrosCodigos, Res).
+
+ordenaCircuitosPeso(N) :- ordenaCircuitosPeso(N, Ordenados),
+                          writeTopNCodigos(Ordenados).
 
 ordenaCircuitosPeso(N, Ordenados) :-
     findall(CodCaminho, encomendaCaminho(CodCaminho,_), CodigosCaminhoRepetidos), 
@@ -100,6 +124,9 @@ ligaCircuitosAoVolumeEncomendas([CodCaminho|OutrosCodigos], [CodCaminho/VolumeTo
     sumVolumes(ListaEncomendas, VolumeTotal),
     ligaCircuitosAoVolumeEncomendas(OutrosCodigos, Res).
 
+ordenaCircuitosVolume(N) :- ordenaCircuitosVolume(N, Ordenados),
+                            writeTopNCodigos(Ordenados).
+
 ordenaCircuitosVolume(N,Ordenados) :-
     findall(CodCaminho, encomendaCaminho(CodCaminho,_), CodigosCaminhoRepetidos), 
     removeRepetidos(CodigosCaminhoRepetidos, CodigosCaminho),
@@ -107,3 +134,7 @@ ordenaCircuitosVolume(N,Ordenados) :-
     ligaCircuitosAoVolumeEncomendas(CodigosCaminho, CircuitosMaisValor),
     ordDecrescente(CircuitosMaisValor, OrdenadosTodos),
     takeTopN(N,OrdenadosTodos,Ordenados).   
+
+%% Permite a inserção de uma associação entre uma encomenda e um caminho
+insereEncomendaCaminho(CodC, CodE) :- atom_concat('encomendaCaminho(', CodC, Parte), atom_concat(Parte, ',', Parte2), atom_concat(Parte2, CodE, Parte3),
+                                      atom_concat(Parte3, ').', Final), evolucao(Final).

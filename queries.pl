@@ -1,5 +1,6 @@
 :- use_module(helpers).
 :- use_module(knowledgeBase).
+:- use_module(graph_queries).
 
 :-set_prolog_flag(discontiguous_warnings,off).
 
@@ -465,11 +466,24 @@ menu :- repeat,
 		writeln(' 12.  Imprimir os estafetas.'),
 		writeln(' 13.  Inserir conhecimento.'),
 		writeln(' 14.  Carregar conhecimento a partir de um ficheiro.'),
+		writeln(' 15.  Gerar todos os circuitos possíveis.'),
+		writeln(' 16.  Gerar circuitos através de DFS.'),
+		writeln(' 17.  Gerar circuitos através de BFS.'),
+		writeln(' 18.  Gerar circuitos através de DFS iterativa.'),
+		writeln(' 19.  Gerar circutios através de Pesquisa Gulosa com base na distância.'),
+		writeln(' 20.  Gerar circuitos através de Pesquisa Gulosa com base no trânsito.'),
+		writeln(' 21.  Gerar circuitos através de Pesquisa A* com base na distância.'),
+		writeln(' 22.  Gerar circuitos através de Pesquisa A* com base no trânsito.'),
+		writeln(' 23.  Associar o código de uma encomenda ao código de um circuito.'),
+		writeln(' 24.  Obter o top N de circuitos com base no Peso.'),
+		writeln(' 25.  Obter o top N de circuitos com base no Volume.'),
+		writeln(' 26.  Comparar circuitos com base na distância percorrida.'),
+		writeln(' 27.  Comparar circuitos com base no tempo necessário.'),
 		writeln('  0.  Sair do menu.'),
 		nl,																																	  
 		writeln('-------------------------------------------------------------------------------------------------------------------------------------'),nl,
 		writeln('Insira a Query pretendida: '),
-		read(Choice), Choice >= 0, Choice =< 14,
+		read(Choice), Choice >= 0, Choice =< 27,
 		(Choice = 0 -> !,fail;true), 
 		case(Choice),fail.
 
@@ -494,3 +508,17 @@ case(11) :- query11(Clientes), printIndividuos(Clientes), write('Insira n. para 
 case(12) :- query12(Estafetas), printIndividuos(Estafetas), write('Insira n. para avançar'), read(_), !.
 case(13) :- write('Insira o termo: '), read(Termo), evolucao(Termo), write(Termo), !.
 case(14) :- write('Insira o nome do ficheiro: '), read(Data), term_to_atom(Data,Nome), carregaFicheiro(Nome),!.
+case(15) :- gerarCircuitos(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(16) :- gerarDFSQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(17) :- gerarBFSQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(18) :- gerarDFSIQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(19) :- gerarGulosaDistQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(20) :- gerarGulosaTranQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(21) :- gerarAEstrelaDistQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(22) :- gerarAEstrelaTranQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(23) :- write('Insira o código da encomenda: '), read(CodE), nl, write('Insira o código do circuito: '), read(CodC), insereEncomendaCaminho(CodC, CodE), writeln('Inserido com sucesso'),
+			writeln('Insira n. para avançar'), read(_), !.
+case(24) :- writeln('Quantos circuitos pretende obter? '), read(N), ordenaCircuitosPeso(N), writeln('Insira n. para avançar.'), read(_), !.
+case(25) :- writeln('Quantos circuitos pretende obter? '), read(N), ordenaCircuitosVolume(N), writeln('Insira n. para avançar.'), read(_), !.
+case(26) :- writeln('Em construção.'), writeln('Insira n. para avançar.'), read(_), !.
+case(27) :- writeln('Em construção.'), writeln('Insira n. para avanlar.'), read(_), !.
