@@ -73,34 +73,37 @@ sumPesos([CodEnc|T], PesoTotal) :-
     sumPesos(T, PesoR), 
     PesoTotal is Peso + PesoR.
 
-ligaCircuitosAoPesoEncomendas([],_).
-ligaCircuitosAoPesoEncomendas([Circuito|OutrosCircuitos], [Circuito/PesoTotal|Res]) :-
-    caminho(CodCaminho, Circuito),
+ligaCircuitosAoPesoEncomendas([],[]).
+ligaCircuitosAoPesoEncomendas([CodCaminho|OutrosCodigos], [CodCaminho/PesoTotal|Res]) :-
     findall(CodEncomenda, encomendaCaminho(CodCaminho, CodEncomenda), ListaEncomendas),
     sumPesos(ListaEncomendas, PesoTotal),
-    ligaCircuitosAoPesoEncomendas(OutrosCircuitos, Res).
+    ligaCircuitosAoPesoEncomendas(OutrosCodigos, Res).
 
-ordenaCircuitosPeso([],_).
-ordenaCircuitosPeso(Circuitos, Ordenados) :-
-    ligaCircuitosAoPesoEncomendas(Circuitos, CircuitosMaisValor),
-    ordDecrescente(CircuitosMaisValor, Ordenados).
+ordenaCircuitosPeso(N, Ordenados) :-
+    findall(CodCaminho, encomendaCaminho(CodCaminho,_), CodigosCaminhoRepetidos), 
+    removeRepetidos(CodigosCaminhoRepetidos, CodigosCaminho),
+    !,
+    ligaCircuitosAoPesoEncomendas(CodigosCaminho, CircuitosMaisValor),
+    ordDecrescente(CircuitosMaisValor, OrdenadosTodos),
+    takeTopN(N,OrdenadosTodos,Ordenados).
 
 %% Por volume
-
 sumVolumes([],0).
 sumVolumes([CodEnc|T], VolumeTotal) :-
     encomenda(CodEnc,_,_,_,_,Volume,_,_,_,_),
     sumVolumes(T, VolumeR),
     VolumeTotal is Volume + VolumeR.
 
-ligaCircuitosAoVolumeEncomendas([],_).
-ligaCircuitosAoVolumeEncomendas([Circuito|OutrosCircuitos], [Circuito/VolumeTotal|Res]) :-
-    caminho(CodCaminho, Circuito),
+ligaCircuitosAoVolumeEncomendas([],[]).
+ligaCircuitosAoVolumeEncomendas([CodCaminho|OutrosCodigos], [CodCaminho/VolumeTotal|Res]) :-
     findall(CodEncomenda, encomendaCaminho(CodCaminho, CodEncomenda), ListaEncomendas),
     sumVolumes(ListaEncomendas, VolumeTotal),
-    ligaCircuitosAoVolumeEncomendas(OutrosCircuitos, Res).
+    ligaCircuitosAoVolumeEncomendas(OutrosCodigos, Res).
 
-ordenaCircuitosVolume([],_).
-ordenaCircuitosVolume(Circuitos, Ordenados) :-
-    ligaCircuitosAoVolumeEncomendas(Circuitos, CircuitosMaisValor),
-    ordDecrescente(CircuitosMaisValor, Ordenados).
+ordenaCircuitosVolume(N,Ordenados) :-
+    findall(CodCaminho, encomendaCaminho(CodCaminho,_), CodigosCaminhoRepetidos), 
+    removeRepetidos(CodigosCaminhoRepetidos, CodigosCaminho),
+    !,
+    ligaCircuitosAoVolumeEncomendas(CodigosCaminho, CircuitosMaisValor),
+    ordDecrescente(CircuitosMaisValor, OrdenadosTodos),
+    takeTopN(N,OrdenadosTodos,Ordenados).   

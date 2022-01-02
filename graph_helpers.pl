@@ -14,6 +14,7 @@
 	]).
 
 :- use_module(helpers).
+:- use_module(knowledgeBase).
 
 % ------------------------------------------------------------ Gera todos os circuitos usando BFS da origem para todos os destinos (otimizando sub-percursos de percursos).
 
