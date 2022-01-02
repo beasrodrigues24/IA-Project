@@ -10,7 +10,8 @@
 	gerarBFS/1,
 	gerarDFS/1,
 	profundidadeIterativa/3,
-	gerarDFSIterativa/1
+	gerarDFSIterativa/1,
+	distanciaCircuito/2
 	]).
 
 :- use_module(helpers).
@@ -387,3 +388,16 @@ expande_dist(Dest,Caminho,ExpCaminhos) :-
 
 expande_tran(Dest,Caminho,ExpCaminhos) :-
 	findall(NovoCaminho,adjacenteTran(Dest,Caminho,NovoCaminho),ExpCaminhos).
+
+distanciaCircuito([], 0).
+distanciaCircuito([X], 0).
+distanciaCircuito([A|[B|T]], D) :-
+	edgeDist(A,B,D1),
+	distanciaCircuito([B|T], D2),
+	D is D1 + D2.
+
+edgeDist(A,B, Dist) :-
+	edge(A,B,_,Dist,_).
+edgeDist(A,B, Dist) :-
+	edge(B,A,_,Dist,_).
+

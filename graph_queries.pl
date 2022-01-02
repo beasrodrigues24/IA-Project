@@ -107,3 +107,55 @@ ordenaCircuitosVolume(N,Ordenados) :-
     ligaCircuitosAoVolumeEncomendas(CodigosCaminho, CircuitosMaisValor),
     ordDecrescente(CircuitosMaisValor, OrdenadosTodos),
     takeTopN(N,OrdenadosTodos,Ordenados).   
+
+% Compara dois circuitos com base em distância
+comparaCircuitos(C1, C2, R) :-
+    distanciaCircuito(C1, D1),
+    distanciaCircuito(C2, D2),
+    R is D1 - D2.
+
+% Compara dois circuitos com base na lista de encomendas que podem ser feitas
+% em relação ao tempo, sendo que escolhe sempre a opção mais ecológica para as encomendas
+% Sendo que DataAtual é a data que se pretende estabelecer como base de comparação.
+comparaCircuitos(C1, C2, E1, E2, DataAtual, R) :-
+    tempoCircuito(C1, E1, DataAtual, T1),
+    tempoCircuito(C2, E2, DataAtual, T2),
+    R is T1 - T2.
+
+% Calcula o tempo do circuito escolhendo o transporte indicado para
+% as encomendas que serão transportadas assim como o peso total das
+% encomendas
+tempoCircuito(C, E, DataAtual, Temp) :-
+    sumPesos(E, P),
+    maxDuracao(E, DataAtual, MaxDuracao),
+    transporteDisponiveis(P, Transportes),
+    calculaMinTempo(C,MaxDuracao, P, Transportes, Temp).
+
+calculaMinTempo(C, MaxDuracao, P, Transportes, T) :-
+    calculaMinTempoAux(C, MaxDuracao, P, Transportes, [T|_]).
+
+calculaMinTempoAux(_,_,_,[],[]).
+calculaMinTempoAux(C, MaxDuracao, P, [Transporte|T1], [Temp | T2]) :-
+    tempo(C, Transporte, P, Temp),
+    Temp =< MaxDuracao,
+    calculaMinTempoAux(C, MaxDuracao, P, T1, T2), !.
+calculaMinTempoAux(C, MaxDuracao, P, [_|T1], T2) :-
+    calculaMinTempoAux(C, MaxDuracao, P, T1, T2).
+
+transporteDisponiveis(Peso, T) :-
+    findall(Transporte, (tMaisEcologico(Transporte), transporte(Transporte, PesoMax,_), Peso =< PesoMax) , T).
+
+maxDuracao(E, DataAtual, MaxDuracao) :-
+    dataStamp(DataAtual, Stamp),
+    findall(X,
+    (encomenda(Cod,TempMax,_,_,_,_,_,_,DataCriacao,_),
+     member(Cod, E),
+     dataStamp(DataCriacao, Stamp1),
+     X is (Stamp1 + (TempMax * 3600)) - Stamp,
+     X > 0),
+    R),
+    length(R, LenR),
+    length(E, LenE),
+    LenR == LenE,
+    min_list(R, Max),
+    MaxDuracao is Max / 3600.
