@@ -9,7 +9,9 @@
     gerarCircuitos/1,
     ordenaCircuitosPeso/1,
     ordenaCircuitosVolume/1,
-    insereEncomendaCaminho/2
+    insereEncomendaCaminho/2,
+    comparaCircuitos/3,
+    comparaCircuitos/6
 ]).
 
 :- use_module(graph_helpers).
@@ -138,6 +140,8 @@ ordenaCircuitosVolume(N,Ordenados) :-
 %% Permite a inserção de uma associação entre uma encomenda e um caminho
 insereEncomendaCaminho(CodC, CodE) :- atom_concat('encomendaCaminho(', CodC, Parte), atom_concat(Parte, ',', Parte2), atom_concat(Parte2, CodE, Parte3),
                                       atom_concat(Parte3, ').', Final), evolucao(Final).
+
+
 % Compara dois circuitos com base em distância
 comparaCircuitos(C1, C2, R) :-
     distanciaCircuito(C1, D1),
