@@ -6,7 +6,6 @@ from pyswip import Variable,Query
 from tkinter import messagebox
 from tkinter import filedialog
 from PIL import ImageTk,Image  
-import graph
 
 prolog = Prolog()
 prolog.consult("queries.pl")
@@ -16,7 +15,7 @@ app.title("Green Distributions")
 app.geometry("800x400")
 app.configure(background="white")
 frame = Frame(app)
-frame.pack()
+frame.pack(expand=True,fill=BOTH)
 
 labelHello = Label(frame, text = 'Green Distribution')
 labelHello.config(width=200)
@@ -31,6 +30,8 @@ canvas = Canvas(frame, width = 600, height = 600)
 canvas.pack()  
 img = ImageTk.PhotoImage(Image.open("green3.jpg"))  
 canvas.create_image(5, 5, anchor=NW, image=img) 
+
+import graph
 
 # GLOBAL VARIABLES
 
@@ -831,6 +832,8 @@ menuCircuitos.add_command(label="Gerar circuitos usando Gulosa - distância",com
 menuCircuitos.add_command(label="Gerar circuitos usando Gulosa - trânsito",command=lambda: graph.gerarGulosaT(frame))
 menuCircuitos.add_command(label="Gerar circuitos usando AEstrela - distância",command=lambda: graph.gerarAEstrelaD(frame))
 menuCircuitos.add_command(label="Gerar circuitos usando AEstrela - trânsito",command=lambda: graph.gerarAEstrelaT(frame))
+menuCircuitos.add_command(label="Visualizar mapa",command=lambda: graph.gerarMapa(frame))
+menuCircuitos.add_command(label="Visualizar circuito",command=graph.gerarCircuitos)
 
 menuInsert.add_command(label="Cliente (EXTRA)",command=insertCliente)
 menuInsert.add_command(label="Registar nova encomenda (EXTRA) ",command=insertEncomenda)
