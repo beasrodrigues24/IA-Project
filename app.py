@@ -834,6 +834,9 @@ menuCircuitos.add_command(label="Gerar circuitos usando AEstrela - distância",c
 menuCircuitos.add_command(label="Gerar circuitos usando AEstrela - trânsito",command=lambda: graph.gerarAEstrelaT(frame))
 menuCircuitos.add_command(label="Visualizar mapa",command=lambda: graph.gerarMapa(frame))
 menuCircuitos.add_command(label="Visualizar circuito",command=graph.gerarCircuitos)
+menuCircuitos.add_command(label="Associar encomenda a caminho",command=lambda: graph.associarEncomendaCaminho(frame))
+menuCircuitos.add_command(label="obterTopCircuitos",command=lambda: graph.obterTopCircuitos(frame))
+menuCircuitos.add_command(label="compararCircuitos",command=lambda: graph.compararCircuitos(frame))
 
 menuInsert.add_command(label="Cliente (EXTRA)",command=insertCliente)
 menuInsert.add_command(label="Registar nova encomenda (EXTRA) ",command=insertEncomenda)

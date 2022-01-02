@@ -5,6 +5,11 @@ from tkinter import Tk, Canvas, Frame, BOTH
 import os
 
 codCircuito = StringVar()
+codCircuito2 = StringVar()
+codEncomenda = StringVar()
+topN = StringVar()
+topOpt = StringVar()
+produtividade = StringVar()
 
 prolog = Prolog()
 prolog.consult("graph_queries.pl")
@@ -13,6 +18,80 @@ prolog.consult("queries.pl")
 def clearFrame(frame):
     for widget in frame.winfo_children():
         widget.destroy()
+
+def comparar():
+    if (produtividade.get() == "Distância"):
+        print("Dist")
+    elif (produtividade.get() == "Tempo"):
+        print("Time")
+    print(codCircuito.get())
+    print(codCircuito2.get())
+
+def compararCircuitos(frame):
+    clearFrame(frame)
+    
+    OPTIONS = [
+    "Distância",
+    "Tempo"
+    ] #etc
+
+    produtividade.set(OPTIONS[0]) # default value
+
+    w = OptionMenu(frame, produtividade, *OPTIONS)
+    w.pack()
+    text = Label(frame,text="Codigo circuito 1")
+    textInsert = Entry(frame,textvariable=codCircuito)
+    text2 = Label(frame,text="Codigo circuito 2")
+    text2Insert = Entry(frame,textvariable=codCircuito2)
+    btn = ttk.Button(frame,text="Comparar",command=comparar)
+    text.pack()
+    textInsert.pack()
+    text2.pack()
+    text2Insert.pack()
+    btn.pack()
+
+def top():
+    if (topOpt.get() == "Peso"):
+        print("Peso")
+    elif (topOpt.get() == "Volume"):
+        print("Volume")
+    print(topN.get())
+
+def obterTopCircuitos(frame):
+    clearFrame(frame)
+
+    OPTIONS = [
+    "Peso",
+    "Volume"
+    ] #etc
+
+    topOpt.set(OPTIONS[0]) # default value
+
+    w = OptionMenu(frame, topOpt, *OPTIONS)
+    w.pack()
+    text = Label(frame,text="Top")
+    textInsert = Entry(frame,textvariable=topN)
+    btn = ttk.Button(frame,text="Obter",command=top)
+    text.pack()
+    textInsert.pack()
+    btn.pack()
+
+def associarCE():
+    print(codCircuito.get())
+    print(codEncomenda.get())
+
+def associarEncomendaCaminho(frame):
+    clearFrame(frame)
+    text = Label(frame,text="Codigo circuito")
+    textInsert = Entry(frame,textvariable=codCircuito)
+    text2 = Label(frame,text="Codigo encomenda")
+    text2Insert = Entry(frame,textvariable=codEncomenda)
+    btn = ttk.Button(frame,text="Gerar rota",command=associarCE)
+    text.pack()
+    textInsert.pack()
+    text2.pack()
+    text2Insert.pack()
+    btn.pack()
 
 def gerarDFS(frame):
     clearFrame(frame)
