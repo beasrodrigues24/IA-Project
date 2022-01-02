@@ -25,7 +25,10 @@ origem(neverland).
 /* 
 A explicação desse facto "tMaisEcologico" será útil para flexibilidade na primeira query (explicação adiante)
 */
+% Organizado do mais ecologico para o menos
 tMaisEcologico(bicicleta).
+tMaisEcologico(moto).
+tMaisEcologico(carro).
 
 /*
 Cidade onde se localiza o armazém
@@ -47,18 +50,18 @@ cidadeBase(neverland).
 
 :- dynamic(encomenda/10).
 
-encomenda(1,40,4,7,34,23,moto,19.95,21/11/2021/0,gothamCity).
-encomenda(2,20,2,2,34,23,moto,20.1,21/11/2021/0,centralCity). %-- CodE:2 - CodC:2
-encomenda(3,50,3,3,34,23,carro,23,01/06/2021/0,gothamCity).
-encomenda(4,10,2,4,34,23,moto,32,01/06/2021/0,centralCity). %-- CodE:4 - CodC:2
-encomenda(5,10,2,5,34,23,moto,43,11/09/2021/0,centralCity). %-- CodE:5 - CodC:2
-encomenda(6,30,6,6,34,23,moto,10,23/02/2018/0,wonderland).
-encomenda(7,40,2,4,34,23,moto,02,12/02/2019/0,narnia).  %-- CodE:4 - CodC:2
-encomenda(8,50,8,8,34,23,carro,2,21/11/2021/0,centralCity).
-encomenda(9,60,2,2,34,23,bicicleta,28,24/12/2020/0,narnia).  %-- CodE:2 - CodC:2
-encomenda(10,10,5,1,34,23,moto,40,26/12/2020/0,narnia).
-encomenda(11,20,3,2,34,23,moto,42,01/01/2021/0,centralCity). %-- CodE: 2
-encomenda(12,70,2,4,34,23,moto,24.5,21/11/2021/0,narnia).   %-- CodE:4 - CodC:2
+encomenda(1,40,4,7,12,23,moto,19.95,21/11/2021/0,gothamCity).
+encomenda(2,20,2,2,10,23,moto,20.1,21/11/2021/0,centralCity). %-- CodE:2 - CodC:2
+encomenda(3,50,3,3,35,23,carro,23,01/06/2021/0,gothamCity).
+encomenda(4,10,2,4,8,23,moto,32,01/06/2021/0,centralCity). %-- CodE:4 - CodC:2
+encomenda(5,10,2,5,2,23,moto,43,11/09/2021/0,centralCity). %-- CodE:5 - CodC:2
+encomenda(6,30,6,6,13,23,moto,10,23/02/2018/0,wonderland).
+encomenda(7,40,2,4,10,23,moto,02,12/02/2019/0,narnia).  %-- CodE:4 - CodC:2
+encomenda(8,50,8,8,50,23,carro,2,21/11/2021/0,centralCity).
+encomenda(9,60,2,2,2,23,bicicleta,28,24/12/2020/0,narnia).  %-- CodE:2 - CodC:2
+encomenda(10,10,5,1,4,23,moto,40,26/12/2020/0,narnia).
+encomenda(11,20,3,2,10,23,moto,42,01/01/2021/0,centralCity). %-- CodE: 2
+encomenda(12,70,2,4,2,23,moto,24.5,21/11/2021/0,narnia).   %-- CodE:4 - CodC:2
 
 
 %- encomenda(
