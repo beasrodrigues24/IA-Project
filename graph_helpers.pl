@@ -8,9 +8,12 @@
 	gerarAestrelaDist/1,
 	gerarAestrelaTran/1,
 	gerarBFS/1,
+	gerarBFS2/1,
 	gerarDFS/1,
+	gerarDFS2/1,
 	profundidadeIterativa/3,
 	gerarDFSIterativa/1,
+	gerarDFSIterativa2/1,
 	distanciaCircuito/2,
 	edgeDist/3
 	]).
@@ -25,6 +28,10 @@ gerarBFS(CircuitosOtimizados) :-
 	gerarBFSAux(Circuitos,TodosDests),
 	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
 
+gerarBFS2(Circuitos) :-
+	getDests(TodosDests),
+	gerarBFS2Aux(Circuitos,TodosDests).
+
 % OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando o algoritmo BFS.
 
 gerarBFSAux([],[]).
@@ -33,12 +40,24 @@ gerarBFSAux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
 	largura(Orig,Dest,Circuito),
 	gerarBFSAux(OutrosCircuitos,OutrosDest).
 
+gerarBFS2Aux([],[]).
+gerarBFS2Aux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	largura(Orig,Dest,CircuitoIda),
+	largura(Dest,Orig,[H|CircuitoVolta]),
+	append(CircuitoIda,CircuitoVolta,Circuito),
+	gerarBFS2Aux(OutrosCircuitos,OutrosDest).
+
 % ------------------------------------------------------------ Gera todos os circuitos usando DFS da origem para todos os destinos (otimizando sub-percursos de percursos).
 
 gerarDFS(CircuitosOtimizados) :-
 	getDests(TodosDests),
 	gerarDFSAux(Circuitos,TodosDests),
 	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
+
+gerarDFS2(Circuitos) :-
+	getDests(TodosDests),
+	gerarDFS2Aux(Circuitos,TodosDests).
 
 % OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando o algoritmo DFS.
 
@@ -48,12 +67,24 @@ gerarDFSAux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
 	profundidade(Orig,Dest,Circuito),
 	gerarDFSAux(OutrosCircuitos,OutrosDest).
 
+gerarDFS2Aux([],[]).
+gerarDFS2Aux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	profundidade(Orig,Dest,CircuitoIda),
+	profundidade(Dest,Orig,[H|CircuitoVolta]),
+	append(CircuitoIda,CircuitoVolta,Circuito),
+	gerarDFS2Aux(OutrosCircuitos,OutrosDest).
+
 % ----------------------------------------------------------- Gera todos os circuitos usando DFS Iterativa para todos os destinos (otimizando sub-percursos de percursos).
 
 gerarDFSIterativa(CircuitosOtimizados) :-
 	getDests(TodosDests),
 	gerarDFSIterativaAux(Circuitos,TodosDests),
 	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
+
+gerarDFSIterativa2(Circuitos) :-
+	getDests(TodosDests),
+	gerarDFSIterativaAux2(Circuitos,TodosDests).
 
 % OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando o algoritmo DFS Iterativo.
 
@@ -62,6 +93,14 @@ gerarDFSIterativaAux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
 	origem(Orig),
 	profundidadeIterativa(Orig,Dest,Circuito),
 	gerarDFSIterativaAux(OutrosCircuitos,OutrosDest).
+
+gerarDFSIterativaAux2([],[]).
+gerarDFSIterativaAux2([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	profundidadeIterativa(Orig,Dest,CircuitoIda),
+	profundidadeIterativa(Dest,Orig,[_|CircuitoVolta]),
+	append(CircuitoIda,CircuitoVolta,Circuito),
+	gerarDFSIterativaAux2(OutrosCircuitos,OutrosDest).
 
 % ------------------------------------------------------------ Gera todos os circuitos usando Aestrela da origem para todos os destinos (otimizando sub-percursos de percursos), com a heurística da distância.
 

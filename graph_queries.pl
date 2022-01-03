@@ -1,7 +1,10 @@
 :- module(graph_queries, [
 	gerarBFSQ/1,
+	gerarBFS2Q/1,
 	gerarDFSQ/1,
+	gerarDFS2Q/1,
     gerarDFSIQ/1,
+    gerarDFSI2Q/1,
     gerarGulosaDistQ/1,
     gerarGulosaTranQ/1,
     gerarAEstrelaDistQ/1,
@@ -55,9 +58,15 @@ aestrelaQ(Origem,Destino,CaminhoDist,CaminhoTran) :- aestrela(Origem,Destino,Cam
 
 gerarBFSQ(Circuitos) :- gerarBFS(Circuitos).
 
+gerarBFS2Q(Circuitos) :- gerarBFS2(Circuitos).
+
 gerarDFSQ(Circuitos) :- gerarDFS(Circuitos).
 
+gerarDFS2Q(Circuitos) :- gerarDFS2(Circuitos).
+
 gerarDFSIQ(Circuitos) :- gerarDFSIterativa(Circuitos).
+
+gerarDFSI2Q(Circuitos) :- gerarDFSIterativa2(Circuitos).
 
 gerarGulosaDistQ(Circuitos) :- gerarGulosaDist(Circuitos).
 
