@@ -202,26 +202,43 @@ writeLista([H|T]) :- write(H), write(', '), writeLista(T).
 writeCircuitos([]).
 writeCircuitos([Cod/Caminho|T]) :-  write('Circuito '), write(Cod), write(': ['), writeLista(Caminho), writeln(']'), writeCircuitos(T).
 
+minCaminho([Cod],distancia,Cod).
+minCaminho([Cod|T], distancia, Cod) :-
+    minCaminho(T, distancia, CodR),
+    distanciaCaminho(Cod, Dist1),
+    distanciaCaminho(CodR, Dist2),
+    Dist1 < Dist2, !.
+minCaminho([_|T],distancia, R) :-
+    minCaminho(T,distancia, R).
 
-escolheCaminho(Caminhos, distancia, Res) :-
-    getCircuitos(Caminhos, Circuitos),
-    escolheCircuito(Circuitos, distancia, RCircuito),
-    caminho(Res, RCircuito).
+minCaminho([Cod], DataAtual, tempo, Cod) :-
+    tempoCaminho(Cod, DataAtual,_). % Serve apenas para confirmar que é possível realizar este caminho
+minCaminho([Cod|T], DataAtual, tempo, Cod) :-
+    minCaminho(T, DataAtual, tempo, CodR),
+    tempoCaminho(Cod, DataAtual, Temp1),
+    tempoCaminho(CodR, DataAtual, Temp2),
+    Temp1 < Temp2, !.
+minCaminho([_|T], DataAtual, tempo, R) :-
+    minCaminho(T, DataAtual, tempo, R).
 
+distanciaCaminho(Cod, Dist) :-
+    caminho(Cod, C),
+    distanciaCircuito(C, Dist).
 
-getCircuitos([], []).
-getCircuitos([H|T], [H1|T1]) :-
-    getCircuitos(T, T1),
-    caminho(H, H1).
+tempoCaminho(Cod, DataAtual, Temp) :-
+    caminho(Cod, Circuito),
+    getEncomendas(Cod, Encomendas),
+    tempoCircuito(Circuito, Encomendas, DataAtual, Temp).
 
-escolheCircuito(Circuitos, distancia, Res) :-
-    minCircuito(Circuitos, Res).
+getEncomendas(Cod, Encomendas) :-
+    findall(Encomenda, encomendaCaminho(Cod, Encomenda), Encomendas).
 
-minCircuito([C], C).
-minCircuito([C|T], C) :-
-    minCircuito(T, R),
-    distanciaCircuito(R, Dist1),
-    distanciaCircuito(C, Dist2),
-    Dist2 < Dist1, !.
-minCircuito([_|T], R) :-
-    minCircuito(T, R).
+comparaCaminho(C1, C2, R) :-
+    distanciaCaminho(C1, D1),
+    distanciaCaminho(C2, D2),
+    R is D1 - D2.
+
+comparaCaminho(C1, C2, DataAtual, R) :-
+    tempoCaminho(C1, DataAtual, T1),
+    tempoCaminho(C2, DataAtual, T2),
+    R is T1 - T2.
