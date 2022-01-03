@@ -20,6 +20,50 @@ def clearFrame(frame):
     for widget in frame.winfo_children():
         widget.destroy()
 
+def maisRapido(frame):
+    clearFrame(frame)
+    res = list(prolog.query("minCaminho("+str(codCircuito.get())+",Res)"))
+    if (len(res) > 0):
+        st = "O circuito " + str(res[0]['Res']) + " é o mais rápido."
+        text = Label(frame,text=st)
+        text.pack()
+
+    print("Mais rapido")
+
+def maisEcologico(frame):
+    clearFrame(frame)
+    res = list(prolog.query("minCaminho("+str(codCircuito.get())+","+str(dataBase.get())+",Res)"))
+    if (len(res) > 0):
+        st = "O circuito " + str(res[0]['Res']) + " é o mais ecológico."
+        text = Label(frame,text=st)
+        text.pack()
+
+    print("Mais ecológico")
+
+def circuitoMaisRapido(frame):
+    clearFrame(frame)
+    text = Label(frame,text="Codigos dos circuitos a comparar * (no formato [cod1,...,codN])")
+    textInsert = Entry(frame,textvariable=codCircuito)
+    text.pack()
+    textInsert.pack()
+    btn = ttk.Button(frame,text="Comparar",command=lambda: maisRapido(frame))
+    btn.pack()
+    print("Fast")
+
+def circuitoMaisEcologico(frame):
+    clearFrame(frame)
+    text = Label(frame,text="Codigos dos circuitos a comparar * (no formato [cod1,...,codN]")
+    textInsert = Entry(frame,textvariable=codCircuito)
+    text.pack()
+    textInsert.pack()
+    text2 = Label(frame,text="Data base")
+    text2Insert = Entry(frame,textvariable=dataBase)
+    text2.pack()
+    text2Insert.pack()
+    btn = ttk.Button(frame,text="Comparar",command=lambda: maisEcologico(frame))
+    btn.pack()
+    print("Eco")
+
 def comparar(frame):
     clearFrame(frame)
     if (produtividade.get() == "Distância"):
