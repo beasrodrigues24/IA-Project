@@ -339,7 +339,6 @@ def gerarGulosaD(frame):
     res = prolog.query("gerarGulosaDistQ(Circuitos)", maxresult=1)
     for s in res:
         for circuito in s['Circuitos']:
-            print(str(r) + "-" + str(c))
             table = ttk.Treeview(frame)
             table.grid(row = r, column = c, sticky = W, padx = 10, pady = 10)
             table['columns'] = ('Etapa','Local')
@@ -374,7 +373,6 @@ def gerarGulosaD(frame):
 
             elif ((rr % 3) != 0):
                 rr = rr + 1
-    print("oi4")
 
 def gerarGulosaT(frame):
 
@@ -387,7 +385,6 @@ def gerarGulosaT(frame):
     res = prolog.query("gerarGulosaTranQ(Circuitos)", maxresult=1)
     for s in res:
         for circuito in s['Circuitos']:
-            print(str(r) + "-" + str(c))
             table = ttk.Treeview(frame)
             table.grid(row = r, column = c, sticky = W, padx = 10, pady = 10)
             table['columns'] = ('Etapa','Local')
@@ -422,7 +419,6 @@ def gerarGulosaT(frame):
 
             elif ((rr % 3) != 0):
                 rr = rr + 1
-    print("oi5")
 
 def gerarAEstrelaD(frame):
 
@@ -435,7 +431,6 @@ def gerarAEstrelaD(frame):
     res = prolog.query("gerarAEstrelaDistQ(Circuitos)", maxresult=1)
     for s in res:
         for circuito in s['Circuitos']:
-            print(str(r) + "-" + str(c))
             table = ttk.Treeview(frame)
             table.grid(row = r, column = c, sticky = W, padx = 10, pady = 10)
             table['columns'] = ('Etapa','Local')
@@ -470,7 +465,6 @@ def gerarAEstrelaD(frame):
 
             elif ((rr % 3) != 0):
                 rr = rr + 1
-    print("oi6")
 
 def gerarAEstrelaT(frame):
 
@@ -483,7 +477,6 @@ def gerarAEstrelaT(frame):
     res = prolog.query("gerarAEstrelaTranQ(Circuitos)", maxresult=1)
     for s in res:
         for circuito in s['Circuitos']:
-            print(str(r) + "-" + str(c))
             table = ttk.Treeview(frame)
             table.grid(row = r, column = c, sticky = W, padx = 10, pady = 10)
             table['columns'] = ('Etapa','Local')
@@ -518,7 +511,6 @@ def gerarAEstrelaT(frame):
 
             elif ((rr % 3) != 0):
                 rr = rr + 1
-    print("oi7")
 
 retas = {"gothamCitycentralCity": [600,100,800,150], 
          "gothamCitycapitol": [600,100,500,250] , 
@@ -531,8 +523,8 @@ retas = {"gothamCitycentralCity": [600,100,800,150],
          "capitolpawnee": [500,250,700,400],
          "capitolhogwarts": [500,250,500,650],
          "gravityFallsbikiniBottom": [900,300,1100,420],
-         "pawneebikiniBottom": [500,250,1100,420],
-         "pawneeneverland": [500,250,1100,420],
+         "pawneebikiniBottom": [700,400,1100,420],
+         "pawneeneverland": [700,400,600,550],
          "rivendelltheShire": [400,400,300,600],
          "mordortheShire": [100,500,300,600],
          "neverlandwonderland": [600,550,780,550],
@@ -550,7 +542,7 @@ retas = {"gothamCitycentralCity": [600,100,800,150],
          "tatooinedragonstone": [770,810,610,900],
          "dragonstonenarnia": [610,900,520,770],
          "narniakingsLanding": [520,770,300,850],
-         "kingsLanding": [300,850,180,700]
+         "kingsLandingasgard": [300,850,180,700]
          }
 
 nodos = {"gothamCity": [600,100,50], 
@@ -572,7 +564,7 @@ nodos = {"gothamCity": [600,100,50],
         "hogwarts": [500,650,40],
         "neverland": [600,550,40],
         "hogsmeade": [730,700,40],
-        "kingsLanding": [300,850,40],
+        "kingsLanding": [300,850,50],
         "narnia": [520,770,30],
         "dragonstone": [610,900,50],
         "tatooine": [770,810,40],
@@ -615,12 +607,14 @@ def colorir(mapKey,mapKey2,nodeKey1,nodeKey2,canvas):
     write_name(n2[0],n2[1],nodeKey2,canvas)
 
 def gerarRota(frame,canvas):
-    print(codCircuito.get())
+    drawLines(frame,canvas)
+    drawNodes(frame,canvas)
+    print("ROTA DO CIRCUITO: " + codCircuito.get())
     res = list(prolog.query("caminho("+codCircuito.get()+",Circuito)", maxresult=1))
     # for local(res[0]['Circuito'])
     i = 0
     while (i < len(res[0]['Circuito']) - 1):
-        print("----")
+        print(">")
         print(res[0]['Circuito'][i])
         print(res[0]['Circuito'][i + 1])
         mapKey = str(res[0]['Circuito'][i]) + str(res[0]['Circuito'][i+1])
@@ -653,9 +647,9 @@ def drawLines(frame,canvas):
     #Gravity Falls -> Bikini Bottom
     canvas.create_line(900,300,1100,420)
     #Pawnee -> Bikini Bottom
-    canvas.create_line(500,250,1100,420)
+    canvas.create_line(700,400,1100,420)
     #Pawnee -> Neverland
-    canvas.create_line(500,250,600,550)
+    canvas.create_line(700,400,600,550)
     #Rivendell -> The Shire
     canvas.create_line(400,400,300,600)
     #Mordor -> The Shire
@@ -753,7 +747,7 @@ def drawNodes(frame,canvas):
     create_circle(730,700,40,canvas)
     txt19 = canvas.create_text(730, 700, text='Hogsmeade')
     #King'sLand
-    create_circle(300,850,40,canvas)
+    create_circle(300,850,50,canvas)
     txt20 = canvas.create_text(300, 850, text='Kings Land')
     #Narnia
     create_circle(520,770,30,canvas)
@@ -825,17 +819,3 @@ def gerarCircuitos():
     i = 0
     j = 0
     gerarRec(res[0]['Circuitos'],0)
-        #for circuito in s['Circuitos']:
-        #    print("#")
-        #    print(str(circuito))
-        #    res2 = bool(list(prolog.query("evolucao(caminho("+str(j)+",1))")))
-        #    if res2 == True:
-        #        prolog.assertz("caminho("+str(j)+",1))")
-        #        print("Inserido !")
-        #    j = j + 1
-       #     while (i < len(circuito) - 1):
-        #        print("----")
-        #        print(circuito[i])
-        #        print(circuito[i + 1])
-        #        i = i + 1
-        #    i = 0

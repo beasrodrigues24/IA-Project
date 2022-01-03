@@ -13,8 +13,7 @@
 		velocidadeDiminui/2,
 		caminho/2,
 		encomendaCaminho/2,
-		origem/1,
-        caminho/2
+		origem/1
 	]).
 
 :- use_module(helpers).
@@ -147,8 +146,8 @@ velocidadeDiminui(carro, 0.1).
 
 :-dynamic(caminho/2).
 
-caminho(1, [gravityFalls, centralCity, gothamCity]).
-caminho(2, [neverland,wonderland]).
+caminho(-1, [gravityFalls, centralCity, gothamCity]).
+#caminho(2, [neverland,wonderland]).
 
 % - encomendaCaminho(CodCaminho, CodEncomenda)
 
