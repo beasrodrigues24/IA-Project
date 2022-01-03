@@ -443,6 +443,10 @@ leFicheiro(Stream,[X|L]) :-
 	read(Stream,X),
 	leFicheiro(Stream,L).
 
+%% Permite a inserção de uma associação entre uma encomenda e um caminho
+insereEncomendaCaminho(CodC, CodE) :- atom_concat('encomendaCaminho(', CodC, Parte), atom_concat(Parte, ',', Parte2), atom_concat(Parte2, CodE, Parte3),
+                                      atom_concat(Parte3, ').', Final), (evolucao(Final) -> write(Final) ; write('falso')).
+
 %-------------------------------  Menu  -------------------------------------%
 
 printIndividuos([]).
@@ -483,7 +487,7 @@ menu :- repeat,
 		nl,																																	  
 		writeln('-------------------------------------------------------------------------------------------------------------------------------------'),nl,
 		writeln('Insira a Query pretendida: '),
-		read(Choice), Choice >= 0, Choice =< 27,
+		read(Choice), Choice >= 0, Choice =< 28,
 		(Choice = 0 -> !,fail;true), 
 		case(Choice),fail.
 
@@ -516,9 +520,10 @@ case(19) :- gerarGulosaDistQ(_), writeln('Os circuitos foram gerados com sucesso
 case(20) :- gerarGulosaTranQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
 case(21) :- gerarAEstrelaDistQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
 case(22) :- gerarAEstrelaTranQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
-case(23) :- write('Insira o código da encomenda: '), read(CodE), nl, write('Insira o código do circuito: '), read(CodC), insereEncomendaCaminho(CodC, CodE), writeln('Inserido com sucesso'),
+case(23) :- write('Insira o termo (encomendaCaminho(cod_circuito,cod_encomenda).): '), read(EncCam), evolucao(EncCam), write(EncCam),
 			writeln('Insira n. para avançar'), read(_), !.
 case(24) :- writeln('Quantos circuitos pretende obter? '), read(N), ordenaCircuitosPeso(N), writeln('Insira n. para avançar.'), read(_), !.
 case(25) :- writeln('Quantos circuitos pretende obter? '), read(N), ordenaCircuitosVolume(N), writeln('Insira n. para avançar.'), read(_), !.
 case(26) :- writeln('Em construção.'), writeln('Insira n. para avançar.'), read(_), !.
 case(27) :- writeln('Em construção.'), writeln('Insira n. para avanlar.'), read(_), !.
+case(28) :- printCircuitos(), !.

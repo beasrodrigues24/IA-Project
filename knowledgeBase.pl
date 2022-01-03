@@ -146,16 +146,16 @@ velocidadeDiminui(carro, 0.1).
 
 :-dynamic(caminho/2).
 
-%caminho(1, [gravityFalls, centralCity, gothamCity]).
+caminho(1, [gravityFalls, centralCity, gothamCity]).
 %caminho(2, [neverland,wonderland]).
 
 % - encomendaCaminho(CodCaminho, CodEncomenda)
 
 :-dynamic(encomendaCaminho/2).
 
-encomendaCaminho(1,1).
-encomendaCaminho(1,2).
-encomendaCaminho(2,6).
+% encomendaCaminho(1,1).
+% encomendaCaminho(1,2).
+% encomendaCaminho(2,6).
 
 
 /***************** INVARIANTES ******************/

@@ -11,9 +11,9 @@
     ordenaCircuitosVolume/1,
     ordenaCircuitosPeso/2,
     ordenaCircuitosVolume/2,
-    insereEncomendaCaminho/2,
     comparaCircuitos/3,
-    comparaCircuitos/6
+    comparaCircuitos/6,
+    printCircuitos/0
 ]).
 
 :- use_module(graph_helpers).
@@ -139,10 +139,6 @@ ordenaCircuitosVolume(N,Ordenados) :-
     ordDecrescente(CircuitosMaisValor, OrdenadosTodos),
     takeTopN(N,OrdenadosTodos,Ordenados).   
 
-%% Permite a inserção de uma associação entre uma encomenda e um caminho
-insereEncomendaCaminho(CodC, CodE) :- atom_concat('encomendaCaminho(', CodC, Parte), atom_concat(Parte, ',', Parte2), atom_concat(Parte2, CodE, Parte3),
-                                      atom_concat(Parte3, ').', Final), evolucao(Final).
-
 
 % Compara dois circuitos com base em distância
 comparaCircuitos(C1, C2, R) :-
@@ -195,3 +191,8 @@ maxDuracao(E, DataAtual, MaxDuracao) :-
     LenR == LenE,
     min_list(R, Max),
     MaxDuracao is Max / 3600.
+
+printCircuitos() :- findall(CodC,encomendaCaminho(_,_), Lista), writeCircuitos(Lista).
+
+writeCircuitos([]).
+writeCircuitos([H|T]) :-  write('Circuito: '), writeln(H), writeCircuitos(T).
