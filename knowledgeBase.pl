@@ -13,7 +13,8 @@
 		velocidadeDiminui/2,
 		caminho/2,
 		encomendaCaminho/2,
-		origem/1
+		origem/1,
+        caminho/2
 	]).
 
 :- use_module(helpers).
