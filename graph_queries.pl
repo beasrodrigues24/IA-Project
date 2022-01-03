@@ -7,11 +7,14 @@
     gerarDFSI2Q/1,
     gerarGulosaDistQ/1,
     gerarGulosaTranQ/1,
+    gerarGulosaDist2Q/1,
+    gerarGulosaTran2Q/1,
     gerarAEstrelaDistQ/1,
     gerarAEstrelaDist2Q/1,
     gerarAEstrelaTranQ/1,
     gerarAEstrelaTran2Q/1,
     gerarCircuitos/1,
+    gerarCircuitos2/1,
     ordenaCircuitosPeso/1,
     ordenaCircuitosVolume/1,
     ordenaCircuitosPeso/2,
@@ -74,6 +77,10 @@ gerarGulosaDistQ(Circuitos) :- gerarGulosaDist(Circuitos).
 
 gerarGulosaTranQ(Circuitos) :- gerarGulosaTran(Circuitos).
 
+gerarGulosaDist2Q(Circuitos) :- gerarGulosaDist2(Circuitos).
+
+gerarGulosaTran2Q(Circuitos) :- gerarGulosaTran2(Circuitos).
+
 gerarAEstrelaDistQ(Circuitos) :- gerarAestrelaDist(Circuitos).
 
 gerarAEstrelaDist2Q(Circuitos) :- gerarAestrelaDist2(Circuitos).
@@ -90,6 +97,15 @@ gerarCircuitos([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT,CircuitosBFS,Cir
 	gerarBFS(CircuitosBFS),
 	gerarDFS(CircuitosDFS),
 	gerarDFSIterativa(CircuitosDFSI).
+
+gerarCircuitos2([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT,CircuitosBFS,CircuitosDFS,CircuitosDFSI]) :- 
+	gerarGulosaDist2(CircuitosGD),
+	gerarGulosaTran2(CircuitosGT),
+	gerarAestrelaDist2(CircuitosAD),
+	gerarAestrelaTran2(CircuitosAT),
+	gerarBFS2(CircuitosBFS),
+	gerarDFS2(CircuitosDFS),
+	gerarDFSIterativa2(CircuitosDFSI).
 
 % Calcular tempo de um percurso dado peso e transporte
 

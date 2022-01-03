@@ -5,6 +5,8 @@
 	aestrela/4,
 	gerarGulosaDist/1,
 	gerarGulosaTran/1,
+	gerarGulosaDist2/1,
+	gerarGulosaTran2/1,
 	gerarAestrelaDist/1,
 	gerarAestrelaDist2/1,
 	gerarAestrelaTran/1,
@@ -165,6 +167,10 @@ gerarGulosaDist(CircuitosOtimizados) :-
 	gerarGulosaAuxDist(Circuitos,TodosDests),
 	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
 
+gerarGulosaDist2(Circuitos) :-
+	getDests(TodosDests),
+	gerarGulosaAuxDist2(Circuitos,TodosDests).
+
 % OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando a heurística da distância para o algoritmo guloso.
 
 gerarGulosaAuxDist([],[]).
@@ -173,12 +179,24 @@ gerarGulosaAuxDist([CircuitoD|OutrosCircuitos],[Dest|OutrosDest]) :-
 	gulosa(Orig,Dest,CircuitoD,_),
 	gerarGulosaAuxDist(OutrosCircuitos,OutrosDest).
 
+gerarGulosaAuxDist2([],[]).
+gerarGulosaAuxDist2([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	gulosa(Orig,Dest,CircuitoIda,_),
+	gulosa(Dest,Orig,[_|CircuitoVolta],_),
+	append(CircuitoIda,CircuitoVolta,Circuito),
+	gerarGulosaAuxDist2(OutrosCircuitos,OutrosDest).
+
 % simetrica a gerarGulosaDist, mas com a heurística do trânsito.
 
 gerarGulosaTran(CircuitosOtimizados) :-
 	getDests(TodosDests),
 	gerarGulosaAuxTran(Circuitos,TodosDests),
 	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
+
+gerarGulosaTran2(Circuitos) :-
+	getDests(TodosDests),
+	gerarGulosaAuxTran2(Circuitos,TodosDests).
 
 % OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando a heurística do trânsito para o algoritmo guloso.
 
@@ -187,6 +205,14 @@ gerarGulosaAuxTran([CircuitoT|OutrosCircuitos],[Dest|OutrosDest]) :-
 	origem(Orig),
 	gulosa(Orig,Dest,_,CircuitoT),
 	gerarGulosaAuxTran(OutrosCircuitos,OutrosDest).
+
+gerarGulosaAuxTran2([],[]).
+gerarGulosaAuxTran2([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	gulosa(Orig,Dest,_,CircuitoIda),
+	gulosa(Dest,Orig,_,[_|CircuitoVolta]),
+	append(CircuitoIda,CircuitoVolta,Circuito),
+	gerarGulosaAuxTran2(OutrosCircuitos,OutrosDest).
 
 % --------------------------------------------------------------------------
 
@@ -456,7 +482,7 @@ expande_tran(Dest,Caminho,ExpCaminhos) :-
 	findall(NovoCaminho,adjacenteTran(Dest,Caminho,NovoCaminho),ExpCaminhos).
 
 distanciaCircuito([], 0).
-distanciaCircuito([X], 0).
+distanciaCircuito([_], 0).
 distanciaCircuito([A|[B|T]], D) :-
 	edgeDist(A,B,D1),
 	distanciaCircuito([B|T], D2),
