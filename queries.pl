@@ -483,6 +483,7 @@ menu :- repeat,
 		writeln(' 25.  Obter o top N de circuitos com base no Volume.'),
 		writeln(' 26.  Comparar circuitos com base na distância percorrida.'),
 		writeln(' 27.  Comparar circuitos com base no tempo necessário.'),
+		writeln(' 28.  Imprimir todos os circuitos possíveis.'),
 		writeln('  0.  Sair do menu.'),
 		nl,																																	  
 		writeln('-------------------------------------------------------------------------------------------------------------------------------------'),nl,
@@ -520,10 +521,10 @@ case(19) :- gerarGulosaDistQ(_), writeln('Os circuitos foram gerados com sucesso
 case(20) :- gerarGulosaTranQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
 case(21) :- gerarAEstrelaDistQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
 case(22) :- gerarAEstrelaTranQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
-case(23) :- write('Insira o termo (encomendaCaminho(cod_circuito,cod_encomenda).): '), read(EncCam), evolucao(EncCam), write(EncCam),
+case(23) :- write('Insira o termo [encomendaCaminho(cod_circuito,cod_encomenda).]: '), read(EncCam), evolucao(EncCam), writeln(EncCam),
 			writeln('Insira n. para avançar'), read(_), !.
 case(24) :- writeln('Quantos circuitos pretende obter? '), read(N), ordenaCircuitosPeso(N), writeln('Insira n. para avançar.'), read(_), !.
 case(25) :- writeln('Quantos circuitos pretende obter? '), read(N), ordenaCircuitosVolume(N), writeln('Insira n. para avançar.'), read(_), !.
 case(26) :- writeln('Em construção.'), writeln('Insira n. para avançar.'), read(_), !.
 case(27) :- writeln('Em construção.'), writeln('Insira n. para avanlar.'), read(_), !.
-case(28) :- printCircuitos(), !.
+case(28) :- printCircuitos(), writeln('Insira n. para avançar.'), read(_), !.

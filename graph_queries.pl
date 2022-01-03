@@ -192,7 +192,12 @@ maxDuracao(E, DataAtual, MaxDuracao) :-
     min_list(R, Max),
     MaxDuracao is Max / 3600.
 
-printCircuitos() :- findall(CodC,encomendaCaminho(_,_), Lista), writeCircuitos(Lista).
+% Imprime todos os circuitos existentes na base de conhecimento.
+printCircuitos() :- findall(Cod/Circ, caminho(Cod,Circ), Lista), writeCircuitos(Lista).
+
+writeLista([]).
+writeLista([T]) :- write(T).
+writeLista([H|T]) :- write(H), write(', '), writeLista(T).
 
 writeCircuitos([]).
-writeCircuitos([H|T]) :-  write('Circuito: '), writeln(H), writeCircuitos(T).
+writeCircuitos([Cod/Caminho|T]) :-  write('Circuito '), write(Cod), write(': ['), writeLista(Caminho), writeln(']'), writeCircuitos(T).
