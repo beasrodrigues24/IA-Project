@@ -8,7 +8,9 @@
     gerarGulosaDistQ/1,
     gerarGulosaTranQ/1,
     gerarAEstrelaDistQ/1,
+    gerarAEstrelaDist2Q/1,
     gerarAEstrelaTranQ/1,
+    gerarAEstrelaTran2Q/1,
     gerarCircuitos/1,
     ordenaCircuitosPeso/1,
     ordenaCircuitosVolume/1,
@@ -74,7 +76,11 @@ gerarGulosaTranQ(Circuitos) :- gerarGulosaTran(Circuitos).
 
 gerarAEstrelaDistQ(Circuitos) :- gerarAestrelaDist(Circuitos).
 
+gerarAEstrelaDist2Q(Circuitos) :- gerarAestrelaDist2(Circuitos).
+
 gerarAEstrelaTranQ(Circuitos) :- gerarAestrelaTran(Circuitos).
+
+gerarAEstrelaTran2Q(Circuitos) :- gerarAestrelaTran2(Circuitos).
 
 gerarCircuitos([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT,CircuitosBFS,CircuitosDFS,CircuitosDFSI]) :- 
 	gerarGulosaDist(CircuitosGD),

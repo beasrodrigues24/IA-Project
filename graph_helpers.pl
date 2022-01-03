@@ -6,7 +6,9 @@
 	gerarGulosaDist/1,
 	gerarGulosaTran/1,
 	gerarAestrelaDist/1,
+	gerarAestrelaDist2/1,
 	gerarAestrelaTran/1,
+	gerarAestrelaTran2/1,
 	gerarBFS/1,
 	gerarBFS2/1,
 	gerarDFS/1,
@@ -44,7 +46,7 @@ gerarBFS2Aux([],[]).
 gerarBFS2Aux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
 	origem(Orig),
 	largura(Orig,Dest,CircuitoIda),
-	largura(Dest,Orig,[H|CircuitoVolta]),
+	largura(Dest,Orig,[_|CircuitoVolta]),
 	append(CircuitoIda,CircuitoVolta,Circuito),
 	gerarBFS2Aux(OutrosCircuitos,OutrosDest).
 
@@ -71,7 +73,7 @@ gerarDFS2Aux([],[]).
 gerarDFS2Aux([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
 	origem(Orig),
 	profundidade(Orig,Dest,CircuitoIda),
-	profundidade(Dest,Orig,[H|CircuitoVolta]),
+	profundidade(Dest,Orig,[_|CircuitoVolta]),
 	append(CircuitoIda,CircuitoVolta,Circuito),
 	gerarDFS2Aux(OutrosCircuitos,OutrosDest).
 
@@ -109,6 +111,10 @@ gerarAestrelaDist(CircuitosOtimizados) :-
 	gerarAestrelaAuxDist(Circuitos,TodosDests),
 	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
 
+gerarAestrelaDist2(Circuitos) :-
+	getDests(TodosDests),
+	gerarAestrelaAuxDist2(Circuitos,TodosDests).
+
 % OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando a heurística da distância para o algoritmo Aestrela.
 
 gerarAestrelaAuxDist([],[]).
@@ -117,12 +123,24 @@ gerarAestrelaAuxDist([CircuitoD|OutrosCircuitos],[Dest|OutrosDest]) :-
 	aestrela(Orig,Dest,CircuitoD,_),
 	gerarAestrelaAuxDist(OutrosCircuitos,OutrosDest).
 
+gerarAestrelaAuxDist2([],[]).
+gerarAestrelaAuxDist2([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	aestrela(Orig,Dest,CircuitoIda,_),
+	aestrela(Dest,Orig,[_|CircuitoVolta],_),
+	append(CircuitoIda,CircuitoVolta,Circuito),
+	gerarAestrelaAuxDist2(OutrosCircuitos,OutrosDest).
+
 % simetrica a gerarAestrelaDist, mas com a heurística do trânsito.
 
 gerarAestrelaTran(CircuitosOtimizados) :-
 	getDests(TodosDests),
 	gerarAestrelaAuxTran(Circuitos,TodosDests),
 	otimizaCircuitos(Circuitos,[],CircuitosOtimizados).
+
+gerarAestrelaTran2(Circuitos) :-
+	getDests(TodosDests),
+	gerarAestrelaAuxTran2(Circuitos,TodosDests).
 
 % OBJETIVO - buscar todos os caminhos (da origem) para todos os destinos, utilizando a heurística do trânsito para o algoritmo aestrela.
 
@@ -131,6 +149,14 @@ gerarAestrelaAuxTran([CircuitoT|OutrosCircuitos],[Dest|OutrosDest]) :-
 	origem(Orig),
 	aestrela(Orig,Dest,_,CircuitoT),
 	gerarAestrelaAuxTran(OutrosCircuitos,OutrosDest).
+
+gerarAestrelaAuxTran2([],[]).
+gerarAestrelaAuxTran2([Circuito|OutrosCircuitos],[Dest|OutrosDest]) :-
+	origem(Orig),
+	aestrela(Orig,Dest,_,CircuitoIda),
+	aestrela(Dest,Orig,_,[_|CircuitoVolta]),
+	append(CircuitoIda,CircuitoVolta,Circuito),
+	gerarAestrelaAuxTran2(OutrosCircuitos,OutrosDest).
 
 % ------------------------------------------------------------ Gera todos os circuitos usando Gulosa da origem para todos os destinos (otimizando sub-percursos de percursos), com a heurística da distância.
 
