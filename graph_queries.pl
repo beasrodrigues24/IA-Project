@@ -13,7 +13,11 @@
     ordenaCircuitosVolume/2,
     comparaCircuitos/3,
     comparaCircuitos/6,
-    printCircuitos/0
+    printCircuitos/0,
+    minCaminho/2,
+    minCaminho/3,
+    minCircuito/2,
+    minCircuito/3.
 ]).
 
 :- use_module(graph_helpers).
@@ -243,7 +247,22 @@ comparaCaminho(C1, C2, DataAtual, R) :-
     tempoCaminho(C2, DataAtual, T2),
     R is T1 - T2.
 
-%minCircuito([C/E], DataAtual, tempo, (C/E)) :-
-%    tempoCircuito(C, E, DataAtual,_).
-%minCircuito([C/E|T], DataAtual, tempo, (C/E)) :-
-%    minCircuito(T, DataAtual, tempo, (RC/RE)).
+minCircuito([C/E], DataAtual,C/E) :-
+    tempoCircuito(C, E, DataAtual,_).
+minCircuito([C/E|T], DataAtual, C/E) :-
+    minCircuito(T, DataAtual, RC/RE),
+    tempoCircuito(C, E, DataAtual, Temp1),
+    tempoCircuito(RC, RE, DataAtual, Temp2),
+    Temp1 < Temp2, !.
+minCircuito([_|T], DataAtual, R) :-
+    minCircuito(T, DataAtual, R).
+
+minCircuito([C], C) :-
+    distanciaCircuito(C,_).
+minCircuito([C|T], C) :-
+    minCircuito(T, R),
+    distanciaCircuito(C, D1),
+    distanciaCircuito(R, D2),
+    D1 < D2, !.
+minCircuito([_|T], R) :-
+    minCircuito(T,R).
