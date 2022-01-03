@@ -17,7 +17,9 @@
     minCaminho/2,
     minCaminho/3,
     minCircuito/2,
-    minCircuito/3.
+    minCircuito/3,
+    comparaCaminho/3,
+    comparaCaminho/4
 ]).
 
 :- use_module(graph_helpers).

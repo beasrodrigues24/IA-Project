@@ -5,6 +5,7 @@ from tkinter import Tk, Canvas, Frame, BOTH
 import os
 
 codCircuito = StringVar()
+dataBase = StringVar()
 codCircuito2 = StringVar()
 codEncomenda = StringVar()
 topN = StringVar()
@@ -19,13 +20,37 @@ def clearFrame(frame):
     for widget in frame.winfo_children():
         widget.destroy()
 
-def comparar():
+def comparar(frame):
+    clearFrame(frame)
     if (produtividade.get() == "Distância"):
-        print("Dist")
+        res = list(prolog.query("comparaCaminho("+str(codCircuito.get())+","+str(codCircuito2.get())+",Res)"))
+        print("Res:" + str(res[0]['Res']))
+        if (res[0]['Res'] > 0):
+            st = "O circuito " + str(codCircuito.get()) + " é " + str(res[0]['Res']) + " unidades maior que o circuito " + str(codCircuito2.get()) + " em termos de distância."
+            text = Label(frame,text=st)
+            text.pack()
+        elif (res[0]['Res'] == 0):
+            text2 = Label(frame,text="Os circuitos são iguais em termos de distância")
+            text2.pack()
+        elif (res[0]['Res'] < 0):
+            st2 = "O circuito " + str(codCircuito2.get()) + " é " + str(abs(res[0]['Res'])) + " unidades maior que o circuito " + str(codCircuito.get()) + " em termos de distância."
+            text3 = Label(frame,text=st2)
+            text3.pack()
+
     elif (produtividade.get() == "Tempo"):
-        print("Time")
-    print(codCircuito.get())
-    print(codCircuito2.get())
+        res = list(prolog.query("comparaCaminho("+str(codCircuito.get())+","+str(codCircuito2.get())+","+dataBase.get()+",Res)"))
+        print("Res:" + str(res[0]['Res']))
+        if (res[0]['Res'] > 0):
+            st = "O circuito " + str(codCircuito.get()) + " é " + str(res[0]['Res']) + " unidades maior que o circuito " + str(codCircuito2.get()) + " em termos de tempo."
+            text = Label(frame,text=st)
+            text.pack()
+        elif (res[0]['Res'] == 0):
+            text2 = Label(frame,text="Os circuitos são iguais em termos de tempo")
+            text2.pack()
+        elif (res[0]['Res'] < 0):
+            st2 = "O circuito " + str(codCircuito2.get()) + " é " + str(abs(res[0]['Res'])) + " unidades maior que o circuito " + str(codCircuito.get()) + " em termos de tempo"
+            text3 = Label(frame,text=st2)
+            text3.pack()
 
 def compararCircuitos(frame):
     clearFrame(frame)
@@ -43,11 +68,15 @@ def compararCircuitos(frame):
     textInsert = Entry(frame,textvariable=codCircuito)
     text2 = Label(frame,text="Codigo circuito 2")
     text2Insert = Entry(frame,textvariable=codCircuito2)
-    btn = ttk.Button(frame,text="Comparar",command=comparar)
+    text3 = Label(frame,text="Data base * (apenas para comparar tempos)")
+    text3Insert = Entry(frame,textvariable=dataBase)
+    btn = ttk.Button(frame,text="Comparar",command=lambda: comparar(frame))
     text.pack()
     textInsert.pack()
     text2.pack()
     text2Insert.pack()
+    text3.pack()
+    text3Insert.pack()
     btn.pack()
 
 def top(frame):
