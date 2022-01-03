@@ -11,7 +11,8 @@
 	gerarDFS/1,
 	profundidadeIterativa/3,
 	gerarDFSIterativa/1,
-	distanciaCircuito/2
+	distanciaCircuito/2,
+	edgeDist/3
 	]).
 
 :- use_module(helpers).
@@ -396,8 +397,4 @@ distanciaCircuito([A|[B|T]], D) :-
 	distanciaCircuito([B|T], D2),
 	D is D1 + D2.
 
-edgeDist(A,B, Dist) :-
-	edge(A,B,_,Dist,_).
-edgeDist(A,B, Dist) :-
-	edge(B,A,_,Dist,_).
-
+edgeDist(A,B, Dist) :- adjacente(A,B,Dist,_).

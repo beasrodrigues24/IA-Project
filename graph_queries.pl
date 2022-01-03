@@ -74,8 +74,8 @@ gerarCircuitos([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT,CircuitosBFS,Cir
 
 tempo([],_,_,0).
 tempo([_],_,_,0).
-tempo([Nodo1,Nodo2|OutrosNodos], Transporte, Peso, Tempo) :- 
-    edge(Nodo1,Nodo2,_,Distancia,_),
+tempo([Nodo1,Nodo2|OutrosNodos], Transporte, Peso, Tempo) :-
+    edgeDist(Nodo1,Nodo2,Distancia),
     transporte(Transporte,_,VelocidadeMedia),
     velocidadeDiminui(Transporte, Diminuicao),
     Velocidade is VelocidadeMedia - Diminuicao*Peso,
@@ -202,24 +202,24 @@ writeLista([H|T]) :- write(H), write(', '), writeLista(T).
 writeCircuitos([]).
 writeCircuitos([Cod/Caminho|T]) :-  write('Circuito '), write(Cod), write(': ['), writeLista(Caminho), writeln(']'), writeCircuitos(T).
 
-minCaminho([Cod],distancia,Cod).
-minCaminho([Cod|T], distancia, Cod) :-
-    minCaminho(T, distancia, CodR),
+minCaminho([Cod],Cod).
+minCaminho([Cod|T], Cod) :-
+    minCaminho(T, CodR),
     distanciaCaminho(Cod, Dist1),
     distanciaCaminho(CodR, Dist2),
     Dist1 < Dist2, !.
-minCaminho([_|T],distancia, R) :-
-    minCaminho(T,distancia, R).
+minCaminho([_|T], R) :-
+    minCaminho(T, R).
 
-minCaminho([Cod], DataAtual, tempo, Cod) :-
+minCaminho([Cod], DataAtual, Cod) :-
     tempoCaminho(Cod, DataAtual,_). % Serve apenas para confirmar que é possível realizar este caminho
-minCaminho([Cod|T], DataAtual, tempo, Cod) :-
-    minCaminho(T, DataAtual, tempo, CodR),
+minCaminho([Cod|T], DataAtual, Cod) :-
+    minCaminho(T, DataAtual, CodR),
     tempoCaminho(Cod, DataAtual, Temp1),
     tempoCaminho(CodR, DataAtual, Temp2),
     Temp1 < Temp2, !.
-minCaminho([_|T], DataAtual, tempo, R) :-
-    minCaminho(T, DataAtual, tempo, R).
+minCaminho([_|T], DataAtual, R) :-
+    minCaminho(T, DataAtual, R).
 
 distanciaCaminho(Cod, Dist) :-
     caminho(Cod, C),
@@ -242,3 +242,8 @@ comparaCaminho(C1, C2, DataAtual, R) :-
     tempoCaminho(C1, DataAtual, T1),
     tempoCaminho(C2, DataAtual, T2),
     R is T1 - T2.
+
+%minCircuito([C/E], DataAtual, tempo, (C/E)) :-
+%    tempoCircuito(C, E, DataAtual,_).
+%minCircuito([C/E|T], DataAtual, tempo, (C/E)) :-
+%    minCircuito(T, DataAtual, tempo, (RC/RE)).

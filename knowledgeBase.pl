@@ -339,7 +339,6 @@ edge(tatooine, dragonstone, falconBoulevard, 100, 90).
 edge(dragonstone, narnia, lionStreet, 17, 23).
 edge(narnia, kingsLanding, aslanAvenue, 22, 56).
 edge(kingsLanding, asgard, odinStreet, 30, 89).
-edge(A, B, Street, Distance, Prob) :- edge(B, A, Street, Distance, Prob).
 
 % estima(Orig,Dest,Distancia Linha Reta,Probabilidade de transito(valor de 0 a 100))
 
