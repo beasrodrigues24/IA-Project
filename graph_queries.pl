@@ -9,6 +9,8 @@
     gerarCircuitos/1,
     ordenaCircuitosPeso/1,
     ordenaCircuitosVolume/1,
+    ordenaCircuitosPeso/2,
+    ordenaCircuitosVolume/2,
     insereEncomendaCaminho/2
 ]).
 
