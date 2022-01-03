@@ -201,3 +201,27 @@ writeLista([H|T]) :- write(H), write(', '), writeLista(T).
 
 writeCircuitos([]).
 writeCircuitos([Cod/Caminho|T]) :-  write('Circuito '), write(Cod), write(': ['), writeLista(Caminho), writeln(']'), writeCircuitos(T).
+
+
+escolheCaminho(Caminhos, distancia, Res) :-
+    getCircuitos(Caminhos, Circuitos),
+    escolheCircuito(Circuitos, distancia, RCircuito),
+    caminho(Res, RCircuito).
+
+
+getCircuitos([], []).
+getCircuitos([H|T], [H1|T1]) :-
+    getCircuitos(T, T1),
+    caminho(H, H1).
+
+escolheCircuito(Circuitos, distancia, Res) :-
+    minCircuito(Circuitos, Res).
+
+minCircuito([C], C).
+minCircuito([C|T], C) :-
+    minCircuito(T, R),
+    distanciaCircuito(R, Dist1),
+    distanciaCircuito(C, Dist2),
+    Dist2 < Dist1, !.
+minCircuito([_|T], R) :-
+    minCircuito(T, R).
