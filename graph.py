@@ -474,11 +474,39 @@ retas = {"gothamCitycentralCity": [600,100,800,150],
          "hogsmeadenarnia": [730,700,520,770],
          "bedrockjurassicPark":[950,650,970,850],
          "jurassicParktatooine": [970,850,770,810],
-         "tatooinedragstone": [770,810,610,900],
-         "dragstonenarnia": [610,900,520,770],
+         "tatooinedragonstone": [770,810,610,900],
+         "dragonstonenarnia": [610,900,520,770],
          "narniakingsLanding": [520,770,300,850],
          "kingsLanding": [300,850,180,700]
          }
+
+nodos = {"gothamCity": [600,100,50], 
+        "capitol": [500,250,40],
+        "centralCity":[800,150,50],
+        "gravityFalls":[900,300,50],
+        "pawnee":[700,400,30],
+        "eastEgg":[400,125,40],
+        "westEgg":[200,250,40],
+        "westworld":[300,300,40],
+        "rivendell":[400,400,40],
+        "starCity":[1000,200,40],
+        "bikiniBottom":[1100,420,50],
+        "springfield":[920,450,40],
+        "quahog": [1200,500,30],
+        "mordor":[100,500,30],
+        "theShire":[300,600,40],
+        "asgard": [180,700,30],
+        "hogwarts": [500,650,40],
+        "neverland": [600,550,40],
+        "hogsmeade": [730,700,40],
+        "kingsLanding": [300,850,40],
+        "narnia": [520,770,30],
+        "dragonstone": [610,900,50],
+        "tatooine": [770,810,40],
+        "jurassicPark": [970,850,50],
+        "bedrock": [950,650,40],
+        "wonderland": [780,550,40]
+        }
 
 def create_circle(x, y, r, canvasName): #center coordinates, radius
     x0 = x - r
@@ -487,7 +515,17 @@ def create_circle(x, y, r, canvasName): #center coordinates, radius
     y1 = y + r
     return canvasName.create_oval(x0, y0, x1, y1,fill="#15f948")
 
-def colorir(mapKey,mapKey2,canvas):
+def create_circle2(x, y, r, canvasName): #center coordinates, radius
+    x0 = x - r
+    y0 = y - r
+    x1 = x + r
+    y1 = y + r
+    canvasName.create_oval(x0, y0, x1, y1,fill="blue")
+
+def write_name(x,y,name,canvasName):
+    canvasName.create_text(x,y,text=name)
+
+def colorir(mapKey,mapKey2,nodeKey1,nodeKey2,canvas):
     print(mapKey)
     l = retas.get(mapKey,"Null")
     if (l == "Null"):
@@ -495,7 +533,13 @@ def colorir(mapKey,mapKey2,canvas):
         print(mapKey2)
         l = retas.get(mapKey2)
 
-    canvas.create_line(l[0],l[1],l[2],l[3],fill="red")
+    canvas.create_line(l[0],l[1],l[2],l[3],fill="blue")
+    n = nodos.get(nodeKey1)
+    n2 = nodos.get(nodeKey2)
+    create_circle2(n[0],n[1],n[2],canvas)
+    write_name(n[0],n[1],nodeKey1,canvas)
+    create_circle2(n2[0],n2[1],n2[2],canvas)
+    write_name(n2[0],n2[1],nodeKey2,canvas)
 
 def gerarRota(frame,canvas):
     print(codCircuito.get())
@@ -508,26 +552,11 @@ def gerarRota(frame,canvas):
         print(res[0]['Circuito'][i + 1])
         mapKey = str(res[0]['Circuito'][i]) + str(res[0]['Circuito'][i+1])
         mapKey2 = str(res[0]['Circuito'][i + 1]) + str(res[0]['Circuito'][i])
-        colorir(mapKey,mapKey2,canvas)
+        colorir(mapKey,mapKey2,str(res[0]['Circuito'][i]),str(res[0]['Circuito'][i+1]),canvas)
         i = i + 1
+    #drawNodes(frame,canvas)
 
-def gerarMapa(frame):
-    clearFrame(frame)
-    
-    vbar=Scrollbar(frame,orient=VERTICAL)
-    vbar.pack(side=RIGHT,fill=Y)
-    
-    canvas = Canvas(frame,width=1280,height=520,scrollregion=(0,0,500,1500))
-    vbar.config(command=canvas.yview)
-    canvas.config(background="white",yscrollcommand=vbar.set)
- 
-    text = Label(frame,text="Codigo circuito")
-    textInsert = Entry(frame,textvariable=codCircuito)
-    btn = ttk.Button(frame,text="Gerar rota",command=lambda: gerarRota(frame,canvas))
-    text.pack()
-    textInsert.pack()
-    btn.pack()
-    
+def drawLines(frame,canvas): 
     #Gotham City -> Central City
     canvas.create_line(600,100,retas["gothamCitycentralCity"][2],150)
     #Gotham City -> Capitol
@@ -590,9 +619,9 @@ def gerarMapa(frame):
     canvas.create_line(520,770,300,850)
     #KingsLand -> Asgard
     canvas.create_line(300,850,180,700)
+    canvas.pack(side=LEFT,expand=True,fill=BOTH)
 
-
-
+def drawNodes(frame,canvas):
     #GothamCity
     create_circle(600,100,50,canvas)
     txt = canvas.create_text(600, 100, text='Gotham City')
@@ -674,10 +703,29 @@ def gerarMapa(frame):
     
     canvas.pack(side=LEFT,expand=True,fill=BOTH)
     #canvas.pack(fill=BOTH, expand=1)
-    print("oi")
+
+def gerarMapa(frame):
+    clearFrame(frame)
+    vbar=Scrollbar(frame,orient=VERTICAL)
+    vbar.pack(side=RIGHT,fill=Y)
+    
+    canvas = Canvas(frame,width=1280,height=520,scrollregion=(0,0,500,1500))
+    vbar.config(command=canvas.yview)
+    canvas.config(background="white",yscrollcommand=vbar.set)
+ 
+    text = Label(frame,text="Codigo circuito")
+    textInsert = Entry(frame,textvariable=codCircuito)
+    btn = ttk.Button(frame,text="Gerar rota",command=lambda: gerarRota(frame,canvas))
+    text.pack()
+    textInsert.pack()
+    btn.pack()
+    drawLines(frame,canvas)
+    drawNodes(frame,canvas)
 
 
 def gerarRec(circuitos,key):
+    print("KEY:" + str(key))
+    print("LEN:" + str(len(circuitos)))
     if len(circuitos) == 0:
         return
     st = "["
@@ -697,10 +745,10 @@ def gerarRec(circuitos,key):
         prolog.assertz("caminho("+str(key)+","+st+")")
         print("Inserido !")
     if len(circuitos) > 1:
-        gerarRec(circuitos[1:-1],key + 1)
+        gerarRec(circuitos[1:],key + 1)
 
 def gerarCircuitos():    
-    res = list(prolog.query("gerarGulosaDistQ(Circuitos)", maxresult=1))
+    res = list(prolog.query("gerarGulosaDistQ(Circuitos)",maxresult=1))
     i = 0
     j = 0
     gerarRec(res[0]['Circuitos'],0)

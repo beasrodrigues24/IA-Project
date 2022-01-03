@@ -833,7 +833,6 @@ menuCircuitos.add_command(label="Gerar circuitos usando Gulosa - trânsito",comm
 menuCircuitos.add_command(label="Gerar circuitos usando AEstrela - distância",command=lambda: graph.gerarAEstrelaD(frame))
 menuCircuitos.add_command(label="Gerar circuitos usando AEstrela - trânsito",command=lambda: graph.gerarAEstrelaT(frame))
 menuCircuitos.add_command(label="Visualizar mapa",command=lambda: graph.gerarMapa(frame))
-menuCircuitos.add_command(label="Visualizar circuito",command=graph.gerarCircuitos)
 menuCircuitos.add_command(label="Associar encomenda a caminho",command=lambda: graph.associarEncomendaCaminho(frame))
 menuCircuitos.add_command(label="obterTopCircuitos",command=lambda: graph.obterTopCircuitos(frame))
 menuCircuitos.add_command(label="compararCircuitos",command=lambda: graph.compararCircuitos(frame))
@@ -850,6 +849,8 @@ menuBar.add_cascade(label="Inserir",menu = menuInsert)
 menuBar.add_cascade(label="Cicuitos",menu = menuCircuitos)
 
 app.config(menu=menuBar)
+
+graph.gerarCircuitos()
 
 app.mainloop()
 
