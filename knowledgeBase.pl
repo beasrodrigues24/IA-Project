@@ -146,16 +146,7 @@ velocidadeDiminui(carro, 0.1).
 
 :-dynamic(caminho/2).
 
-caminho(1000, [gravityFalls, centralCity, gothamCity]).
-% caminho(2, [neverland,wonderland]).
-
-% - encomendaCaminho(CodCaminho, CodEncomenda)
-
 :-dynamic(encomendaCaminho/2).
-
-encomendaCaminho(1,1).
-encomendaCaminho(2,2).
-% encomendaCaminho(2,6).
 
 
 /***************** INVARIANTES ******************/
@@ -359,4 +350,11 @@ estima(mordor,neverland,48,21).
 estima(mordor,gothamCity,94,16).
 estima(mordor,bikinibottom,60,43).
 estima(mordor,bedrock,74,39).
-
+estima(tatooine,hogwarts,100,33).
+estima(pawnee,rivendell,148,40).
+estima(quahog,jurassicPark,40,70).
+estima(starCity,eastEgg,150,18).
+estima(asgard,neverland,110,27).
+estima(wonderland,capitol,35,4).
+estima(dragonstone,theShire,67,50).
+estima(springfield,starCity,40,20).
