@@ -28,7 +28,8 @@
     minCircuito/3,
     comparaCaminho/3,
     comparaCaminho/4,
-    printEncomendaCaminho/0
+    printEncomendaCaminho/0,
+    caminhosComNodos/2
 ]).
 
 :- use_module(graph_helpers).
@@ -314,3 +315,8 @@ writeCircuitos([Cod/Caminho|T]) :-  write('Circuito '), write(Cod), write(': [')
 printEncomendaCaminho() :- findall(CodC/CodE, encomendaCaminho(CodC,CodE), Lista), writeEncCam(Lista).
 writeEncCam([]).
 writeEncCam([CodC/CodE|T]) :- write('Código Circuito: '), write(CodC), write(' | '), write('Código Encomenda: '), writeln(CodE), writeEncCam(T).
+
+
+
+caminhosComNodos(L, R) :-
+    findall(Cod, (caminho(Cod, Circuito), subset(L,Circuito)), R).
