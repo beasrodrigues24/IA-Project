@@ -11,6 +11,7 @@ codEncomenda = StringVar()
 topN = StringVar()
 topOpt = StringVar()
 produtividade = StringVar()
+key_act = 0
 
 prolog = Prolog()
 prolog.consult("graph_queries.pl")
@@ -192,7 +193,7 @@ def gerarDFS(frame):
     r = 0;
     c = 0;
     cc = 0; rr = 1;
-    res = prolog.query("gerarDFSQ(Circuitos)", maxresult=1)
+    res = prolog.query("gerarDFS2Q(Circuitos)", maxresult=1)
     for s in res:
         for circuito in s['Circuitos']:
             print(str(r) + "-" + str(c))
@@ -241,7 +242,7 @@ def gerarBFS(frame):
     r = 0;
     c = 0;
     cc = 0; rr = 1;
-    res = prolog.query("gerarBFSQ(Circuitos)", maxresult=1)
+    res = prolog.query("gerarBFS2Q(Circuitos)", maxresult=1)
     for s in res:
         for circuito in s['Circuitos']:
             print(str(r) + "-" + str(c))
@@ -289,7 +290,7 @@ def gerarDFSI(frame):
     r = 0;
     c = 0;
     cc = 0; rr = 1;
-    res = prolog.query("gerarDFSIQ(Circuitos)", maxresult=1)
+    res = prolog.query("gerarDFSI2Q(Circuitos)", maxresult=1)
     for s in res:
         for circuito in s['Circuitos']:
             print(str(r) + "-" + str(c))
@@ -336,7 +337,7 @@ def gerarGulosaD(frame):
     r = 0;
     c = 0;
     cc = 0; rr = 1;
-    res = prolog.query("gerarGulosaDistQ(Circuitos)", maxresult=1)
+    res = prolog.query("gerarGulosaDist2Q(Circuitos)", maxresult=1)
     for s in res:
         for circuito in s['Circuitos']:
             table = ttk.Treeview(frame)
@@ -382,7 +383,7 @@ def gerarGulosaT(frame):
     r = 0;
     c = 0;
     cc = 0; rr = 1;
-    res = prolog.query("gerarGulosaTranQ(Circuitos)", maxresult=1)
+    res = prolog.query("gerarGulosaTran2Q(Circuitos)", maxresult=1)
     for s in res:
         for circuito in s['Circuitos']:
             table = ttk.Treeview(frame)
@@ -428,7 +429,7 @@ def gerarAEstrelaD(frame):
     r = 0;
     c = 0;
     cc = 0; rr = 1;
-    res = prolog.query("gerarAEstrelaDistQ(Circuitos)", maxresult=1)
+    res = prolog.query("gerarAEstrelaDist2Q(Circuitos)", maxresult=1)
     for s in res:
         for circuito in s['Circuitos']:
             table = ttk.Treeview(frame)
@@ -474,7 +475,7 @@ def gerarAEstrelaT(frame):
     r = 0;
     c = 0;
     cc = 0; rr = 1;
-    res = prolog.query("gerarAEstrelaTranQ(Circuitos)", maxresult=1)
+    res = prolog.query("gerarAEstrelaTran2Q(Circuitos)", maxresult=1)
     for s in res:
         for circuito in s['Circuitos']:
             table = ttk.Treeview(frame)
@@ -791,14 +792,14 @@ def gerarMapa(frame):
 
 
 def gerarRec(circuitos,key):
-    print("KEY:" + str(key))
+    global key_act
+    print("KEY:" + str(key_act))
     print("LEN:" + str(len(circuitos)))
     if len(circuitos) == 0:
         return
     st = "["
     i = 1
     for l in circuitos[0]:
-        print(str(i) + "-" + str(len(circuitos[0])))
         if i < len(circuitos[0]):
             st2 = str(l) + ","
             st += st2
@@ -812,10 +813,29 @@ def gerarRec(circuitos,key):
         prolog.assertz("caminho("+str(key)+","+st+")")
         print("Inserido !")
     if len(circuitos) > 1:
+        key_act = key_act + 1
         gerarRec(circuitos[1:],key + 1)
 
-def gerarCircuitos():    
-    res = list(prolog.query("gerarGulosaDistQ(Circuitos)",maxresult=1))
-    i = 0
-    j = 0
-    gerarRec(res[0]['Circuitos'],0)
+def gerarCircuitos():   
+    global key_act
+    key_act = 0
+    res = list(prolog.query("gerarGulosaDist2Q(Circuitos)",maxresult=1))
+    gerarRec(res[0]['Circuitos'],key_act)
+    
+    res = list(prolog.query("gerarGulosaTran2Q(Circuitos)",maxresult=1))
+    gerarRec(res[0]['Circuitos'],key_act)
+    
+    res = list(prolog.query("gerarAEstrelaDist2Q(Circuitos)",maxresult=1))
+    gerarRec(res[0]['Circuitos'],key_act)
+    
+    res = list(prolog.query("gerarAEstrelaTran2Q(Circuitos)",maxresult=1))
+    gerarRec(res[0]['Circuitos'],key_act)
+    
+    res = list(prolog.query("gerarBFS2Q(Circuitos)",maxresult=1))
+    gerarRec(res[0]['Circuitos'],key_act)
+
+    res = list(prolog.query("gerarDFS2Q(Circuitos)",maxresult=1))
+    gerarRec(res[0]['Circuitos'],key_act)
+    
+    res = list(prolog.query("gerarDFSI2Q(Circuitos)",maxresult=1))
+    gerarRec(res[0]['Circuitos'],key_act)

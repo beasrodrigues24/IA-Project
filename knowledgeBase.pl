@@ -146,7 +146,7 @@ velocidadeDiminui(carro, 0.1).
 
 :-dynamic(caminho/2).
 
-caminho(-1, [gravityFalls, centralCity, gothamCity]).
+caminho(1000, [gravityFalls, centralCity, gothamCity]).
 #caminho(2, [neverland,wonderland]).
 
 % - encomendaCaminho(CodCaminho, CodEncomenda)
