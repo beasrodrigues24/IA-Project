@@ -19,7 +19,8 @@
            isEqual/2,
            takeTopN/3,
            printListaPares/1,
-           clear/0
+           clear/0,
+           writeLista/1
                 ]).
 
 pertenceData(DataInicial, DataFinal, Data) :- dataDiff(Data, DataInicial, N1),
@@ -161,6 +162,14 @@ printListaPares([]).
 printListaPares([Nome/Freq|T]) :- 
 	write('Nome: '), write(Nome), write(', Frequência: '), write(Freq), nl,
 	printListaPares(T).	
+
+/*
+ * Nome: writeLista(Lista)
+ * Descrição: Recebe uma lista e imprime-a, separando os seus elementos por vírgulas.
+*/
+writeLista([]).
+writeLista([T]) :- write(T).
+writeLista([H|T]) :- write(H), write(', '), writeLista(T).
 
 clear() :- nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl.
 

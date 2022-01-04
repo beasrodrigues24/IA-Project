@@ -27,7 +27,8 @@
     minCircuito/2,
     minCircuito/3,
     comparaCaminho/3,
-    comparaCaminho/4
+    comparaCaminho/4,
+    printEncomendaCaminho/0
 ]).
 
 :- use_module(graph_helpers).
@@ -229,16 +230,6 @@ maxDuracao(E, DataAtual, MaxDuracao) :-
     min_list(R, Max),
     MaxDuracao is Max / 3600.
 
-% Imprime todos os circuitos existentes na base de conhecimento.
-printCircuitos() :- findall(Cod/Circ, caminho(Cod,Circ), Lista), writeCircuitos(Lista).
-
-writeLista([]).
-writeLista([T]) :- write(T).
-writeLista([H|T]) :- write(H), write(', '), writeLista(T).
-
-writeCircuitos([]).
-writeCircuitos([Cod/Caminho|T]) :-  write('Circuito '), write(Cod), write(': ['), writeLista(Caminho), writeln(']'), writeCircuitos(T).
-
 minCaminho([Cod],Cod).
 minCaminho([Cod|T], Cod) :-
     minCaminho(T, CodR),
@@ -299,3 +290,13 @@ minCircuito([C|T], C) :-
     D1 < D2, !.
 minCircuito([_|T], R) :-
     minCircuito(T,R).
+
+% Imprime todos os circuitos existentes na base de conhecimento.
+printCircuitos() :- findall(Cod/Circ, caminho(Cod,Circ), Lista), writeCircuitos(Lista).
+writeCircuitos([]).
+writeCircuitos([Cod/Caminho|T]) :-  write('Circuito '), write(Cod), write(': ['), writeLista(Caminho), writeln(']'), writeCircuitos(T).
+
+% Imprime todas as "encomendaCaminho" presentes na base de conhecimento.
+printEncomendaCaminho() :- findall(CodC/CodE, encomendaCaminho(CodC,CodE), Lista), writeEncCam(Lista).
+writeEncCam([]).
+writeEncCam([CodC/CodE|T]) :- write('Código Circuito: '), write(CodC), write(' | '), write('Código Encomenda: '), writeln(CodE), writeEncCam(T).

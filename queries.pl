@@ -484,11 +484,12 @@ menu :- repeat,
 		writeln(' 26.  Comparar circuitos com base na distância percorrida.'),
 		writeln(' 27.  Comparar circuitos com base no tempo necessário.'),
 		writeln(' 28.  Imprimir todos os circuitos possíveis.'),
+		writeln(' 29.  Imprimir todas as associações entre códigos de circuito e códigos de encomenda.'),
 		writeln('  0.  Sair do menu.'),
 		nl,																																	  
 		writeln('-------------------------------------------------------------------------------------------------------------------------------------'),nl,
 		writeln('Insira a Query pretendida: '),
-		read(Choice), Choice >= 0, Choice =< 28,
+		read(Choice), Choice >= 0, Choice =< 29,
 		(Choice = 0 -> !,fail;true), 
 		case(Choice),fail.
 
@@ -528,3 +529,4 @@ case(25) :- writeln('Quantos circuitos pretende obter? '), read(N), ordenaCircui
 case(26) :- writeln('Em construção.'), writeln('Insira n. para avançar.'), read(_), !.
 case(27) :- writeln('Em construção.'), writeln('Insira n. para avanlar.'), read(_), !.
 case(28) :- printCircuitos(), writeln('Insira n. para avançar.'), read(_), !.
+case(29) :- printEncomendaCaminho(), writeln('Insira n. para avançar'), read(_), !.

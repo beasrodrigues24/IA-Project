@@ -147,7 +147,7 @@ velocidadeDiminui(carro, 0.1).
 :-dynamic(caminho/2).
 
 caminho(1000, [gravityFalls, centralCity, gothamCity]).
-#caminho(2, [neverland,wonderland]).
+% caminho(2, [neverland,wonderland]).
 
 % - encomendaCaminho(CodCaminho, CodEncomenda)
 
@@ -276,10 +276,16 @@ compareDatas([Di/Df|T],De) :- not(pertenceData(Di,Df,De)), compareDatas(T,De).
  * Não permite a associação de uma CodEncomenda a mais de um circuito
  */
 
-+encomendaCaminho(_,CodEncomenda) :: (
++encomendaCaminho(CodC,CodEncomenda) :: (
 	findall(CodCaminho,encomendaCaminho(CodCaminho,CodEncomenda),Lista),
 	length(Lista,N),
-	N == 1
+	N == 1,
+	findall(CodC, caminho(CodC, _), ListaCam),
+	length(ListaCam, L),
+	L > 0,
+	findall(CodEncomenda, encomenda(CodEncomenda,_,_,_,_,_,_,_,_,_), ListaEnc),
+	length(ListaEnc, L2),
+	L2 > 0
 	).
 
 /* 
