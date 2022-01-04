@@ -841,6 +841,7 @@ menuCircuitos.add_command(label="Obter Top circuitos",command=lambda: graph.obte
 menuCircuitos.add_command(label="Comparar circuitos",command=lambda: graph.compararCircuitos(frame))
 menuCircuitos.add_command(label="Escolher o circuito mais rápido",command=lambda: graph.circuitoMaisRapido(frame))
 menuCircuitos.add_command(label="Escolher o circuito mais ecológico",command=lambda: graph.circuitoMaisEcologico(frame))
+menuCircuitos.add_command(label="Obter circuitos com nodos",command=lambda: graph.circuitosComNodos(frame))
 
 menuInsert.add_command(label="Cliente (EXTRA)",command=insertCliente)
 menuInsert.add_command(label="Registar nova encomenda (EXTRA) ",command=insertEncomenda)

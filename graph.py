@@ -11,6 +11,7 @@ codEncomenda = StringVar()
 topN = StringVar()
 topOpt = StringVar()
 produtividade = StringVar()
+nodosProcurar = StringVar()
 key_act = 0
 
 prolog = Prolog()
@@ -20,6 +21,31 @@ prolog.consult("queries.pl")
 def clearFrame(frame):
     for widget in frame.winfo_children():
         widget.destroy()
+
+def comNodos(frame):
+    clearFrame(frame)
+    res = list(prolog.query("caminhosComNodos("+str(nodosProcurar.get())+",Res)"))
+    i = 0
+    if (len(res) > 0):
+        st = "Os circuitos que passam pelos nodos indicados são: \n" 
+        for cod in res[0]['Res']:
+            st += str(cod) + ","
+            i = i + 1
+            if (i % 10) == 0:
+                st += "\n"
+        text = Label(frame,text=st)
+        text.pack()
+
+    print(nodosProcurar.get())
+
+def circuitosComNodos(frame):
+    clearFrame(frame)
+    text = Label(frame,text="Nodos que o circuito deve ter * (no formato [nodo1,...,nodoN]")
+    textInsert = Entry(frame,textvariable=nodosProcurar)
+    text.pack()
+    textInsert.pack()
+    btn = ttk.Button(frame,text="Procurar",command=lambda:comNodos(frame))
+    btn.pack()
 
 def maisRapido(frame):
     clearFrame(frame)
