@@ -20,7 +20,8 @@
            takeTopN/3,
            printListaPares/1,
            clear/0,
-           writeLista/1
+           writeLista/1,
+           getAbs/2
                 ]).
 
 pertenceData(DataInicial, DataFinal, Data) :- dataDiff(Data, DataInicial, N1),
@@ -170,6 +171,12 @@ printListaPares([Nome/Freq|T]) :-
 writeLista([]).
 writeLista([T]) :- write(T).
 writeLista([H|T]) :- write(H), write(', '), writeLista(T).
+
+/*
+ * Nome: getAbs(Valor, Resultado)
+ * Descrição: Obtém o valor absoluto de um número.
+*/
+getAbs(X, Res) :- Res is abs(X).
 
 clear() :- nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl,nl.
 

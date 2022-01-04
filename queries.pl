@@ -481,15 +481,17 @@ menu :- repeat,
 		writeln(' 23.  Associar o código de uma encomenda ao código de um circuito.'),
 		writeln(' 24.  Obter o top N de circuitos com base no Peso.'),
 		writeln(' 25.  Obter o top N de circuitos com base no Volume.'),
-		writeln(' 26.  Comparar circuitos com base na distância percorrida.'),
-		writeln(' 27.  Comparar circuitos com base no tempo necessário.'),
-		writeln(' 28.  Imprimir todos os circuitos possíveis.'),
-		writeln(' 29.  Imprimir todas as associações entre códigos de circuito e códigos de encomenda.'),
+		writeln(' 26.  Comparar circuitos com base na distância.'),
+		writeln(' 27.  Comparar circuitos com base no tempo.'),
+		writeln(' 28.  Dada uma lista de circuitos escolher o mais rápido.'),
+		writeln(' 29.  Dada uma lista de circuitos e a data de início de uma entrega, fornecer o circuito mais ecológico.'),
+		writeln(' 30.  Imprimir todos os circuitos possíveis.'),
+		writeln(' 31.  Imprimir todas as associações entre códigos de circuito e códigos de encomenda.'),
 		writeln('  0.  Sair do menu.'),
 		nl,																																	  
 		writeln('-------------------------------------------------------------------------------------------------------------------------------------'),nl,
 		writeln('Insira a Query pretendida: '),
-		read(Choice), Choice >= 0, Choice =< 29,
+		read(Choice), Choice >= 0, Choice =< 31,
 		(Choice = 0 -> !,fail;true), 
 		case(Choice),fail.
 
@@ -514,19 +516,31 @@ case(11) :- query11(Clientes), printIndividuos(Clientes), write('Insira n. para 
 case(12) :- query12(Estafetas), printIndividuos(Estafetas), write('Insira n. para avançar'), read(_), !.
 case(13) :- write('Insira o termo: '), read(Termo), evolucao(Termo), write(Termo), !.
 case(14) :- write('Insira o nome do ficheiro: '), read(Data), term_to_atom(Data,Nome), carregaFicheiro(Nome),!.
-case(15) :- gerarCircuitos(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
-case(16) :- gerarDFSQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
-case(17) :- gerarBFSQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
-case(18) :- gerarDFSIQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
-case(19) :- gerarGulosaDistQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
-case(20) :- gerarGulosaTranQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
-case(21) :- gerarAEstrelaDistQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
-case(22) :- gerarAEstrelaTranQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(15) :- gerarCircuitos2(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(16) :- gerarDFS2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(17) :- gerarBFS2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(18) :- gerarDFSI2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(19) :- gerarGulosaDis2tQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(20) :- gerarGulosaTran2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(21) :- gerarAEstrelaDist2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(22) :- gerarAEstrelaTran2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
 case(23) :- write('Insira o termo [encomendaCaminho(cod_circuito,cod_encomenda).]: '), read(EncCam), evolucao(EncCam), writeln(EncCam),
 			writeln('Insira n. para avançar'), read(_), !.
 case(24) :- writeln('Quantos circuitos pretende obter? '), read(N), ordenaCircuitosPeso(N), writeln('Insira n. para avançar.'), read(_), !.
 case(25) :- writeln('Quantos circuitos pretende obter? '), read(N), ordenaCircuitosVolume(N), writeln('Insira n. para avançar.'), read(_), !.
-case(26) :- writeln('Em construção.'), writeln('Insira n. para avançar.'), read(_), !.
-case(27) :- writeln('Em construção.'), writeln('Insira n. para avanlar.'), read(_), !.
-case(28) :- printCircuitos(), writeln('Insira n. para avançar.'), read(_), !.
-case(29) :- printEncomendaCaminho(), writeln('Insira n. para avançar'), read(_), !.
+case(26) :- writeln('Insira o código do primeiro caminho: '), read(Cod1), nl, writeln('Insira o código do segundo caminho'), read(Cod2), nl,
+			comparaCaminho(Cod1, Cod2, Res), (Res > 0 -> write('O caminho '), write(Cod1), write(' é '), write(Res), writeln(' unidades maior em distância.'); 
+											  (Res < 0 -> getAbs(Res, AbsR), write('O caminho '), write(Cod2), write(' é '), write(AbsR), writeln(' unidades maior em distância.');
+											  writeln('Os caminhos são idênticos em termos de distância.'))),
+											  writeln('Insira n. para avançar.'), read(_), !.
+case(27) :- writeln('Insira o código do primeiro caminho: '), read(Cod1), nl, writeln('Insira o código do segundo caminho: '), read(Cod2), nl, writeln('Insira a data base: '),
+			read(Data), comparaCaminho(Cod1, Cod2, Data, Res), write('Hello!'), (Res > 0 -> write('O caminho '), write(Cod1), write(' é '), write(Res), writeln(' unidades maior em duração.'); 
+											  (Res < 0 -> getAbs(Res, AbsR), write('O caminho '), write(Cod2), write(' é '), write(AbsR), writeln(' unidades maior em duração.');
+											  writeln('Os caminhos são idênticos em termos de tempo.'))),
+											  writeln('Insira n. para avançar.'), read(_), !.
+case(28) :- writeln('Insira a lista de códigos: '), read(List), nl, minCaminho(List, Res), write('O caminho '), write(Res), writeln(' é o mais rápido.'), 
+			writeln('Insira n. para avançar.'), read(_), !.
+case(29) :- writeln('Insira a lista de códigos: '), read(List), nl, writeln('Insira a data base: '), read(Data), nl, minCaminho(List, Data, Res), write('O caminho '), write(Res), writeln(' é o mais ecológico.'),
+			writeln('Insira n. para avançar.'), read(_), !.
+case(30) :- printCircuitos(), writeln('Insira n. para avançar.'), read(_), !.
+case(31) :- printEncomendaCaminho(), writeln('Insira n. para avançar'), read(_), !.
