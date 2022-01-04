@@ -101,12 +101,19 @@ gerarCircuitos([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT,CircuitosBFS,Cir
 
 gerarCircuitos2([CircuitosGD,CircuitosGT,CircuitosAD,CircuitosAT,CircuitosBFS,CircuitosDFS,CircuitosDFSI]) :- 
 	gerarGulosaDist2(CircuitosGD),
+	addCodToCircuitos(CircuitosGD,0,0,N1),
 	gerarGulosaTran2(CircuitosGT),
+	addCodToCircuitos(CircuitosGT,N1,N1,N2),
 	gerarAestrelaDist2(CircuitosAD),
+	addCodToCircuitos(CircuitosAD,N2,N2,N3),
 	gerarAestrelaTran2(CircuitosAT),
+	addCodToCircuitos(CircuitosAT,N3,N3,N4),
 	gerarBFS2(CircuitosBFS),
+	addCodToCircuitos(CircuitosBFS,N4,N4,N5),
 	gerarDFS2(CircuitosDFS),
-	gerarDFSIterativa2(CircuitosDFSI).
+	addCodToCircuitos(CircuitosDFS,N5,N5,N6),
+	gerarDFSIterativa2(CircuitosDFSI),
+	addCodToCircuitos(CircuitosDFSI,N6,N6,_).
 
 % Calcular tempo de um percurso dado peso e transporte
 
@@ -290,6 +297,13 @@ minCircuito([C|T], C) :-
     D1 < D2, !.
 minCircuito([_|T], R) :-
     minCircuito(T,R).
+
+addCodToCircuitos([],_,FCod,FCod).
+addCodToCircuitos([Circuito|OutrosCircuitos],Cod,FCod,LastCod) :-
+	evolucao(caminho(Cod,Circuito)),
+	ProxCod is Cod + 1,
+	addCodToCircuitos(OutrosCircuitos,ProxCod,FCod,N),
+	LastCod is N + 1.
 
 % Imprime todos os circuitos existentes na base de conhecimento.
 printCircuitos() :- findall(Cod/Circ, caminho(Cod,Circ), Lista), writeCircuitos(Lista).
