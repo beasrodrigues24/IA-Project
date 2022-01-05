@@ -534,7 +534,7 @@ case(26) :- writeln('Insira o código do primeiro caminho: '), read(Cod1), nl, w
 											  writeln('Os caminhos são idênticos em termos de distância.'))),
 											  writeln('Insira n. para avançar.'), read(_), !.
 case(27) :- writeln('Insira o código do primeiro caminho: '), read(Cod1), nl, writeln('Insira o código do segundo caminho: '), read(Cod2), nl, writeln('Insira a data base: '),
-			read(Data), comparaCaminho(Cod1, Cod2, Data, Res), write('Hello!'), (Res > 0 -> write('O caminho '), write(Cod1), write(' é '), write(Res), writeln(' unidades maior em duração.'); 
+			read(Data), comparaCaminho(Cod1, Cod2, Data, Res), (Res > 0 -> write('O caminho '), write(Cod1), write(' é '), write(Res), writeln(' unidades maior em duração.'); 
 											  (Res < 0 -> getAbs(Res, AbsR), write('O caminho '), write(Cod2), write(' é '), write(AbsR), writeln(' unidades maior em duração.');
 											  writeln('Os caminhos são idênticos em termos de tempo.'))),
 											  writeln('Insira n. para avançar.'), read(_), !.
