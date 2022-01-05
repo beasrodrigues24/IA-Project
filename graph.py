@@ -215,6 +215,20 @@ def associarEncomendaCaminho(frame):
 def gerarDFS(frame):
     clearFrame(frame)
 
+    canvas = Canvas(frame)
+    canvas.pack(fill=BOTH,expand=True)
+    
+    def on_configure(event):
+        canvas.configure(scrollregion=canvas.bbox('all'))
+
+    scrollbar = Scrollbar(frame,command=canvas.yview)
+    scrollbar.pack(side=RIGHT,fill='y')
+    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.bind('<Configure>',on_configure)
+
+    frame = Frame(canvas)
+    canvas.create_window((150,0),window=frame,anchor='nw')
+
     i = 0;
     r = 0;
     c = 0;
@@ -237,7 +251,7 @@ def gerarDFS(frame):
             for local in circuito:
                 table.insert(parent='',index='end',iid=i,values=(i,local))
                 i = i + 1
-            #table.pack()
+            #table.pack(fill=BOTH)
             
             i = 0
 
@@ -248,21 +262,37 @@ def gerarDFS(frame):
                 c = 2
                 cc = 2
             elif cc == 2:
+                c = 3
+                cc = 3
+            elif cc == 3:
                 c = 0
                 cc = 0
 
-            if ((rr % 3) == 0):
+            if ((rr % 4) == 0):
                 r = r + 1
                 rr = rr + 1
 
-            elif ((rr % 3) != 0):
+            elif ((rr % 4) != 0):
                 rr = rr + 1
         
     #table.pack()
 
 def gerarBFS(frame):
-
     clearFrame(frame)
+
+    canvas = Canvas(frame)
+    canvas.pack(fill=BOTH,expand=True)
+    
+    def on_configure(event):
+        canvas.configure(scrollregion=canvas.bbox('all'))
+
+    scrollbar = Scrollbar(frame,command=canvas.yview)
+    scrollbar.pack(side=RIGHT,fill='y')
+    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.bind('<Configure>',on_configure)
+
+    frame = Frame(canvas)
+    canvas.create_window((150,0),window=frame,anchor='nw')
 
     i = 0;
     r = 0;
@@ -290,6 +320,7 @@ def gerarBFS(frame):
             
             i = 0
 
+            
             if cc == 0:
                 c = 1
                 cc = 1
@@ -297,20 +328,38 @@ def gerarBFS(frame):
                 c = 2
                 cc = 2
             elif cc == 2:
+                c = 3
+                cc = 3
+            elif cc == 3:
                 c = 0
                 cc = 0
 
-            if ((rr % 3) == 0):
+            if ((rr % 4) == 0):
                 r = r + 1
                 rr = rr + 1
 
-            elif ((rr % 3) != 0):
+            elif ((rr % 4) != 0):
                 rr = rr + 1
+
         
 
 def gerarDFSI(frame):
     
     clearFrame(frame)
+
+    canvas = Canvas(frame)
+    canvas.pack(fill=BOTH,expand=True)
+    
+    def on_configure(event):
+        canvas.configure(scrollregion=canvas.bbox('all'))
+
+    scrollbar = Scrollbar(frame,command=canvas.yview)
+    scrollbar.pack(side=RIGHT,fill='y')
+    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.bind('<Configure>',on_configure)
+
+    frame = Frame(canvas)
+    canvas.create_window((150,0),window=frame,anchor='nw')
 
     i = 0;
     r = 0;
@@ -345,19 +394,37 @@ def gerarDFSI(frame):
                 c = 2
                 cc = 2
             elif cc == 2:
+                c = 3
+                cc = 3
+            elif cc == 3:
                 c = 0
                 cc = 0
 
-            if ((rr % 3) == 0):
+            if ((rr % 4) == 0):
                 r = r + 1
                 rr = rr + 1
 
-            elif ((rr % 3) != 0):
+            elif ((rr % 4) != 0):
                 rr = rr + 1
+            
 
 def gerarGulosaD(frame):
 
     clearFrame(frame)
+
+    canvas = Canvas(frame)
+    canvas.pack(fill=BOTH,expand=True)
+    
+    def on_configure(event):
+        canvas.configure(scrollregion=canvas.bbox('all'))
+
+    scrollbar = Scrollbar(frame,command=canvas.yview)
+    scrollbar.pack(side=RIGHT,fill='y')
+    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.bind('<Configure>',on_configure)
+
+    frame = Frame(canvas)
+    canvas.create_window((150,0),window=frame,anchor='nw')
 
     i = 0;
     r = 0;
@@ -384,6 +451,7 @@ def gerarGulosaD(frame):
             
             i = 0
 
+            
             if cc == 0:
                 c = 1
                 cc = 1
@@ -391,19 +459,36 @@ def gerarGulosaD(frame):
                 c = 2
                 cc = 2
             elif cc == 2:
+                c = 3
+                cc = 3
+            elif cc == 3:
                 c = 0
                 cc = 0
 
-            if ((rr % 3) == 0):
+            if ((rr % 4) == 0):
                 r = r + 1
                 rr = rr + 1
 
-            elif ((rr % 3) != 0):
+            elif ((rr % 4) != 0):
                 rr = rr + 1
 
-def gerarGulosaT(frame):
 
+def gerarGulosaT(frame):
     clearFrame(frame)
+
+    canvas = Canvas(frame)
+    canvas.pack(fill=BOTH,expand=True)
+    
+    def on_configure(event):
+        canvas.configure(scrollregion=canvas.bbox('all'))
+
+    scrollbar = Scrollbar(frame,command=canvas.yview)
+    scrollbar.pack(side=RIGHT,fill='y')
+    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.bind('<Configure>',on_configure)
+
+    frame = Frame(canvas)
+    canvas.create_window((150,0),window=frame,anchor='nw')
 
     i = 0;
     r = 0;
@@ -430,6 +515,7 @@ def gerarGulosaT(frame):
             
             i = 0
 
+            
             if cc == 0:
                 c = 1
                 cc = 1
@@ -437,19 +523,37 @@ def gerarGulosaT(frame):
                 c = 2
                 cc = 2
             elif cc == 2:
+                c = 3
+                cc = 3
+            elif cc == 3:
                 c = 0
                 cc = 0
 
-            if ((rr % 3) == 0):
+            if ((rr % 4) == 0):
                 r = r + 1
                 rr = rr + 1
 
-            elif ((rr % 3) != 0):
+            elif ((rr % 4) != 0):
                 rr = rr + 1
+
 
 def gerarAEstrelaD(frame):
 
     clearFrame(frame)
+
+    canvas = Canvas(frame)
+    canvas.pack(fill=BOTH,expand=True)
+    
+    def on_configure(event):
+        canvas.configure(scrollregion=canvas.bbox('all'))
+
+    scrollbar = Scrollbar(frame,command=canvas.yview)
+    scrollbar.pack(side=RIGHT,fill='y')
+    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.bind('<Configure>',on_configure)
+
+    frame = Frame(canvas)
+    canvas.create_window((150,0),window=frame,anchor='nw')
 
     i = 0;
     r = 0;
@@ -483,19 +587,37 @@ def gerarAEstrelaD(frame):
                 c = 2
                 cc = 2
             elif cc == 2:
+                c = 3
+                cc = 3
+            elif cc == 3:
                 c = 0
                 cc = 0
 
-            if ((rr % 3) == 0):
+            if ((rr % 4) == 0):
                 r = r + 1
                 rr = rr + 1
 
-            elif ((rr % 3) != 0):
+            elif ((rr % 4) != 0):
                 rr = rr + 1
+
 
 def gerarAEstrelaT(frame):
 
     clearFrame(frame)
+
+    canvas = Canvas(frame)
+    canvas.pack(fill=BOTH,expand=True)
+    
+    def on_configure(event):
+        canvas.configure(scrollregion=canvas.bbox('all'))
+
+    scrollbar = Scrollbar(frame,command=canvas.yview)
+    scrollbar.pack(side=RIGHT,fill='y')
+    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.bind('<Configure>',on_configure)
+
+    frame = Frame(canvas)
+    canvas.create_window((150,0),window=frame,anchor='nw')
 
     i = 0;
     r = 0;
@@ -521,7 +643,7 @@ def gerarAEstrelaT(frame):
             #table.pack()
             
             i = 0
-
+            
             if cc == 0:
                 c = 1
                 cc = 1
@@ -529,15 +651,19 @@ def gerarAEstrelaT(frame):
                 c = 2
                 cc = 2
             elif cc == 2:
+                c = 3
+                cc = 3
+            elif cc == 3:
                 c = 0
                 cc = 0
 
-            if ((rr % 3) == 0):
+            if ((rr % 4) == 0):
                 r = r + 1
                 rr = rr + 1
 
-            elif ((rr % 3) != 0):
+            elif ((rr % 4) != 0):
                 rr = rr + 1
+
 
 retas = {"gothamCitycentralCity": [600,100,800,150], 
          "gothamCitycapitol": [600,100,500,250] , 
