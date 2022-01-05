@@ -520,7 +520,7 @@ case(15) :- gerarCircuitos2(_), writeln('Os circuitos foram gerados com sucesso.
 case(16) :- gerarDFS2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
 case(17) :- gerarBFS2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
 case(18) :- gerarDFSI2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
-case(19) :- gerarGulosaDis2tQ(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
+case(19) :- gerarGulosaDist2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
 case(20) :- gerarGulosaTran2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
 case(21) :- gerarAEstrelaDist2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
 case(22) :- gerarAEstrelaTran2Q(_), writeln('Os circuitos foram gerados com sucesso.'), writeln('Insira n. para avançar.'), read(_), !.
